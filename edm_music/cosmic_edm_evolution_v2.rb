@@ -280,7 +280,7 @@ puts "7种立体声轨道 | 25音色 | 宇宙谐波音阶"
 puts "COSMIC演化引擎运行中 | 风格: #{s.to_s.upcase}"
 
 # === 系统功能说明 ===
-# Cosmic EDM Evolution v1.1 - 功能概览
+# Cosmic EDM Evolution v2 - 黄金序列驱动版 功能概览
 #
 # 时间单位说明：
 # • cg loop: 1 tick = 0.25 拍 (sleep 0.25)
