@@ -183,18 +183,17 @@ live_loop :cm, sync: :cg do
         end
       end
     end
-    puts "🌌 相位提示: #{cp.to_s.upcase}"
+    puts "相位提示: #{cp.to_s.upcase}"
   end
   if t % 16 == 0 && t > 0
     ge = qs(t * 0.0625, :macro)
-    pe = { big_bang: "💥", galaxy: "🌌", stellar: "⭐", death: "🌑", quantum: "⚛️" }
-    puts "#{pe[cp]} #{cp.to_s.upcase} | 演化度: #{(ge * 100).to_i}%"
+    puts "#{cp.to_s.upcase} | 演化度: #{(ge * 100).to_i}%"
   end
   sleep 4
 end
 puts "=== Cosmic EDM Evolution v1.0 启动 ==="
-puts "🎭 7种立体声轨道 | 🎵 25种音色 | 🌌 宇宙谐波音阶"
-puts "⚛️ 量子态演化引擎运行中... | 风格: #{s.to_s.upcase}"
+puts "7种立体声轨道 | 25种音色 | 宇宙谐波音阶"
+puts "量子态演化引擎运行中... | 风格: #{s.to_s.upcase}"
 
 # === 系统功能说明 ===
 # 🌌 Cosmic EDM Evolution v1.0 - 功能概览
