@@ -30,6 +30,22 @@ SC_PROF={
   sine:{amp:1.2,cut:0.8}
 }.freeze
 
+PH_E={
+  big_bang:{atk:0.05,rel:0.7},
+  galaxy:{atk:0.12,rel:0.9},
+  stellar:{atk:0.08,rel:0.8},
+  death:{atk:0.03,rel:0.6},
+  quantum:{atk:0.1,rel:1.1}
+}.freeze
+
+PH_R={
+  big_bang:[:galaxy,:stellar],
+  galaxy: [:stellar,:quantum],
+  stellar:[:death,:big_bang],
+  death:  [:quantum,:galaxy],
+  quantum:[:big_bang,:stellar]
+}.freeze
+
 EP=[:big_bang,:galaxy,:stellar,:death,:quantum].ring
 
 S_FX=[:perc_bell,:perc_snap,:elec_tick,:elec_blip2,:elec_ping,:elec_pop,:drum_cowbell,:vinyl_hiss]
