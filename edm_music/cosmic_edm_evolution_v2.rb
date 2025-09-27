@@ -20,18 +20,18 @@ MD = {
 define :mr do |a = 0.0, b = 1.0, c = :pi, adv = 1|
   d = MD[c] || MD[:pi]
   l = [d.length-1, 1].max
-  i = @dc[c] % l
+  i = @dc[c]%l
   s = d[i, 2] || d[i]
   v = s.to_i
   sc = (10**s.length)-1
-  @dc[c] = (@dc[c]+adv) % l
+  @dc[c] = (@dc[c]+adv)%l
   a+(v/sc.to_f)*(b-a)
 end
 
 define :mp do |list, c = :pi, adv = 1|
   arr = list.respond_to?(:to_a) ? list.to_a : Array(list)
   return arr.first if arr.empty?
-  arr[mr(0, arr.length, c, adv).to_i % arr.length]
+  arr[mr(0, arr.length, c, adv).to_i%arr.length]
 end
 
 CS = {
@@ -104,12 +104,12 @@ define :es do |i,nm,role=:auto,e=nil|
   role = (p<48 ? :bass : p<60 ? :arp : p<72 ? :lead : :accent) if role==:auto
   pools={bass:S_SYN4,lead:S_SYN2,arp:S_SYN,accent:S_SYN3,pad:S_SYN5}
   pool=pools[role]||S_SYN2
-  idx=((i*pool.length)+(e*0.37*pool.length)).to_i % pool.length
+  idx=((i*pool.length)+(e*0.37*pool.length)).to_i%pool.length
   sc=pool[idx]; use_synth sc; sc
 end
 
 define :phase do |t|
-  EP[((t*0.01) % EP.length).to_i]
+  EP[((t*0.01)%EP.length).to_i]
 end
 
 define :cs do |p|
@@ -119,14 +119,14 @@ end
 define :pl do |kind,t,i,pn|
   case kind
   when :harmonic
-    return unless t % 3 == 0 && i > 0.4
-    n = pn[t % pn.length]+12
+    return unless t%3 == 0 && i > 0.4
+    n = pn[t%pn.length]+12
     es(i,n,:accent,i)
     play n, amp: i*0.3,
          mod_range: lr(i*12, 0, 24), mod_rate: lr(i*8, 0.1, 16),
          attack: 0.1, release: 1.5, pan: cp(t,:figure8)
   when :tremolo
-    return unless spread(7,32)[t % 32]
+    return unless spread(7,32)[t%32]
     n = mp(pn,:e)+mp([0,7],:golden)
     es(i,n,:arp,i)
     with_fx :tremolo, phase: lr(i*2, 0.1, 4), mix: lr(i*0.8, 0, 1) do
@@ -155,13 +155,13 @@ live_loop :cg do
   pn = cs(ph)
 
   sample :bd_haus, amp: m, rate: lr(1+(m-0.5)*0.1, 0.5, 2.0),
-         lpf: lr(80+ma*40, 20, 130), pan: cp(t,:pendulum)*0.3 if t % 4 == 0
+         lpf: lr(80+ma*40, 20, 130), pan: cp(t,:pendulum)*0.3 if t%4 == 0
 
-  if [6, 14].include?(t % 16)
+  if [6, 14].include?(t%16)
     sample :sn_dub, amp: ma*0.8, pan: cp(t,:orbit), hpf: lr(20+m*80, 0, 118)
   end
 
-  if spread(5, 16)[t % 16]
+  if spread(5, 16)[t%16]
     sample mp(S_FX,:pi), amp: f*0.4,
            rate: lr(0.8+m*0.4, 0.25, 4.0),
            pan: cp(t+mr(0, 8,:golden),:spiral)
@@ -169,13 +169,13 @@ live_loop :cg do
 
   if s == :edm
     sample :drum_cymbal_closed, amp: 0.2, pan: cp(t,:random)
-    da = t % 64 < 4 ? 2 : 1
+    da = t%64 < 4 ? 2 : 1
   else
     da = 1
   end
 
-  if t % 2 == 0 && m > 0.5
-    ni = ((t*f*5)+(m*8)).to_i % pn.length
+  if t%2 == 0 && m > 0.5
+    ni = ((t*f*5)+(m*8)).to_i%pn.length
     tn = pn[ni]
     es(m, tn,:lead, f)
     with_fx :distortion, distort: 0.1 do
@@ -185,14 +185,14 @@ live_loop :cg do
     end
   end
 
-  pl(:harmonic, t, f, pn) if t % 2 == 0
-  pl(:tremolo, t, ma, pn) if t % 4 == 0
+  pl(:harmonic, t, f, pn) if t%2 == 0
+  pl(:tremolo, t, ma, pn) if t%4 == 0
 
-  if t % 32 == 0
+  if t%32 == 0
     in_thread do
       3.times do |i|
-        es(f, pn[i % pn.length],:pad, f)
-        play_chord chord(pn[i % pn.length], mp(S_CHD,:golden)),
+        es(f, pn[i%pn.length],:pad, f)
+        play_chord chord(pn[i%pn.length], mp(S_CHD,:golden)),
              amp: f*0.2*da, attack: lr(1.5+i*0.5, 0, 4),
              release: lr(6+ma*3, 1, 12),
              cutoff: lr(60+m*25, 20, 130),
@@ -201,19 +201,19 @@ live_loop :cg do
       end
     end
   end
-  if t % 8 == 0 && f > 0.6
+  if t%8 == 0 && f > 0.6
     es(ma, note(pn[0])-24,:bass, f)
     play note(pn[0])-24, amp: ma*0.6*da,
          attack: 0.1, release: 2,
          cutoff: lr(60+m*20, 20, 130),
          pan: cp(t,:pendulum)*0.4
   end
-  if t % 64 == 60
+  if t%64 == 60
     sample mp(S_FX_TRANS,:golden), amp: f*0.35,
            rate: lr(0.8+f*0.4, 0.5, 1.5),
            pan: cp(t,:wave)
   end
-  if t % 128 == 124
+  if t%128 == 124
     sample mp(S_FX_TRANS,:pi), amp: f*0.45,
            rate: lr(0.6+f*0.5, 0.4, 1.4),
            pan: cp(t*0.5,:galaxy)
@@ -227,9 +227,9 @@ live_loop :ct, sync: :cg do
   ph = phase(t*2)
   pn = cs(ph)
 
-  pl(:particle, t*2, qs(t*0.125,:micro), pn) if t % 2 == 0
+  pl(:particle, t*2, qs(t*0.125,:micro), pn) if t%2 == 0
 
-  if t % 32 == 0
+  if t%32 == 0
     si = qs(t*0.015625,:fusion)
     if si > 0.6
       use_synth mp(S_AMB,:golden)
@@ -242,9 +242,9 @@ live_loop :ct, sync: :cg do
     end
   end
 
-  sample :loop_compus, amp: 0.3, beat_stretch: 4 if s == :deep_house && t % 4 == 0
+  sample :loop_compus, amp: 0.3, beat_stretch: 4 if s == :deep_house && t%4 == 0
 
-  if t % 16 == 0 && f > 0.5
+  if t%16 == 0 && f > 0.5
     sample mp(S_FX2,:e), amp: f*0.3,
            rate: lr(0.5+f*0.5, 0.25, 2.0),
            pan: cp(t*4,:random)
@@ -257,7 +257,7 @@ live_loop :cm, sync: :cg do
   ph = phase(t*4)
   pn = cs(ph)
 
-  if t % 8 == 0
+  if t%8 == 0
     use_synth :dark_ambience
     ai = qs(t*0.125,:fusion)
     play pn.map { |n| note(n)-36 }.take(3),
@@ -266,7 +266,7 @@ live_loop :cm, sync: :cg do
          pan: cp(t*4,:galaxy)*0.6
   end
 
-  if t % 20 == 0 && t > 0
+  if t%20 == 0 && t > 0
     use_synth :prophet
     with_fx :reverb, room: 0.8, mix: 0.6 do
       with_fx :echo, phase: 0.375, decay: 2 do
@@ -281,7 +281,7 @@ live_loop :cm, sync: :cg do
     puts "相位提示: #{ph.to_s.upcase}"
   end
 
-  if t % 16 == 0 && t > 0
+  if t%16 == 0 && t > 0
     ge = qs(t*0.0625,:macro)
     puts "#{ph.to_s.upcase} | 演化度: #{(ge*100).to_i}%"
   end
@@ -351,12 +351,12 @@ puts "COSMIC演化引擎运行中 | 风格: #{s.to_s.upcase}"
 #   -相位提示：80 拍周期（cm 层）输出状态 → 给长时运行用户自然参照点。
 #
 # === 风格切换 ===
-# • :edm → 128 BPM，恒定 closed hi-hat，64 拍周期前 4 拍能量提升 (t % 64 < 4)。
+# • :edm → 128 BPM，恒定 closed hi-hat，64 拍周期前 4 拍能量提升 (t%64 < 4)。
 # • :deep_house → 120 BPM，加入 compus shaker（ct 中 t%4==0 即每 8 拍）与较大混响。
 #
 # === 音乐层次 ===
 # 节拍层 (cg):
-#   -底鼓：每 1 拍 (t % 4 == 0)；声像 pendulum。
+#   -底鼓：每 1 拍 (t%4 == 0)；声像 pendulum。
 #   -军鼓：16 tick 序列中的第 6 与 14 tick → 6,14 ⇒ 1.5 拍与 3.5 拍位置。
 #   -打击细节：spread(5,16) → 16 tick（=4 拍）循环的 5 分布事件。
 #   -Hi-hat：EDM 模式每 tick (0.25 拍)。
