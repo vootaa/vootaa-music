@@ -196,7 +196,7 @@ live_loop :cg do
         lc=((get(:lead_last)||-99)>t-2)
         pamp=f*0.2*da*(lc ? 0.7 : 1); pamp*=1.15 if ml
         cb = f<0.5 ? lr(50+m*20,20,110) : lr(80+m*30,40,130)
-        with_fx(:compressor,threshold:0.35,clamp_time:0.01,relax_time:0.15) do
+        with_fx(:compressor,threshold:0.4,clamp_time:0.02,relax_time:0.2) do
           ch=chord(rn,mp(S_CHD,:golden))
           plr ch,pamp,cb,cp(t+i*16,mp(S_PAN,:pi)),ma,ml
         end
