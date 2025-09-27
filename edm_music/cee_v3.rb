@@ -31,19 +31,38 @@ SC_PROF={
 }.freeze
 
 EP=[:big_bang,:galaxy,:stellar,:death,:quantum].ring
+
 S_FX=[:perc_bell,:perc_snap,:elec_tick,:elec_blip2,:elec_ping,:elec_pop,:drum_cowbell,:vinyl_hiss]
+S_FX_HI=[:perc_bell,:elec_ping]
 S_FX2=[:ambi_choir,:ambi_glass_rub,:ambi_glass_hum,:ambi_drone,:ambi_dark_woosh,:ambi_swoosh,:ambi_lunar_land,:guit_e_slide,:guit_em9,:vinyl_backspin,:drum_roll]
-S_FX_TRANS=[:drum_splash_soft,:drum_splash_hard,:vinyl_scratch,:vinyl_backspin,:ambi_swoosh]
+S_FXT=[:drum_splash_soft,:drum_splash_hard,:vinyl_scratch,:vinyl_backspin,:ambi_swoosh]
+
 S_SYN=[:mod_saw,:mod_pulse,:mod_sine,:mod_tri,:pluck,:fm]
 S_SYN2=[:prophet,:blade,:supersaw,:zawa,:pulse]
 S_SYN3=[:pretty_bell,:beep,:chiplead,:chipbass,:pluck,:mod_beep]
 S_SYN4=[:tb303,:subpulse,:fm,:sine,:growl,:dsaw]
 S_SYN5=[:hollow,:prophet,:saw,:dark_ambience,:supersaw,:blade]
+
 S_CHD=[:minor7,:major7,:sus4,:add9,:dim7,:minor,:major,:dom7]
 S_AMB=[:hollow,:prophet,:saw]
 S_PAN=[:spiral,:orbit,:galaxy,:figure8,:random]
 S_PAN2=[:spiral,:figure8,:wave]
-PH_LEAD={big_bang:[:prophet,:pulse,:blade],galaxy:[:prophet,:blade,:zawa],stellar:[:blade,:supersaw,:pulse],death:[:prophet,:zawa],quantum:[:blade,:supersaw,:zawa,:pulse]}
+
+PH_LEAD={
+  big_bang:[:prophet,:pulse,:blade],
+  galaxy: [:prophet,:blade,:zawa],
+  stellar:[:blade,:supersaw,:pulse],
+  death:  [:prophet,:zawa],
+  quantum:[:blade,:supersaw,:zawa,:pulse]
+}
+
+PH_FILTER={
+  death:  ->(pool){pool - [:supersaw]},
+  quantum: ->(pool){(pool + [:blade,:zawa]).uniq}
+}.freeze
+
+# 主题动机（与相位集合作为索引位移）
+MOTIF=[0,2,4,7].freeze
 
 # === 系统功能说明 ===
 # Cosmic EDM Evolution v3 - 无理数序列驱动版 功能概览
@@ -150,7 +169,7 @@ PH_LEAD={big_bang:[:prophet,:pulse,:blade],galaxy:[:prophet,:blade,:zawa],stella
 # • 修改变量 s=:edm/:deep_house 切换风格。
 # • 运行 ≥5 分钟体验一个以上完整长周期（含 64/80 拍事件）。
 # • 立体声输出设备可最大化轨道运动感。
-# • 可调试：临时开启 use_debug true 观察事件节奏。
+# • 可调试：临时开启 use_debug true 观察事件节奏。∂
 #
 # === 创作理念 ===
 # 通过“节奏=时间分形”，“声像=轨道映射”，“能量=多尺度调制”，将抽象数学参数转译为可感知音乐演化。
