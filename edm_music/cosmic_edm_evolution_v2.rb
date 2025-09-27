@@ -42,8 +42,8 @@ CS = {
   quantum: [:c4, :db4, :e4, :fs4, :ab4]
 }.freeze
 EP = [:big_bang, :galaxy, :stellar, :death, :quantum].ring
-S_FX = [:perc_bell, :elec_tick, :elec_blip2, :elec_chime, :perc_snap, :elec_pop, :ambi_glass_rub, :ambi_piano, :ambi_soft_buzz, :ambi_swoosh]
-S_FX2 = [:guit_harmonics, :guit_e_fifths, :guit_e_slide, :guit_em9, :drum_roll, :perc_bell, :elec_tick, :elec_blip2, :elec_chime, :perc_snap, :elec_ping, :elec_pop, :ambi_choir, :ambi_glass_rub, :ambi_piano, :ambi_soft_buzz, :ambi_swoosh]
+S_FX = [:perc_bell, :perc_snap, :elec_tick, :elec_blip2, :elec_ping, :drum_cowbell, :vinyl_hiss]
+S_FX2 = [:ambi_choir, :ambi_glass_rub, :ambi_drone, :ambi_dark_woosh, :guit_e_slide, :guit_em9, :drum_roll]
 S_SYN = [:mod_sine, :mod_saw, :mod_pulse, :mod_tri]
 S_SYN2 = [:prophet, :zawa, :hollow, :pluck]
 S_SYN3 = [:pretty_bell, :chiplead, :beep, :chipbass]
