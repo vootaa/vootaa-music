@@ -63,6 +63,42 @@ end
 define :lr do |v,min,max|
   [[v,max].min,min].max
 end
+define :phase do |t|
+  EP[((t*0.01)%EP.length).to_i]
+end
+define :cs do |p|
+  CS[p] || CS[:stellar]
+end
+define(:ka){|v|v*(get(:f_amp)||1)};define(:kt){|v|v*(get(:f_atk)||1)};define(:kr){|v|v*(get(:f_rel)||1)};define(:kc){|v|v*(get(:f_cut)||1)}
+define :pl do |kind,t,i,pn|
+  case kind
+  when :harmonic
+    return unless t%3==0 && i>0.4
+    n=pn[t%pn.length]+12
+    ln=get(:lead_note); n+=5 if ln && note(ln)==note(n)
+    es(i,n,:accent,i)
+    play n,amp:ka(i*0.3),mod_range:lr(i*12,0,24),mod_rate:lr(i*8,0.1,16),
+         attack:kt(0.1),release:kr(1.5),pan:cp(t,:figure8)+mr(-0.1,0.1,:e)
+  when :tremolo
+    return unless spread(7,32)[t%32]
+    n=mp(pn,:e)+mp([0,7],:golden)
+    es(i,n,:arp,i)
+    with_fx :tremolo,phase:lr(i*2,0.1,4),mix:lr(i*0.8,0,1) do
+      play n,amp:ka(i*0.4),cutoff:lr(kc(60+i*40),20,130),release:kr(0.8),
+           pan:cp(t,:wave)+mr(-0.1,0.1,:e)
+    end
+  when :particle
+    ml=get(:mute_lead)
+    return unless i>(ml ? 0.68 :0.72) && i<(ml ? 0.92 :0.9)
+    n=mp(pn,:golden)+mp([12,24,36],:e)
+    es(i,n,:accent,i)
+    with_fx :reverb,room:0.4,mix:0.3 do
+      play n,amp:ka(i*0.2),attack:kt(0.05),release:kr(0.3),
+           cutoff:lr(kc(80+i*30),50,130),
+           pan:cp(t+mr(0,16,:pi),mp(S_PAN2,:golden))+mr(-0.1,0.1,:e)
+    end
+  end
+end
 define :es do |i,nm,role=:auto,e=nil|
   e||=i; p=note(nm)
   role=(p<48 ? :bass : p<60 ? :arp : p<72 ? :lead : :accent) if role==:auto
@@ -73,41 +109,28 @@ define :es do |i,nm,role=:auto,e=nil|
     fp=pool & ap
     pool=fp unless fp.empty?
   end
-  idx=((i*pool.length)+( (e||i)*0.37*pool.length)).to_i%pool.length
-  sc=pool[idx]; use_synth sc; sc
+  idx=((i*pool.length)+((e||i)*0.37*pool.length)).to_i%pool.length
+  sc=pool[idx]; use_synth sc; set :sc,sc; $last_sc=sc
+  pr=SC_PROF[sc]||{}
+  set :f_amp,pr[:amp]||1; set :f_atk,pr[:atk]||1; set :f_rel,pr[:rel]||1; set :f_cut,pr[:cut]||1
+  sc
 end
-define :phase do |t|
-  EP[((t*0.01)%EP.length).to_i]
-end
-define :cs do |p|
-  CS[p] || CS[:stellar]
-end
-define :pl do |kind,t,i,pn|
-  case kind
-  when :harmonic
-    return unless t%3==0 && i>0.4
-    n=pn[t%pn.length]+12
-    ln=get(:lead_note); n+=5 if ln && note(ln)==note(n)
-    es(i,n,:accent,i)
-    play n,amp:i*0.3,mod_range:lr(i*12,0,24),mod_rate:lr(i*8,0.1,16),
-         attack:0.1,release:1.5,pan:cp(t,:figure8)+mr(-0.1,0.1,:e)
-  when :tremolo
-    return unless spread(7,32)[t%32]
-    n=mp(pn,:e)+mp([0,7],:golden)
-    es(i,n,:arp,i)
-    with_fx :tremolo,phase:lr(i*2,0.1,4),mix:lr(i*0.8,0,1) do
-      play n,amp:i*0.4,cutoff:lr(60+i*40,20,130),release:0.8,pan:cp(t,:wave)+mr(-0.1,0.1,:e)
-    end
-  when :particle
-    ml=get(:mute_lead)
-    return unless i>(ml ? 0.68 :0.72) && i<(ml ? 0.92 :0.9)
-    n=mp(pn,:golden)+mp([12,24,36],:e)
-    es(i,n,:accent,i)
-    with_fx :reverb,room:0.4,mix:0.3 do
-      play n,amp:i*0.2,attack:0.05,release:0.3,
-           cutoff:lr(80+i*30,50,130),pan:cp(t+mr(0,16,:pi),mp(S_PAN2,:golden))+mr(-0.1,0.1,:e)
-    end
-  end
+define :pad_layers do |ch,amp,cut,pan,ma,ml|
+  arr=ch.to_a.map{|x|note(x)}.sort
+  return if arr.empty?
+  root=arr.first
+  rest=arr.drop(1)
+  ext=rest.length>2 ? [rest.pop] : []
+  mid=rest
+  rb=6+ma*3
+  adj_root=ka(amp*0.55); adj_mid=ka(amp); adj_ext=ka(amp*0.35)
+  atk_root=kt(1.5*(ml ? 0.7 : 1)); atk_mid=kt(1.5); atk_ext=kt(0.2)
+  rel_root=kr(rb*1.1); rel_mid=kr(rb); rel_ext=kr(rb*0.4)
+  cut_root=lr(kc(cut-10),20,130); cut_mid=lr(kc(cut),20,130); cut_ext=lr(kc(cut+15),20,130)
+  nr=root-12
+  play nr,amp:adj_root,attack:atk_root,release:rel_root,cutoff:cut_root,pan:pan*0.6
+  mid.each{|n|play n,amp:adj_mid,attack:atk_mid,release:rel_mid,cutoff:cut_mid,pan:pan}
+  ext.each{|n|play n+12,amp:adj_ext,attack:atk_ext,release:rel_ext,cutoff:cut_ext,pan:pan+mr(-0.15,0.15,:e)}
 end
 
 live_loop :cg do
@@ -140,9 +163,9 @@ live_loop :cg do
     es(m,tn,:lead,f); set :lead_note,tn; set :lead_last,t
     with_fx :distortion,distort:0.1 do
       with_fx :pitch_shift,pitch:(rising ? 0.3 :0) do
-        play tn,amp:(m*0.7*da)*(ma>=0.75 ? 0.9 :1),cutoff:lr(40+ma*80,0,130),
-             res:lr(f*0.8,0,1),attack:lr((1-m)*0.3,0,4),
-             release:lr(0.2+f*0.5,0.1,8),pan:cp(t,:galaxy)
+        play tn,amp:ka((m*0.7*da)*(ma>=0.75 ? 0.9 :1)),cutoff:lr(kc(40+ma*80),0,130),
+             res:lr(f*0.8,0,1),attack:kt(lr((1-m)*0.3,0,4)),
+             release:kr(lr(0.2+f*0.5,0.1,8)),pan:cp(t,:galaxy)
       end
     end
   end
@@ -158,11 +181,9 @@ live_loop :cg do
         pad_amp*=1.15 if ml
         cut_base=f<0.5 ? lr(50+m*20,20,110) : lr(80+m*30,40,130)
         with_fx(:compressor,threshold:0.3,clamp_time:0.01,relax_time:0.15) do
-          play_chord chord(pn[i%pn.length],mp(S_CHD,:golden)),
-            amp:pad_amp*(bd_recent ? 0.85 :1),
-            attack:lr((1.5+i*0.5)*(ml ? 0.7 :1),0,4),
-            release:lr(6+ma*3,1,12),cutoff:cut_base,
-            pan:cp(t+i*16,mp(S_PAN,:pi))
+          ch=chord(pn[i%pn.length],mp(S_CHD,:golden))
+          pad_amp=f*0.2*da*(lead_recent ? 0.7 :1); pad_amp*=1.15 if ml
+          pad_layers ch,pad_amp,cut_base,cp(t+i*16,mp(S_PAN,:pi)),ma,ml
         end
         sleep 8
       end
@@ -171,13 +192,12 @@ live_loop :cg do
   if t%8==0 && f>0.6
     bc=(get(:bass_cnt)||0)+1; set :bass_cnt,bc
     base=note(pn[0])-24
-    jump=(bc%4==0 && ma>=0.4)
-    n=base+(jump ? 12 :0)
+    jump=(bc%4==0 && ma>=0.4); n=base+(jump ? 12 :0)
     sc=es(ma,n,:bass,f)
     bn=synth sc,
-      note:n,amp:ma*0.6*da,attack:0.1,
+      note:n,amp:ka(ma*0.6*da),attack:kt(0.1),
       sustain:(jump ? 1.0 :1.6),release:0,
-      note_slide:0.25,cutoff:lr(60+m*20,20,130),
+      note_slide:0.25,cutoff:lr(kc(60+m*20),20,130),
       pan:cp(t,:pendulum)*0.4
     control bn,note:base if jump
   end

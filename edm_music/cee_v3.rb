@@ -19,6 +19,17 @@ CS={
   quantum:[:c4,:db4,:e4,:fs4,:ab4]
 }.freeze
 
+SC_PROF={
+  tb303:{amp:0.9,res:0.85,cut:0.9,atk:0.9,rel:0.8},
+  supersaw:{amp:0.85,cut:1.15,atk:1.1,rel:1.1},
+  blade:{amp:0.95,cut:1.1,mod:1.1},
+  zawa:{amp:0.9,cut:1.05},
+  prophet:{amp:1.0,atk:1.15,rel:1.2,cut:0.95},
+  hollow:{amp:1.05,atk:1.2,rel:1.25},
+  pretty_bell:{amp:1.1,atk:0.4,rel:0.5,cut:1.2},
+  sine:{amp:1.2,cut:0.8}
+}.freeze
+
 EP=[:big_bang,:galaxy,:stellar,:death,:quantum].ring
 S_FX=[:perc_bell,:perc_snap,:elec_tick,:elec_blip2,:elec_ping,:elec_pop,:drum_cowbell,:vinyl_hiss]
 S_FX2=[:ambi_choir,:ambi_glass_rub,:ambi_glass_hum,:ambi_drone,:ambi_dark_woosh,:ambi_swoosh,:ambi_lunar_land,:guit_e_slide,:guit_em9,:vinyl_backspin,:drum_roll]
