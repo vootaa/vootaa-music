@@ -150,8 +150,9 @@ live_loop :cg do
     sample :sn_dub,amp:ma*0.8,pan:cp(t,:orbit),hpf:lr(20+m*80,0,118)
   end
   if f>0.4 && spread(5,16)[t%16]
-    fx_pool = f>0.7 ? [:perc_bell,:elec_tick,:elec_ping] :S_FX
-    sample mp(fx_pool,:pi),amp:f*0.4,rate:lr(0.8+m*0.4,0.25,4.0),
+    sample mp(f>0.7 ? [:perc_bell,:elec_tick,:elec_ping] : S_FX,:pi),
+           amp:f*0.4,
+           rate:lr(0.8+m*0.4,0.25,4.0),
            pan:cp(t+mr(0,8,:golden),:spiral)
   end
   if s==:edm
