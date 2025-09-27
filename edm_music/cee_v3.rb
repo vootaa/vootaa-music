@@ -48,10 +48,10 @@ PH_R={
 
 EP=[:big_bang,:galaxy,:stellar,:death,:quantum].ring
 
-S_FX=[:perc_bell,:perc_snap,:elec_tick,:elec_blip2,:elec_ping,:elec_pop,:drum_cowbell,:vinyl_scratch]
-S_FX_HI=[:perc_bell,:elec_ping]
-S_FX2=[:ambi_choir,:ambi_glass_rub,:ambi_glass_hum,:ambi_drone,:ambi_dark_woosh,:ambi_swoosh,:ambi_lunar_land,:guit_e_slide,:guit_em9,:vinyl_backspin,:drum_roll]
-S_FXT=[:drum_splash_soft,:drum_splash_hard,:vinyl_scratch,:vinyl_backspin,:ambi_swoosh]
+S_FX = [:ambi_glass_rub,:ambi_glass_hum,:elec_ping,:elec_blip2,:ambi_dark_woosh,:ambi_swoosh,:vinyl_hiss,:elec_tick]  # 增强玻璃/太空/电子感，减少cowbell
+S_FX_HI = [:ambi_glass_rub,:elec_ping,:ambi_lunar_land]  # 聚焦高能太空元素
+S_FX2 = [:ambi_choir,:ambi_drone,:ambi_dark_woosh,:ambi_swoosh,:ambi_lunar_land,:vinyl_backspin,:guit_e_slide,:ambi_soft_buzz]  # 强化宇宙氛围，添加buzz
+S_FXT = [:ambi_swoosh,:vinyl_scratch,:vinyl_backspin,:ambi_dark_woosh,:drum_roll]  # 过渡更流畅太空化
 
 S_SYN=[:mod_saw,:mod_pulse,:mod_sine,:mod_tri,:pluck,:fm]
 S_SYN2=[:prophet,:blade,:supersaw,:zawa,:pulse]
