@@ -1,61 +1,61 @@
 # Cosmic EDM Evolution v2.0
 
-s = :edm
-bpm = s == :edm ? 128 : 120
+s=:edm
+bpm=s == :edm ? 128 : 120
 use_bpm bpm
 set_volume! 0.8
 use_debug false
-P = 1.618034
-E = 2.718281828
-PI = Math::PI
+P=1.618034
+E=2.718281828
+PI=Math::PI
 
-MD = {
+MD={
   pi: "3141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067",
   golden: "1618033988749894848204586834365638117720309179805762862135448622705260462818902449707207204189391137",
   e: "2718281828459045235360287471352662497757247093699959574966967627724076630353547594571382178525166427",
   sqrt2: "1414213562373095048801688724209698078569671875376948073176679737990732478462107038850387534327641573"
 }.freeze
-@dc = Hash.new(0)
+@dc=Hash.new(0)
 
-define :mr do |a = 0.0,b = 1.0,c = :pi,adv = 1|
-  d = MD[c] || MD[:pi]
-  l = [d.length-1,1].max
-  i = @dc[c]%l
-  s = d[i,2] || d[i]
-  v = s.to_i
-  sc = (10**s.length)-1
-  @dc[c] = (@dc[c]+adv)%l
+define :mr do |a=0.0,b=1.0,c=:pi,adv=1|
+  d=MD[c] || MD[:pi]
+  l=[d.length-1,1].max
+  i=@dc[c]%l
+  s=d[i,2] || d[i]
+  v=s.to_i
+  sc=(10**s.length)-1
+  @dc[c]=(@dc[c]+adv)%l
   a+(v/sc.to_f)*(b-a)
 end
 
-define :mp do |list,c = :pi,adv = 1|
-  arr = list.respond_to?(:to_a) ? list.to_a : Array(list)
+define :mp do |list,c=:pi,adv=1|
+  arr=list.respond_to?(:to_a) ? list.to_a : Array(list)
   return arr.first if arr.empty?
   arr[mr(0,arr.length,c,adv).to_i%arr.length]
 end
 
-CS = {
+CS={
   big_bang: [:c5,:d5,:f5,:g5],
   galaxy: [:c4,:e4,:g4,:bb4,:d5],
   stellar: [:c4,:d4,:f4,:g4,:a4],
   death: [:c4,:eb4,:gb4,:a4],
   quantum: [:c4,:db4,:e4,:fs4,:ab4]
 }.freeze
-EP = [:big_bang,:galaxy,:stellar,:death,:quantum].ring
-S_FX = [:perc_bell,:perc_snap,:elec_tick,:elec_blip2,:elec_ping,:elec_pop,:drum_cowbell,:vinyl_hiss] # 短瞬态 FX（节奏/点彩/电子粒子）
-S_FX2 = [:ambi_choir,:ambi_glass_rub,:ambi_glass_hum,:ambi_drone,:ambi_dark_woosh,:ambi_swoosh,:ambi_lunar_land,:guit_e_slide,:guit_em9,:vinyl_backspin,:drum_roll] # 长纹理 & 过渡 FX（氛围拖尾/呼吸/滑入）
-S_FX_TRANS = [:drum_splash_soft,:drum_splash_hard,:vinyl_scratch,:vinyl_backspin,:ambi_swoosh] # （段落 Build/Riser 额外池，用于 64/128 拍大结构）
-S_SYN = [:mod_saw,:mod_pulse,:mod_sine,:mod_tri,:pluck,:fm]
-S_SYN2 = [:prophet,:blade,:supersaw,:zawa,:pulse]
-S_SYN3 = [:pretty_bell,:beep,:chiplead,:chipbass,:pluck,:mod_beep]
-S_SYN4 = [:tb303,:subpulse,:fm,:sine,:growl,:dsaw]
-S_SYN5 = [:hollow,:prophet,:saw,:dark_ambience,:supersaw,:blade] # PAD/长铺底
-S_CHD = [:minor7,:major7,:sus4,:add9,:dim7,:minor,:major,:dom7]
-S_AMB = [:hollow,:prophet,:saw]
-S_PAN = [:spiral,:orbit,:galaxy,:figure8,:random]
-S_PAN2 = [:spiral,:figure8,:wave]
+EP=[:big_bang,:galaxy,:stellar,:death,:quantum].ring
+S_FX=[:perc_bell,:perc_snap,:elec_tick,:elec_blip2,:elec_ping,:elec_pop,:drum_cowbell,:vinyl_hiss] # 短瞬态 FX（节奏/点彩/电子粒子）
+S_FX2=[:ambi_choir,:ambi_glass_rub,:ambi_glass_hum,:ambi_drone,:ambi_dark_woosh,:ambi_swoosh,:ambi_lunar_land,:guit_e_slide,:guit_em9,:vinyl_backspin,:drum_roll] # 长纹理 & 过渡 FX（氛围拖尾/呼吸/滑入）
+S_FX_TRANS=[:drum_splash_soft,:drum_splash_hard,:vinyl_scratch,:vinyl_backspin,:ambi_swoosh] # （段落 Build/Riser 额外池，用于 64/128 拍大结构）
+S_SYN=[:mod_saw,:mod_pulse,:mod_sine,:mod_tri,:pluck,:fm]
+S_SYN2=[:prophet,:blade,:supersaw,:zawa,:pulse]
+S_SYN3=[:pretty_bell,:beep,:chiplead,:chipbass,:pluck,:mod_beep]
+S_SYN4=[:tb303,:subpulse,:fm,:sine,:growl,:dsaw]
+S_SYN5=[:hollow,:prophet,:saw,:dark_ambience,:supersaw,:blade] # PAD/长铺底
+S_CHD=[:minor7,:major7,:sus4,:add9,:dim7,:minor,:major,:dom7]
+S_AMB=[:hollow,:prophet,:saw]
+S_PAN=[:spiral,:orbit,:galaxy,:figure8,:random]
+S_PAN2=[:spiral,:figure8,:wave]
 
-define :cp do |t,type = :spiral|
+define :cp do |t,type=:spiral|
   case type
   when :spiral
     Math.sin(t*P*0.08)*Math.cos(t*0.05)*0.8
@@ -64,7 +64,7 @@ define :cp do |t,type = :spiral|
   when :pendulum
     Math.sin(t*0.15)*Math.cos(t*0.03)*0.6
   when :galaxy
-    r = 0.6+Math.sin(t*0.02)*0.2
+    r=0.6+Math.sin(t*0.02)*0.2
     Math.sin(t*0.1)*r
   when :figure8
     Math.sin(t*0.08)*Math.cos(t*0.16)*0.9
@@ -78,18 +78,18 @@ end
 define :qs do |t,l|
   case l
   when :micro
-    b = t*P*0.1
-    q = (Math.sin(b)*Math.log(E)+Math.cos(b*2))*0.3
-    c = (Math.sin(b*3.14159)+Math.cos(b*1.414))*0.2
+    b=t*P*0.1
+    q=(Math.sin(b)*Math.log(E)+Math.cos(b*2))*0.3
+    c=(Math.sin(b*3.14159)+Math.cos(b*1.414))*0.2
     (q+c).abs*0.5+0.3
   when :macro
-    ct = t*0.0618
-    d = Math.sin(ct*0.73)*0.4
-    m = Math.cos(ct*0.27+PI/3)*0.3
+    ct=t*0.0618
+    d=Math.sin(ct*0.73)*0.4
+    m=Math.cos(ct*0.27+PI/3)*0.3
     (d+m)*0.5+0.5
   when :fusion
-    mi = qs(t,:micro)*0.6
-    ma = qs(t,:macro)*0.4
+    mi=qs(t,:micro)*0.6
+    ma=qs(t,:macro)*0.4
     [[mi+ma,0.9].min,0.1].max
   end
 end
@@ -101,7 +101,7 @@ end
 define :es do |i,nm,role=:auto,e=nil|
   e||=i
   p=note(nm)
-  role = (p<48 ? :bass : p<60 ? :arp : p<72 ? :lead : :accent) if role==:auto
+  role=(p<48 ? :bass : p<60 ? :arp : p<72 ? :lead : :accent) if role==:auto
   pools={bass:S_SYN4,lead:S_SYN2,arp:S_SYN,accent:S_SYN3,pad:S_SYN5}
   pool=pools[role]||S_SYN2
   idx=((i*pool.length)+(e*0.37*pool.length)).to_i%pool.length
@@ -120,14 +120,14 @@ define :pl do |kind,t,i,pn|
   case kind
   when :harmonic
     return unless t%3 == 0 && i > 0.4
-    n = pn[t%pn.length]+12
+    n=pn[t%pn.length]+12
     es(i,n,:accent,i)
     play n,amp: i*0.3,
          mod_range: lr(i*12,0,24),mod_rate: lr(i*8,0.1,16),
          attack: 0.1,release: 1.5,pan: cp(t,:figure8)
   when :tremolo
     return unless spread(7,32)[t%32]
-    n = mp(pn,:e)+mp([0,7],:golden)
+    n=mp(pn,:e)+mp([0,7],:golden)
     es(i,n,:arp,i)
     with_fx :tremolo,phase: lr(i*2,0.1,4),mix: lr(i*0.8,0,1) do
       play n,amp: i*0.4,
@@ -135,7 +135,7 @@ define :pl do |kind,t,i,pn|
     end
   when :particle
     return unless i > 0.7
-    n = mp(pn,:golden)+mp([12,24,36],:e)
+    n=mp(pn,:golden)+mp([12,24,36],:e)
     es(i,n,:accent,i)
     with_fx :reverb,room: 0.4,mix: 0.3 do
       play n,amp: i*0.2,
@@ -147,12 +147,12 @@ define :pl do |kind,t,i,pn|
 end
 
 live_loop :cg do
-  t = tick
-  m = qs(t*0.25,:micro)
-  ma = qs(t*0.125,:macro)
-  f = qs(t*0.0625,:fusion)
-  ph = phase(t)
-  pn = cs(ph)
+  t=tick
+  m=qs(t*0.25,:micro)
+  ma=qs(t*0.125,:macro)
+  f=qs(t*0.0625,:fusion)
+  ph=phase(t)
+  pn=cs(ph)
 
   sample :bd_haus,amp: m,rate: lr(1+(m-0.5)*0.1,0.5,2.0),
          lpf: lr(80+ma*40,20,130),pan: cp(t,:pendulum)*0.3 if t%4 == 0
@@ -169,14 +169,14 @@ live_loop :cg do
 
   if s == :edm
     sample :drum_cymbal_closed,amp: 0.2,pan: cp(t,:random)
-    da = t%64 < 4 ? 2 : 1
+    da=t%64 < 4 ? 2 : 1
   else
-    da = 1
+    da=1
   end
 
   if t%2 == 0 && m > 0.5
-    ni = ((t*f*5)+(m*8)).to_i%pn.length
-    tn = pn[ni]
+    ni=((t*f*5)+(m*8)).to_i%pn.length
+    tn=pn[ni]
     es(m,tn,:lead,f)
     with_fx :distortion,distort: 0.1 do
       play tn,amp: m*0.7*da,cutoff: lr(40+ma*80,0,130),
@@ -222,18 +222,18 @@ live_loop :cg do
 end
 
 live_loop :ct,sync: :cg do
-  t = tick
-  f = qs(t*0.0625,:fusion)
-  ph = phase(t*2)
-  pn = cs(ph)
+  t=tick
+  f=qs(t*0.0625,:fusion)
+  ph=phase(t*2)
+  pn=cs(ph)
 
   pl(:particle,t*2,qs(t*0.125,:micro),pn) if t%2 == 0
 
   if t%32 == 0
-    si = qs(t*0.015625,:fusion)
+    si=qs(t*0.015625,:fusion)
     if si > 0.6
       use_synth mp(S_AMB,:golden)
-      sc = pn.take(3).map { |n| n-12 }
+      sc=pn.take(3).map { |n| n-12 }
       with_fx :reverb,room: s == :deep_house ? 0.8 : 0.6,mix: 0.5 do
         with_fx :lpf,cutoff: lr(70+si*30,40,120) do
           play sc,amp: si*0.25,attack: 2,release: 6,pan: cp(t*8,:wave)*0.7
@@ -253,13 +253,13 @@ live_loop :ct,sync: :cg do
 end
 
 live_loop :cm,sync: :cg do
-  t = tick
-  ph = phase(t*4)
-  pn = cs(ph)
+  t=tick
+  ph=phase(t*4)
+  pn=cs(ph)
 
   if t%8 == 0
     use_synth :dark_ambience
-    ai = qs(t*0.125,:fusion)
+    ai=qs(t*0.125,:fusion)
     play pn.map { |n| note(n)-36 }.take(3),
          amp: ai*0.15,attack: 8,release: 16,
          cutoff: lr(40+ai*20,20,130),
@@ -282,7 +282,7 @@ live_loop :cm,sync: :cg do
   end
 
   if t%16 == 0 && t > 0
-    ge = qs(t*0.0625,:macro)
+    ge=qs(t*0.0625,:macro)
     puts "#{ph.to_s.upcase} | 演化度: #{(ge*100).to_i}%"
   end
   sleep 4
@@ -296,9 +296,9 @@ puts "COSMIC演化引擎运行中 | 风格: #{s.to_s.upcase}"
 # Cosmic EDM Evolution v2-无理数序列驱动版 功能概览
 #
 # 时间单位说明：
-# • cg loop: 1 tick = 0.25 拍 (sleep 0.25)
-# • ct loop: 1 tick = 2 拍    (sleep 2)
-# • cm loop: 1 tick = 4 拍    (sleep 4)
+# • cg loop: 1 tick=0.25 拍 (sleep 0.25)
+# • ct loop: 1 tick=2 拍    (sleep 2)
+# • cm loop: 1 tick=4 拍    (sleep 4)
 # 下面若未特别说明，“拍”指真实 musical beats，括号中给出代码触发条件。
 #
 # === 核心结构 ===
@@ -364,7 +364,7 @@ puts "COSMIC演化引擎运行中 | 风格: #{s.to_s.upcase}"
 #
 # 纹理/装饰 (pcl):
 #   -harmonic：每 3 tick 触发 (≈0.75 拍) 且 fusion 强度 > 0.4。
-#   -tremolo：32 tick pattern (spread 7,32) = 8 拍循环稀疏触发。
+#   -tremolo：32 tick pattern (spread 7,32)=8 拍循环稀疏触发。
 #   -particle：ct 中每 4 拍评估一次（ct t%2==0 → 2*2 拍），高能量 (micro>0.7) 时触发。
 #
 # 旋律层：
@@ -400,7 +400,7 @@ puts "COSMIC演化引擎运行中 | 风格: #{s.to_s.upcase}"
 # • 可调试：临时开启 use_debug true 观察事件节奏。
 #
 # === 创作理念 ===
-# 通过“节奏 = 时间分形”，“声像 = 轨道映射”，“能量 = 多尺度调制”，将抽象数学参数转译为可感知音乐演化。
+# 通过“节奏=时间分形”，“声像=轨道映射”，“能量=多尺度调制”，将抽象数学参数转译为可感知音乐演化。
 # 设计重点：
 # • 可持续聆听：缓慢宏观周期+快速微观扰动避免疲劳。
 # • 结构透明：核心函数 cp/qs/lr/es 清晰分层，便于学术或二次开发。
