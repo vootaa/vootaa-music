@@ -42,12 +42,13 @@ CS = {
   quantum: [:c4, :db4, :e4, :fs4, :ab4]
 }.freeze
 EP = [:big_bang, :galaxy, :stellar, :death, :quantum].ring
-S_FX = [:perc_bell, :perc_snap, :elec_tick, :elec_blip2, :elec_ping, :drum_cowbell, :vinyl_hiss]
-S_FX2 = [:ambi_choir, :ambi_glass_rub, :ambi_drone, :ambi_dark_woosh, :guit_e_slide, :guit_em9, :drum_roll]
-S_SYN = [:mod_sine, :mod_saw, :mod_pulse, :mod_tri]
-S_SYN2 = [:prophet, :zawa, :hollow, :pluck]
-S_SYN3 = [:pretty_bell, :chiplead, :beep, :chipbass]
-S_SYN4 = [:sine, :subpulse, :fm, :tb303]
+S_FX = [:perc_bell,:perc_snap,:elec_tick,:elec_blip2,:elec_ping,:elec_pop,:drum_cowbell,:vinyl_hiss] # 短瞬态 FX（节奏/点彩/电子粒子）
+S_FX2 = [:ambi_choir,:ambi_glass_rub,:ambi_glass_hum,:ambi_drone,:ambi_dark_woosh,:ambi_swoosh,:ambi_lunar_land,:guit_e_slide,:guit_em9,:vinyl_backspin,:drum_roll] # 长纹理 & 过渡 FX（氛围拖尾/呼吸/滑入）
+S_FX_TRANS = [:drum_splash_soft,:drum_splash_hard,:vinyl_scratch,:vinyl_backspin,:ambi_swoosh] # （段落 Build/Riser 额外池，用于 64/128 拍大结构）
+S_SYN = [:mod_saw, :mod_pulse, :mod_sine, :mod_tri, :pluck, :fm]
+S_SYN2 = [:prophet, :blade, :supersaw, :zawa, :pulse]
+S_SYN3 = [:pretty_bell, :beep, :chiplead, :chipbass, :pluck, :mod_beep]
+S_SYN4 = [:tb303, :subpulse, :fm, :sine, :growl, :dsaw]
 S_CHD = [:minor7, :major7, :sus4, :add9, :dim7, :minor, :major, :dom7]
 S_AMB = [:hollow, :prophet, :saw]
 S_PAN = [:spiral, :orbit, :galaxy, :figure8, :random]
