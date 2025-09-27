@@ -29,7 +29,9 @@ define :cp do |t,type=:spiral|
   when :random then mr(-0.8,0.8,:sqrt2)
   end
 end
-define(:pj){|base=0.0,amt=0.1,src=:e| base+mr(-amt,amt,src)}
+define(:pj){|base=0.0,amt=0.1,src=:e|
+  lr(base+mr(-amt,amt,src),-1,1)
+  }
 define :qs do |t,l|
   case l
   when :micro
@@ -279,3 +281,7 @@ live_loop :cm, sync: :cg do
   end
   sleep 4
 end
+
+puts "=== Cosmic EDM Evolution v3.0 启动 ==="
+puts "7种立体声轨道 | 25音色 | 宇宙谐波音阶"
+puts "COSMIC演化引擎运行中 | 风格:#{s.to_s.upcase}"
