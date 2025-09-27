@@ -48,7 +48,7 @@ PH_R={
 
 EP=[:big_bang,:galaxy,:stellar,:death,:quantum].ring
 
-S_FX = [:ambi_glass_rub,:ambi_glass_hum,:elec_ping,:elec_blip2,:ambi_dark_woosh,:ambi_swoosh,:vinyl_hiss,:elec_tick]  # 增强玻璃/太空/电子感，减少cowbell
+S_FX = [:ambi_glass_rub,:ambi_glass_hum,:elec_ping,:elec_blip2,:ambi_dark_woosh,:ambi_swoosh,:vinyl_scratch,:elec_tick]  # 增强玻璃/太空/电子感，减少cowbell
 S_FX_HI = [:ambi_glass_rub,:elec_ping,:ambi_lunar_land]  # 聚焦高能太空元素
 S_FX2 = [:ambi_choir,:ambi_drone,:ambi_dark_woosh,:ambi_swoosh,:ambi_lunar_land,:vinyl_backspin,:guit_e_slide,:ambi_soft_buzz]  # 强化宇宙氛围，添加buzz
 S_FXT = [:ambi_swoosh,:vinyl_scratch,:vinyl_backspin,:ambi_dark_woosh,:drum_roll]  # 过渡更流畅太空化
