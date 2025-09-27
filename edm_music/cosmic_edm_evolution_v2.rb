@@ -1,7 +1,7 @@
 # Cosmic EDM Evolution v2.0
 
 s=:edm
-bpm=s == :edm ? 128 : 120
+bpm=s==:edm ? 128 : 120
 use_bpm bpm
 set_volume! 0.8
 use_debug false
@@ -119,7 +119,7 @@ end
 define :pl do |kind,t,i,pn|
   case kind
   when :harmonic
-    return unless t%3 == 0 && i > 0.4
+    return unless t%3==0 && i>0.4
     n=pn[t%pn.length]+12
     es(i,n,:accent,i)
     play n,amp: i*0.3,
@@ -134,7 +134,7 @@ define :pl do |kind,t,i,pn|
            cutoff: lr(60+i*40,20,130),release: 0.8,pan: cp(t,:wave)
     end
   when :particle
-    return unless i > 0.7
+    return unless i>0.7
     n=mp(pn,:golden)+mp([12,24,36],:e)
     es(i,n,:accent,i)
     with_fx :reverb,room: 0.4,mix: 0.3 do
@@ -155,7 +155,7 @@ live_loop :cg do
   pn=cs(ph)
 
   sample :bd_haus,amp: m,rate: lr(1+(m-0.5)*0.1,0.5,2.0),
-         lpf: lr(80+ma*40,20,130),pan: cp(t,:pendulum)*0.3 if t%4 == 0
+         lpf: lr(80+ma*40,20,130),pan: cp(t,:pendulum)*0.3 if t%4==0
 
   if [6,14].include?(t%16)
     sample :sn_dub,amp: ma*0.8,pan: cp(t,:orbit),hpf: lr(20+m*80,0,118)
@@ -167,14 +167,14 @@ live_loop :cg do
            pan: cp(t+mr(0,8,:golden),:spiral)
   end
 
-  if s == :edm
+  if s==:edm
     sample :drum_cymbal_closed,amp: 0.2,pan: cp(t,:random)
     da=t%64 < 4 ? 2 : 1
   else
     da=1
   end
 
-  if t%2 == 0 && m > 0.5
+  if t%2==0 && m>0.5
     ni=((t*f*5)+(m*8)).to_i%pn.length
     tn=pn[ni]
     es(m,tn,:lead,f)
@@ -185,10 +185,10 @@ live_loop :cg do
     end
   end
 
-  pl(:harmonic,t,f,pn) if t%2 == 0
-  pl(:tremolo,t,ma,pn) if t%4 == 0
+  pl(:harmonic,t,f,pn) if t%2==0
+  pl(:tremolo,t,ma,pn) if t%4==0
 
-  if t%32 == 0
+  if t%32==0
     in_thread do
       3.times do |i|
         es(f,pn[i%pn.length],:pad,f)
@@ -201,19 +201,19 @@ live_loop :cg do
       end
     end
   end
-  if t%8 == 0 && f > 0.6
+  if t%8==0 && f>0.6
     es(ma,note(pn[0])-24,:bass,f)
     play note(pn[0])-24,amp: ma*0.6*da,
          attack: 0.1,release: 2,
          cutoff: lr(60+m*20,20,130),
          pan: cp(t,:pendulum)*0.4
   end
-  if t%64 == 60
+  if t%64==60
     sample mp(S_FX_TRANS,:golden),amp: f*0.35,
            rate: lr(0.8+f*0.4,0.5,1.5),
            pan: cp(t,:wave)
   end
-  if t%128 == 124
+  if t%128==124
     sample mp(S_FX_TRANS,:pi),amp: f*0.45,
            rate: lr(0.6+f*0.5,0.4,1.4),
            pan: cp(t*0.5,:galaxy)
@@ -227,14 +227,14 @@ live_loop :ct,sync: :cg do
   ph=phase(t*2)
   pn=cs(ph)
 
-  pl(:particle,t*2,qs(t*0.125,:micro),pn) if t%2 == 0
+  pl(:particle,t*2,qs(t*0.125,:micro),pn) if t%2==0
 
-  if t%32 == 0
+  if t%32==0
     si=qs(t*0.015625,:fusion)
-    if si > 0.6
+    if si>0.6
       use_synth mp(S_AMB,:golden)
       sc=pn.take(3).map { |n| n-12 }
-      with_fx :reverb,room: s == :deep_house ? 0.8 : 0.6,mix: 0.5 do
+      with_fx :reverb,room: s==:deep_house ? 0.8 : 0.6,mix: 0.5 do
         with_fx :lpf,cutoff: lr(70+si*30,40,120) do
           play sc,amp: si*0.25,attack: 2,release: 6,pan: cp(t*8,:wave)*0.7
         end
@@ -242,9 +242,9 @@ live_loop :ct,sync: :cg do
     end
   end
 
-  sample :loop_compus,amp: 0.3,beat_stretch: 4 if s == :deep_house && t%4 == 0
+  sample :loop_compus,amp: 0.3,beat_stretch: 4 if s==:deep_house && t%4==0
 
-  if t%16 == 0 && f > 0.5
+  if t%16==0 && f>0.5
     sample mp(S_FX2,:e),amp: f*0.3,
            rate: lr(0.5+f*0.5,0.25,2.0),
            pan: cp(t*4,:random)
@@ -257,7 +257,7 @@ live_loop :cm,sync: :cg do
   ph=phase(t*4)
   pn=cs(ph)
 
-  if t%8 == 0
+  if t%8==0
     use_synth :dark_ambience
     ai=qs(t*0.125,:fusion)
     play pn.map { |n| note(n)-36 }.take(3),
@@ -266,7 +266,7 @@ live_loop :cm,sync: :cg do
          pan: cp(t*4,:galaxy)*0.6
   end
 
-  if t%20 == 0 && t > 0
+  if t%20==0 && t>0
     use_synth :prophet
     with_fx :reverb,room: 0.8,mix: 0.6 do
       with_fx :echo,phase: 0.375,decay: 2 do
@@ -281,7 +281,7 @@ live_loop :cm,sync: :cg do
     puts "相位提示: #{ph.to_s.upcase}"
   end
 
-  if t%16 == 0 && t > 0
+  if t%16==0 && t>0
     ge=qs(t*0.0625,:macro)
     puts "#{ph.to_s.upcase} | 演化度: #{(ge*100).to_i}%"
   end
@@ -356,14 +356,14 @@ puts "COSMIC演化引擎运行中 | 风格: #{s.to_s.upcase}"
 #
 # === 音乐层次 ===
 # 节拍层 (cg):
-#   -底鼓：每 1 拍 (t%4 == 0)；声像 pendulum。
+#   -底鼓：每 1 拍 (t%4==0)；声像 pendulum。
 #   -军鼓：16 tick 序列中的第 6 与 14 tick → 6,14 ⇒ 1.5 拍与 3.5 拍位置。
 #   -打击细节：spread(5,16) → 16 tick（=4 拍）循环的 5 分布事件。
 #   -Hi-hat：EDM 模式每 tick (0.25 拍)。
 #   -能量提升：64 拍周期前 4 拍振幅加倍 (da=2)。
 #
 # 纹理/装饰 (pcl):
-#   -harmonic：每 3 tick 触发 (≈0.75 拍) 且 fusion 强度 > 0.4。
+#   -harmonic：每 3 tick 触发 (≈0.75 拍) 且 fusion 强度>0.4。
 #   -tremolo：32 tick pattern (spread 7,32)=8 拍循环稀疏触发。
 #   -particle：ct 中每 4 拍评估一次（ct t%2==0 → 2*2 拍），高能量 (micro>0.7) 时触发。
 #
@@ -374,11 +374,11 @@ puts "COSMIC演化引擎运行中 | 风格: #{s.to_s.upcase}"
 #
 # 和声层：
 #   -和弦线程：每 32 tick (=8 拍) 启动独立线程，分 3 组和弦（每组 8 拍 sustain）。
-#   -低音：每 8 tick (=2 拍) 若 fusion > 0.6 补强根音下两组八度。
+#   -低音：每 8 tick (=2 拍) 若 fusion>0.6 补强根音下两组八度。
 #
 # 质感层 (ct):
 #   -Pad/和声簇：每 32 ct tick (=64 拍) 条件性进入 (si>0.6)。
-#   -环境采样点缀：每 16 ct tick (=32 拍) 且 fusion > 0.5。
+#   -环境采样点缀：每 16 ct tick (=32 拍) 且 fusion>0.5。
 #   -Deep House shaker：ct t%4==0 → 每 8 拍。
 #
 # 背景层 (cm):
