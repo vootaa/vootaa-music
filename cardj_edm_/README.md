@@ -268,6 +268,318 @@ def musical_time_wave(global_time, position_in_bar)
 end
 ```
 
+-- E. 噪声函数系统
+
+```ruby
+# Perlin噪声模拟 - 创造更自然的参数变化
+define :perlin_noise do |x, y = 0|
+  # 简化版2D Perlin噪声
+  xi = x.floor
+  yi = y.floor
+  xf = x - xi
+  yf = y - yi
+  
+  # 梯度计算（简化）
+  a = hash_2d(xi, yi)
+  b = hash_2d(xi + 1, yi)
+  c = hash_2d(xi, yi + 1)
+  d = hash_2d(xi + 1, yi + 1)
+  
+  # 插值
+  u = fade(xf)
+  v = fade(yf)
+  lerp(lerp(a, b, u), lerp(c, d, u), v)
+end
+
+# 分形噪声 - 多层次细节
+define :fractal_noise do |x, y, octaves = 4|
+  value = 0
+  amplitude = 1
+  frequency = 1
+  
+  octaves.times do
+    value += perlin_noise(x * frequency, y * frequency) * amplitude
+    amplitude *= 0.5
+    frequency *= 2
+  end
+  value
+end
+```
+
+-- F. 域扭曲 (Domain Warping)
+
+```ruby
+# 域扭曲 - 让简单的参数产生复杂变化
+define :domain_warp do |time, warp_strength = 1.0|
+  # 原始坐标
+  base_x = time * 0.1
+  base_y = time * 0.05
+  
+  # 扭曲偏移
+  warp_x = Math.sin(base_x * 3.0) * warp_strength
+  warp_y = Math.cos(base_y * 2.0) * warp_strength
+  
+  # 返回扭曲后的坐标
+  warped_x = base_x + warp_x
+  warped_y = base_y + warp_y
+  
+  [warped_x, warped_y]
+end
+
+# 应用到音乐参数
+live_loop :warped_lead, sync: :dawn_clock do
+  t = get(:dawn_time)
+  
+  # 域扭曲产生复杂的音高变化
+  warped_coords = domain_warp(t, 0.5)
+  note_offset = (Math.sin(warped_coords[0]) * 12).round
+  
+  play :c4 + note_offset, release: 0.3
+  sleep 0.25
+end
+```
+
+-- G. 混合模式
+
+```ruby
+# 音乐混合模式 - 不同音乐层的交互方式
+define :blend_multiply do |layer1, layer2|
+  layer1 * layer2
+end
+
+define :blend_screen do |layer1, layer2|
+  1 - (1 - layer1) * (1 - layer2)
+end
+
+define :blend_overlay do |layer1, layer2|
+  if layer1 < 0.5
+    2 * layer1 * layer2
+  else
+    1 - 2 * (1 - layer1) * (1 - layer2)
+  end
+end
+
+# 应用到音量控制
+live_loop :blended_dynamics, sync: :dawn_clock do
+  t = get(:dawn_time)
+  
+  # 不同时间尺度的音量层
+  macro_volume = Math.sin(t * 0.01) * 0.5 + 0.5
+  micro_volume = Math.sin(t * 0.5) * 0.5 + 0.5
+  
+  # 使用overlay混合模式
+  final_volume = blend_overlay(macro_volume, micro_volume)
+  
+  set :master_volume, final_volume
+  sleep 1
+end
+```
+
+-- H. 体积射线进行
+
+```ruby
+# 音乐"体积射线" - 创造层次深度
+define :volumetric_reverb do |time, max_depth = 8|
+  depth_samples = []
+  
+  (0..max_depth).each do |depth|
+    # 计算每个深度层的参数
+    distance_factor = depth / max_depth.to_f
+    density = Math.exp(-distance_factor * 2.0)  # 指数衰减
+    
+    depth_samples << {
+      delay: distance_factor * 0.5,
+      decay: 2 + distance_factor * 6,
+      mix: density * 0.3
+    }
+  end
+  
+  depth_samples
+end
+
+# 应用到混响设计
+live_loop :volumetric_space, sync: :dawn_clock do
+  t = get(:dawn_time)
+  
+  if t % 64 == 0  # 每16小节更新空间
+    reverb_layers = volumetric_reverb(t)
+    
+    # 创造多层深度的混响效果
+    in_thread do
+      reverb_layers.each_with_index do |layer, i|
+        with_fx :reverb, room: 0.8, mix: layer[:mix] do
+          with_fx :echo, phase: layer[:delay], decay: layer[:decay] do
+            sample :ambi_soft_buzz, 
+                   rate: 0.5 + i * 0.1,
+                   amp: 0.1
+          end
+        end
+        sleep layer[:delay]
+      end
+    end
+  end
+  
+  sleep 4
+end
+```
+
+-- I. UV动画和纹理采样
+
+```ruby
+# UV动画概念 - 音乐纹理的动态采样
+define :texture_sample do |time, texture_data, uv_transform|
+  # UV坐标变换
+  u = (time * uv_transform[:speed]) % 1.0
+  v = (time * uv_transform[:speed] * 0.618) % 1.0  # 黄金比例
+  
+  # 从"纹理"（音符数组）中采样
+  u_index = (u * texture_data.length).floor
+  texture_data[u_index % texture_data.length]
+end
+
+# 音符"纹理"库
+TEXTURE_SCALES = {
+  morning: scale(:c4, :major_pentatonic),
+  urban: scale(:e4, :minor),
+  highway: scale(:g4, :dorian),
+  night: scale(:a4, :aeolian)
+}
+
+live_loop :textured_melody, sync: :dawn_clock do
+  t = get(:dawn_time)
+  
+  # 动态UV变换
+  uv_speed = 0.1 + Math.sin(t * 0.02) * 0.05
+  
+  # 采样音符
+  current_texture = TEXTURE_SCALES[:morning]
+  sampled_note = texture_sample(t, current_texture, {speed: uv_speed})
+  
+  play sampled_note, release: 0.3, amp: 0.4
+  sleep 0.5
+end
+```
+
+-- L. 后处理效果链
+
+```ruby
+# 音乐后处理管线
+define :audio_post_process do |input_params, effects_chain|
+  result = input_params.dup
+  
+  effects_chain.each do |effect|
+    case effect[:type]
+    when :bloom
+      # 音频"泛光" - 增强谐波
+      result[:harmonics] = (result[:harmonics] || []) + 
+                          generate_harmonics(result[:note], effect[:intensity])
+    when :chromatic_aberration
+      # "色差" - 细微的音高偏移
+      result[:detune] = effect[:amount] * Math.sin(effect[:phase])
+    when :vignette
+      # "暗角" - 渐变音量
+      distance_from_center = calculate_musical_distance(result[:note])
+      result[:amp] *= (1.0 - effect[:strength] * distance_from_center)
+    end
+  end
+  
+  result
+end
+
+# 应用后处理
+live_loop :post_processed_synth, sync: :dawn_clock do
+  t = get(:dawn_time)
+  
+  base_params = {
+    note: :c4,
+    amp: 0.6,
+    release: 0.5
+  }
+  
+  effects = [
+    {type: :bloom, intensity: 0.3},
+    {type: :chromatic_aberration, amount: 0.1, phase: t * 0.1},
+    {type: :vignette, strength: 0.2}
+  ]
+  
+  processed = audio_post_process(base_params, effects)
+  
+  use_synth :prophet
+  play processed[:note], 
+       amp: processed[:amp],
+       release: processed[:release],
+       detune: processed[:detune] || 0
+  
+  sleep 1
+end
+```
+
+-- M. 法线贴图和凸凹贴图
+
+```ruby
+# 音乐"法线贴图" - 给平滑的旋律添加细节纹理
+define :musical_bump_map do |base_note, time, bump_intensity = 0.5|
+  # 计算"法线"（微小的音高变化）
+  bump_x = Math.sin(time * 13.7) * bump_intensity
+  bump_y = Math.cos(time * 17.3) * bump_intensity
+  
+  # 应用到基础音符
+  pitch_deviation = (bump_x + bump_y) * 0.5  # 半音程内的微调
+  
+  {
+    note: base_note + pitch_deviation,
+    brightness: 0.5 + bump_x * 0.3,  # 影响滤波器
+    roughness: 0.5 + bump_y * 0.3    # 影响失真程度
+  }
+end
+```
+
+-- N. 程序化几何生成
+
+```ruby
+# 程序化节奏几何
+define :generate_rhythm_geometry do |complexity, time|
+  vertices = []
+  
+  # 基于复杂度生成"顶点"（节拍点）
+  (0..complexity).each do |i|
+    angle = (i / complexity.to_f) * Math::PI * 2
+    radius = 1.0 + Math.sin(time * 0.1 + i) * 0.3
+    
+    x = Math.cos(angle) * radius
+    y = Math.sin(angle) * radius
+    
+    # 转换为节拍强度和时间偏移
+    vertices << {
+      beat_strength: (x + 1) * 0.5,  # 0-1
+      time_offset: y * 0.125          # ±0.125拍的时间偏移
+    }
+  end
+  
+  vertices
+end
+
+live_loop :geometric_rhythm, sync: :dawn_clock do
+  t = get(:dawn_time)
+  
+  # 生成动态节拍几何
+  complexity = 4 + (Math.sin(t * 0.005) * 2).round
+  rhythm_geo = generate_rhythm_geometry(complexity, t)
+  
+  rhythm_geo.each_with_index do |vertex, i|
+    in_thread do
+      sleep vertex[:time_offset].abs
+      
+      if vertex[:beat_strength] > 0.6
+        sample :bd_tek, amp: vertex[:beat_strength]
+      end
+    end
+  end
+  
+  sleep 2
+end
+```
+
 ### 车载优化策略
 
 - 1.频率分布优化
