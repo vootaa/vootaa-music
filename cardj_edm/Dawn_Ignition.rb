@@ -1,6 +1,8 @@
 # Dawn Ignition - Sonic Pi Code for CarDJ_EDM
 load "/Users/tsb/Pop-Proj/vootaa-music/cardj_edm/cdec.rb"
 
+use_debug false
+
 # Utility functions
 def clamp(val, min, max)
   [min, [val, max].min].max
@@ -41,6 +43,9 @@ end
 
 # Live loops with variant evolution
 live_loop :kick do
+  if variant_index >= VARIANT_COUNT_DI
+    stop
+  end
   t = current_beat * (60.0 / BPM_DI)
   fusion = get_fusion(t) + drift
   amp = clamp(fusion * 0.8, 0.1, 1.0)
@@ -50,30 +55,42 @@ live_loop :kick do
 end
 
 live_loop :bass do
+  if variant_index >= VARIANT_COUNT_DI
+    stop
+  end
   t = current_beat * (60.0 / BPM_DI)
   fusion = get_fusion(t) + drift
   amp = clamp(fusion * 0.6, 0.05, 0.8)
   pan = 0  # Low freq centered
-  note = scale(:c2, :minor_pentatonic)[(melody_seq[(t.to_i % melody_seq.length)] * 7).to_i]
+  note = scale(:c2, :minor_pentatonic)[(melody_seq[(t.to_i % melody_seq.length)] * 7).to_i % 5]  # Fixed: modulo 5 to prevent index out of range (minor_pentatonic has 5 notes)
   synth :saw, note: note, amp: amp, pan: pan, release: 0.5
   sleep 2.0 / (BPM_DI / 60.0)
 end
 
 live_loop :melody do
+  if variant_index >= VARIANT_COUNT_DI
+    stop
+  end
   t = current_beat * (60.0 / BPM_DI)
   fusion = get_fusion(t) + drift
   amp = clamp(fusion * 0.7, 0.1, 0.9)
   pan = S_PAN.call(HORIZON_PAN_DI + LANE_PAN_DI.call(t) * 0.2)
-  notes = scale(:c4, :major)[(kick_seq[(t.to_i % kick_seq.length)] * 7).to_i]
+  notes = scale(:c4, :major)[(kick_seq[(t.to_i % kick_seq.length)] * 7).to_i % 7]  # Fixed: modulo 7 to prevent index out of range (major scale has 7 notes)
   # Pad layering: multiple synths for harmony
   synth :piano, note: notes, amp: amp, pan: pan, release: 1.0
   if fusion > 0.5
     synth :saw, note: chord_degree(notes, :major, 3), amp: amp * 0.5, pan: pan + 0.1, release: 1.5  # Chord enhancement
+    if fusion > 0.8  # Add more chords for richness
+      synth :piano, note: chord(:c4, :major7), amp: amp * 0.3, pan: pan - 0.1, release: 2.0  # Full chord layering
+    end
   end
   sleep 4.0 / (BPM_DI / 60.0)
 end
 
 live_loop :percussion do
+  if variant_index >= VARIANT_COUNT_DI
+    stop
+  end
   t = current_beat * (60.0 / BPM_DI)
   fusion = get_fusion(t) + drift
   amp = clamp(fusion * 0.5, 0.05, 0.7)
@@ -83,6 +100,9 @@ live_loop :percussion do
 end
 
 live_loop :fx do
+  if variant_index >= VARIANT_COUNT_DI
+    stop
+  end
   t = current_beat * (60.0 / BPM_DI)
   fusion = get_fusion(t) + drift
   amp = clamp(fusion * 0.4, 0.02, 0.6)
@@ -97,6 +117,9 @@ live_loop :fx do
 end
 
 live_loop :events do
+  if variant_index >= VARIANT_COUNT_DI
+    stop
+  end
   t = current_beat * (60.0 / BPM_DI)
   fusion = get_fusion(t) + drift
   threshold = BPM_DI > 130 ? 0.6 : 0.7  # Velocity-based threshold
@@ -115,6 +138,8 @@ live_loop :events do
       end
     when :amen_fill
       sample AMEN_POOL.sample, amp: clamp(0.6, 0.1, 1.0), pan: S_PAN.call(rand(-0.3..0.3)), rate: 1.0
+    # when :midi_anchor  # New: Anchor point for external MIDI (replace with actual path later)
+      # sample "/path/to/external_midi_anchor.wav", amp: clamp(0.8, 0.1, 1.0), pan: S_PAN.call(HORIZON_PAN_DI)  # Placeholder for rendered MIDI
     # Add more cases as needed
     end
   end
@@ -123,6 +148,11 @@ end
 
 # Variant control with prompt and breathing gap
 live_loop :variant_ctrl do
+  # DEBUG: Print progress if in DEBUG mode
+  if DEBUG
+    puts "DEBUG: Starting variant #{variant_index + 1} of #{VARIANT_COUNT_DI}"
+  end
+  
   # Variant start prompt: unique Synth melody for House with stereo surround and fade-in
   melody_notes = [:c4, :e4, :g4, :c5]
   melody_notes.each_with_index do |n, i|

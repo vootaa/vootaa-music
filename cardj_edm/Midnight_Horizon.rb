@@ -1,6 +1,8 @@
 # Midnight Horizon - Sonic Pi Code for CarDJ_EDM
 load "/Users/tsb/Pop-Proj/vootaa-music/cardj_edm/cdec.rb"
 
+use_debug false
+
 # Utility functions
 def clamp(val, min, max)
   [min, [val, max].min].max
@@ -41,6 +43,9 @@ end
 
 # Live loops with variant evolution
 live_loop :kick do
+  if variant_index >= VARIANT_COUNT_MH
+    stop
+  end
   t = current_beat * (60.0 / BPM_MH)
   fusion = get_fusion_mh(t) + drift
   amp = clamp(fusion * 0.7, 0.1, 0.9)
@@ -50,6 +55,9 @@ live_loop :kick do
 end
 
 live_loop :bass do
+  if variant_index >= VARIANT_COUNT_MH
+    stop
+  end
   t = current_beat * (60.0 / BPM_MH)
   fusion = get_fusion_mh(t) + drift
   amp = clamp(fusion * 0.5, 0.05, 0.7)
@@ -60,6 +68,9 @@ live_loop :bass do
 end
 
 live_loop :melody do
+  if variant_index >= VARIANT_COUNT_UV
+    stop
+  end
   t = current_beat * (60.0 / BPM_MH)
   fusion = get_fusion_mh(t) + drift
   amp = clamp(fusion * 0.9, 0.1, 1.0)
@@ -69,11 +80,17 @@ live_loop :melody do
   synth :saw, note: notes, amp: amp, pan: pan, release: 2.0  # Pad for ambient layering
   if fusion > 0.8
     synth :pluck, note: chord_degree(notes, :major, 6), amp: amp * 0.7, pan: pan - 0.2, release: 3.0  # Chord enhancement
+    if fusion > 0.8  # Add more chords for richness
+      synth :piano, note: chord(:c4, :major7), amp: amp * 0.3, pan: pan - 0.1, release: 2.0  # Full chord layering
+    end
   end
   sleep 4.0 / (BPM_MH / 60.0)
 end
 
 live_loop :percussion do
+  if variant_index >= VARIANT_COUNT_MH
+    stop
+  end
   t = current_beat * (60.0 / BPM_MH)
   fusion = get_fusion_mh(t) + drift
   amp = clamp(fusion * 0.4, 0.05, 0.6)
@@ -83,6 +100,9 @@ live_loop :percussion do
 end
 
 live_loop :fx do
+  if variant_index >= VARIANT_COUNT_MH
+    stop
+  end
   t = current_beat * (60.0 / BPM_MH)
   fusion = get_fusion_mh(t) + drift
   amp = clamp(fusion * 0.6, 0.02, 0.8)
@@ -97,6 +117,9 @@ live_loop :fx do
 end
 
 live_loop :events do
+  if variant_index >= VARIANT_COUNT_MH
+    stop
+  end
   t = current_beat * (60.0 / BPM_MH)
   fusion = get_fusion_mh(t) + drift
   threshold = BPM_MH > 130 ? 0.6 : 0.7
@@ -123,6 +146,11 @@ end
 
 # Variant control with prompt and breathing gap
 live_loop :variant_ctrl do
+  # DEBUG: Print progress if in DEBUG mode
+  if DEBUG
+    puts "DEBUG: Starting variant #{variant_index + 1} of #{VARIANT_COUNT_DI}"
+  end
+  
   # Variant start prompt: unique Synth melody for Uplifting Trance with stereo surround and fade-in
   melody_notes = [:c4, :e4, :g4, :b4, :c5]  # Uplifting arpeggio for night horizon
   melody_notes.each_with_index do |n, i|
