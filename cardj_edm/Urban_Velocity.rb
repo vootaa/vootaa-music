@@ -100,6 +100,9 @@ live_loop :percussion do
 end
 
 live_loop :fx do
+  if variant_index >= VARIANT_COUNT_UV
+    stop
+  end
   t = current_beat * (60.0 / BPM_UV)
   fusion = get_fusion_uv(t) + drift
   amp = clamp(fusion * 0.3, 0.05, 0.5)
