@@ -111,13 +111,14 @@ end
 
 # Variant control with prompt and breathing gap
 live_loop :variant_ctrl do
-  # Variant start prompt: unique Synth notes with fade-in for smooth recognition
-  notes = [:c4, :e4, :g4]  # Bright chord for House style
-  notes.each_with_index do |n, i|
-    synth :piano, note: n, amp: (i + 1) * 0.2, release: 0.5, pan: 0  # Fade-in via amp increase
-    sleep 0.3
+  # Variant start prompt: unique Synth melody for House with stereo surround
+  melody_notes = [:c4, :e4, :g4, :c5]  # Gentle ascending melody for House style
+  melody_notes.each_with_index do |n, i|
+    pan = Math.sin(i * PI / 3) * 0.6  # Stereo surround: smooth left-right sweep
+    synth :piano, note: n, amp: 0.4 + i * 0.1, release: 0.4, pan: pan  # Piano with fade-in amp
+    sleep 0.25  # Moderate sleep for gradual feel
   end
-  sleep 0.5  # Prompt end
+  sleep 0.5  # Prompt end, total ~1.5 sec
   
   total_seg = SEGMENTS_DI.values.sum
   sleep total_seg  # Play variant

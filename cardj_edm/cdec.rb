@@ -31,3 +31,15 @@ LANE_PAN_DI = lambda { |t| Math.sin(t * PI / 10) * 0.3 }
 HORIZON_PAN_DI = 0.5
 VEL_PAN_OFF_DI = 0.1
 EVENT_POOL_DI = [:bd_haus, :sn_dub, :bd_fat, :synth_piano, :synth_saw, :sample_perc, :fx_reverb, :fx_echo, :synth_pad, :amen_fill]
+
+# Urban Velocity constants
+BPM_UV = 135  # Higher BPM for fast-paced city driving
+VARIANT_COUNT_UV = 4  # Number of variants; total duration ~20 min
+SEGMENTS_UV = { intro: 45, drive: 90, peak: 60, outro: 30 }  # Single variant ~3.75 min; total ~15 min, adjust for 20 min
+VEL_BASE_UV = 0.6
+INT_BASE_UV = 0.4
+FUSION_MAX_UV = 1.0
+LANE_PAN_UV = lambda { |t| Math.sin(t * PI / 8) * 0.4 }  # Faster lane switching for city feel
+HORIZON_PAN_UV = 0.3
+VEL_PAN_OFF_UV = 0.15
+EVENT_POOL_UV = [:bd_tek, :sn_dub, :bd_fat, :synth_pluck, :synth_saw, :sample_perc, :fx_reverb, :fx_echo, :synth_pad, :amen_fill]
