@@ -1,4 +1,4 @@
-# Dawn Ignition 《晨启》
+# Dawn Ignition 《晨启》V0.1
 # 基于数学演变的Deep House
 
 use_bpm 120
