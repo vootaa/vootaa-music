@@ -20,10 +20,16 @@ AMEN_POOL = [
   "/Users/tsb/Pop-Proj/rhythm-lab.com_amen_vol.1/WAV/cw_amen18_178.wav"
 ]  # Select 5 for variety; use in events for rhythmic fills
 
+# DEBUG switch: shorten time to 1/5 for quick testing
+DEBUG = true
+
+# S_PAN mapping for surround stereo (lambda for multi-speaker layout)
+S_PAN = lambda { |pan_val| [-1.0, [pan_val, 1.0].min].max }  # Ensure pan in range, can extend for 5.1 if needed
+
 # Dawn Ignition constants
 BPM_DI = 128
 VARIANT_COUNT_DI = 5  # Number of variants; total duration = VARIANT_COUNT_DI * single variant length (~25 min total)
-SEGMENTS_DI = { intro: 60, drive: 120, peak: 80, outro: 40 }  # Single variant ~5 min (300 sec); adjust for total ~25 min
+SEGMENTS_DI = { intro: DEBUG ? 60 / 5 : 60, drive: DEBUG ? 120 / 5 : 120, peak: DEBUG ? 80 / 5 : 80, outro: DEBUG ? 40 / 5 : 40 }  # Single variant ~5 min (300 sec); adjust for total ~25 min
 VEL_BASE_DI = 0.5
 INT_BASE_DI = 0.3
 FUSION_MAX_DI = 1.0
@@ -35,7 +41,7 @@ EVENT_POOL_DI = [:bd_haus, :sn_dub, :bd_fat, :synth_piano, :synth_saw, :sample_p
 # Urban Velocity constants
 BPM_UV = 135  # Higher BPM for fast-paced city driving
 VARIANT_COUNT_UV = 4  # Number of variants; total duration ~20 min
-SEGMENTS_UV = { intro: 45, drive: 90, peak: 60, outro: 30 }  # Single variant ~3.75 min; total ~15 min, adjust for 20 min
+SEGMENTS_UV = { intro: DEBUG ? 45 / 5 : 45, drive: DEBUG ? 90 / 5 : 90, peak: DEBUG ? 60 / 5 : 60, outro: DEBUG ? 30 / 5 : 30 }  # Single variant ~3.75 min; total ~15 min, adjust for 20 min
 VEL_BASE_UV = 0.6
 INT_BASE_UV = 0.4
 FUSION_MAX_UV = 1.0
@@ -47,7 +53,7 @@ EVENT_POOL_UV = [:bd_tek, :sn_dub, :bd_fat, :synth_pluck, :synth_saw, :sample_pe
 # Endless Lane constants
 BPM_EL = 132  # Steady BPM for long highway cruising
 VARIANT_COUNT_EL = 6  # Number of variants; total duration ~35 min
-SEGMENTS_EL = { intro: 50, drive: 150, peak: 100, outro: 50 }  # Single variant ~6.25 min; total ~37.5 min, adjust for 35 min
+SEGMENTS_EL = { intro: DEBUG ? 50 / 5 : 50, drive: DEBUG ? 150 / 5 : 150, peak: DEBUG ? 100 / 5 : 100, outro: DEBUG ? 50 / 5 : 50 }  # Single variant ~6.25 min; total ~37.5 min, adjust for 35 min
 VEL_BASE_EL = 0.4
 INT_BASE_EL = 0.2
 FUSION_MAX_EL = 1.0
@@ -59,7 +65,7 @@ EVENT_POOL_EL = [:bd_haus, :sn_dub, :bd_fat, :synth_saw, :synth_pad, :sample_per
 # Midnight Horizon constants
 BPM_MH = 138  # Uplifting BPM for night driving
 VARIANT_COUNT_MH = 5  # Number of variants; total duration ~30 min
-SEGMENTS_MH = { intro: 40, drive: 100, peak: 80, outro: 40 }  # Single variant ~4.33 min; total ~21.67 min, adjust for 30 min
+SEGMENTS_MH = { intro: DEBUG ? 40 / 5 : 40, drive: DEBUG ? 100 / 5 : 100, peak: DEBUG ? 80 / 5 : 80, outro: DEBUG ? 40 / 5 : 40 }  # Single variant ~4.33 min; total ~21.67 min, adjust for 30 min
 VEL_BASE_MH = 0.3
 INT_BASE_MH = 0.5
 FUSION_MAX_MH = 1.0
@@ -71,7 +77,7 @@ EVENT_POOL_MH = [:bd_haus, :sn_dub, :bd_fat, :synth_pad, :synth_saw, :sample_per
 # Station Dreams constants
 BPM_SD = 100  # Lower BPM for chillout relaxation
 VARIANT_COUNT_SD = 4  # Number of variants; total duration ~18 min
-SEGMENTS_SD = { intro: 30, drive: 60, peak: 40, outro: 20 }  # Single variant ~2.5 min; total ~10 min, adjust for 18 min
+SEGMENTS_SD = { intro: DEBUG ? 30 / 5 : 30, drive: DEBUG ? 60 / 5 : 60, peak: DEBUG ? 40 / 5 : 40, outro: DEBUG ? 20 / 5 : 20 }  # Single variant ~2.5 min; total ~10 min, adjust for 18 min
 VEL_BASE_SD = 0.2
 INT_BASE_SD = 0.1
 FUSION_MAX_SD = 0.8

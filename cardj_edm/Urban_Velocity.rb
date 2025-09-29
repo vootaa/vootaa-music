@@ -23,11 +23,13 @@ def get_md_seq(const, len)
   seq.map { |d| d / 10.0 }
 end
 
-# Initialize sequences and variant logic
+# Cached sequences for optimization
 kick_seq = get_md_seq("pi", 100)
 bass_seq = get_md_seq("golden", 100)
 melody_seq = get_md_seq("e", 200)
 event_seq = get_md_seq("sqrt2", EVENT_POOL_UV.length)
+
+# Initialize sequences and variant logic
 variant_index = 0
 drift = 0
 event_subsets = []
@@ -42,7 +44,7 @@ live_loop :kick do
   t = current_beat * (60.0 / BPM_UV)
   fusion = get_fusion_uv(t) + drift
   amp = clamp(fusion * 1.0, 0.2, 1.0)  # Stronger kick for energy
-  pan = LANE_PAN_UV.call(t) + VEL_PAN_OFF_UV * fusion
+  pan = S_PAN.call(LANE_PAN_UV.call(t) + VEL_PAN_OFF_UV * fusion)
   sample :bd_tek, amp: amp, pan: pan  # Tekno kick for Electro House
   sleep 1.0 / (BPM_UV / 60.0)
 end
@@ -61,9 +63,13 @@ live_loop :melody do
   t = current_beat * (60.0 / BPM_UV)
   fusion = get_fusion_uv(t) + drift
   amp = clamp(fusion * 0.9, 0.2, 1.0)
-  pan = HORIZON_PAN_UV + LANE_PAN_UV.call(t) * 0.3
+  pan = S_PAN.call(HORIZON_PAN_UV + LANE_PAN_UV.call(t) * 0.3)
   notes = scale(:c5, :major)[(kick_seq[(t.to_i % kick_seq.length)] * 7).to_i]
+  # Pad layering: multiple synths for harmony
   synth :pluck, note: notes, amp: amp, pan: pan, release: 0.2  # Pluck for staccato Electro feel
+  if fusion > 0.6
+    synth :saw, note: chord_degree(notes, :major, 4), amp: amp * 0.6, pan: pan - 0.1, release: 0.5  # Chord enhancement
+  end
   sleep 2.0 / (BPM_UV / 60.0)
 end
 
@@ -71,7 +77,7 @@ live_loop :percussion do
   t = current_beat * (60.0 / BPM_UV)
   fusion = get_fusion_uv(t) + drift
   amp = clamp(fusion * 0.7, 0.1, 0.8)
-  pan = LANE_PAN_UV.call(t) * -1
+  pan = S_PAN.call(LANE_PAN_UV.call(t) * -1)
   sample :sn_dub, amp: amp, pan: pan if rand < 0.5 + fusion * 0.5  # More frequent snares
   sleep 0.5 / (BPM_UV / 60.0)
 end
@@ -80,9 +86,12 @@ live_loop :fx do
   t = current_beat * (60.0 / BPM_UV)
   fusion = get_fusion_uv(t) + drift
   amp = clamp(fusion * 0.3, 0.05, 0.5)
-  pan = HORIZON_PAN_UV + rand(-0.6..0.6) * fusion
-  with_fx :reverb, room: 0.8 do
-    synth :noise, amp: amp, pan: pan, release: 1.5  # Added reverb for Big Room space
+  pan = S_PAN.call(HORIZON_PAN_UV + rand(-0.6..0.6) * fusion)
+  # FX stacking: nested reverb and echo
+  with_fx :reverb, room: 0.8, decay: 1.5 + fusion * 1.5 do
+    with_fx :echo, phase: 0.2, decay: 0.4 do
+      synth :noise, amp: amp, pan: pan, release: 1.5  # Added reverb for Big Room space
+    end
   end
   sleep 4.0 / (BPM_UV / 60.0)
 end
@@ -90,21 +99,22 @@ end
 live_loop :events do
   t = current_beat * (60.0 / BPM_UV)
   fusion = get_fusion_uv(t) + drift
-  if fusion > 0.6 && event_subsets[variant_index]
+  threshold = BPM_UV > 130 ? 0.5 : 0.6
+  if fusion > threshold && event_subsets[variant_index]
     event = event_subsets[variant_index].sample
     case event
     when :bd_tek
-      sample :bd_tek, amp: 0.7, pan: rand(-0.5..0.5)
+      sample :bd_tek, amp: clamp(0.7, 0.1, 1.0), pan: S_PAN.call(rand(-0.5..0.5))
     when :sn_dub
-      sample :sn_dub, amp: 0.5, pan: rand(-0.5..0.5)
+      sample :sn_dub, amp: clamp(0.5, 0.1, 1.0), pan: S_PAN.call(rand(-0.5..0.5))
     when :synth_pluck
-      synth :pluck, note: :d5, amp: 0.8, pan: HORIZON_PAN_UV
+      synth :pluck, note: :d5, amp: clamp(0.8, 0.1, 1.0), pan: S_PAN.call(HORIZON_PAN_UV)
     when :fx_reverb
       with_fx :reverb do
-        synth :saw, note: :f4, amp: 0.4, release: 0.8
+        synth :saw, note: :f4, amp: clamp(0.4, 0.1, 1.0), release: 0.8
       end
     when :amen_fill
-      sample AMEN_POOL.sample, amp: 0.7, pan: rand(-0.4..0.4), rate: 1.2  # Faster rate for energy
+      sample AMEN_POOL.sample, amp: clamp(0.7, 0.1, 1.0), pan: S_PAN.call(rand(-0.4..0.4)), rate: 1.2  # Faster rate for energy
     # Add more cases as needed
     end
   end
@@ -113,11 +123,12 @@ end
 
 # Variant control with prompt and breathing gap
 live_loop :variant_ctrl do
-  # Variant start prompt: unique Synth melody for Electro House with stereo surround
+  # Variant start prompt: unique Synth melody for Electro House with stereo surround and fade-in
   melody_notes = [:c5, :d5, :e5, :f5]  # Sharp ascending melody for Big Room energy
   melody_notes.each_with_index do |n, i|
-    pan = Math.sin(i * PI / 2) * 0.8  # Stereo surround: left to right oscillation
-    synth :pluck, note: n, amp: 0.6 + i * 0.1, release: 0.2, pan: pan  # Quick pluck with increasing amp
+    fade_amp = (i + 1) / melody_notes.length.to_f * 0.6  # Fade-in amp
+    pan = S_PAN.call(Math.sin(i * PI / 2) * 0.8)
+    synth :pluck, note: n, amp: fade_amp, release: 0.2, pan: pan  # Quick pluck with increasing amp
     sleep 0.15  # Shorter sleep for fast-paced feel
   end
   sleep 0.4  # Prompt end, total ~1 sec
@@ -129,6 +140,6 @@ live_loop :variant_ctrl do
   sleep 1.5
   
   variant_index += 1
-  drift = Math.sin(variant_index * PI / VARIANT_COUNT_UV) * 0.15
+  drift += 0.02  # Cumulative drift
   stop if variant_index >= VARIANT_COUNT_UV
 end
