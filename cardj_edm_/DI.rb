@@ -25,7 +25,7 @@ define :wave do |t,m|
 end
 
 define :layers do |t|
-  {mi:t%8,me:(t/8)%32,ma:(t/256)%128,ul:(t/512)%64}
+  {mi:t%8,me:(t/8)%32,ma:(t/256)%128,ul:(t/64)%64}
 end
 
 define :energy do |p|
@@ -82,10 +82,12 @@ live_loop :k,sync: :mc do
   if main_trigger || backup_trigger
     w = warp(t)
     ki = e*(0.8+pi_r(t)*0.4)
+    gold_mod = gold(t, 0.05)
     with_fx :compressor,threshold:0.6,slope_above:0.5 do
       with_fx :hpf,cutoff:40 do
         sample :bd_haus,amp:[[ki*1.4,0.05].max,3.0].min,
-               rate:1.0+Math.sin(t*0.01618)*0.02,cutoff:75,pan:0
+               rate:1.0+Math.sin(t*0.01618)*0.02+gold_mod,
+               cutoff:75+gold_mod*20,pan:0
       end
     end
   end
@@ -161,7 +163,7 @@ live_loop :l,sync: :mc do
     if m.size>0&&pi_r(t)>0.6
       n=m.choose[:note]+[0,7,-7].choose
     else
-      ni = (pi_r(t*3) * s.size).floor % s.size  # 简化warp计算
+      ni = (pi_r(t*3) * s.size).floor % s.size
       n=s[ni]
     end
     if l[:me]%16==0
@@ -169,9 +171,10 @@ live_loop :l,sync: :mc do
       nm.shift if nm.size>4
       set :mm,nm
     end
+    gold_pitch = gold(t, 0.3)
     with_fx :echo,phase:0.375,decay:4,mix:0.2 do
       with_fx :reverb,room:0.5,mix:0.15 do
-        play n,attack:0.1,release:1.5+e,
+        play n+gold_pitch,attack:0.1,release:1.5+e,
              cutoff:[[85+e*20,40].max,125].min,
              amp:[[0.6*e,0.01].max,2.0].min,
              pan:[[-0.4+pi_r(t*5)*0.8,-0.95].max,0.95].min
@@ -190,13 +193,14 @@ live_loop :a,sync: :mc do
     s=[scale(:c4,:major_pentatonic),scale(:d4,:dorian),scale(:e4,:mixolydian)]
     cs=s[(l[:ul]/8)%3]
     n=cs.choose
-    with_fx :reverb,room:0.85,mix:0.7 do
+    gold_reverb = 0.7 + gold(t, 0.2)
+    with_fx :reverb,room:0.85,mix:gold_reverb do
       play n+[0,12].choose,attack:3,release:10,
            amp:[[0.15*e,0.01].max,2.0].min,
            pan:[[-0.6+pi_r(t*7)*1.2,-0.95].max,0.95].min
     end
   end
-  sleep 8  # 保持原有节拍
+  sleep 8
 end
 
 # 打击乐
@@ -225,12 +229,13 @@ live_loop :fx,sync: :mc do
 end
 
 # 监控
-live_loop :m,sync: :mc do
-  t,l=get(:dt),get(:tl)
-  if l[:ul]%32==0
-    pr=((t%9600)/9600.0*100).round(1)
-    e=(get(:ce)*100).round(1)
-    puts "🌅#{pr}%|⚡#{e}%|🎵#{l[:ul]}/128|🕐#{(t*0.125/60).round(1)}m"
-  end
-  sleep 16
+live_loop :m do
+  t = get(:dt)
+  l = get(:tl)
+  pr = ((t%9600)/9600.0*100).round(1)
+  e = (get(:ce)*100).round(1)
+  mins = (t*0.125/60).round(1)
+  puts "🌅#{pr}%|⚡#{e}%|🎵#{l[:ul]}/64|🕐#{mins}m"
+  
+  sleep 5
 end
