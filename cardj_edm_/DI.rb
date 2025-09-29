@@ -25,7 +25,7 @@ define :wave do |t,m|
 end
 
 define :layers do |t|
-  {mi:t%8,me:(t/8)%32,ma:(t/256)%128,ul:(t/2048)%16}
+  {mi:t%8,me:(t/8)%32,ma:(t/256)%128,ul:(t/512)%64}
 end
 
 define :energy do |p|
@@ -42,12 +42,12 @@ end
 define :dens do |e,l|
   d = e*(0.8+Math.sin(l[:mi]*0.5)*0.2)
   {
-    k: d > 0.15,
-    b: d > 0.12,
-    h: d > 0.18,
-    p: d > 0.25,
-    l: d > 0.35,
-    f: d > 0.45
+    k: d > 0.12,
+    b: d > 0.10,  
+    h: d > 0.15,  
+    p: d > 0.20,
+    l: d > 0.25,
+    f: d > 0.35   
   }
 end
 
@@ -96,15 +96,16 @@ end
 live_loop :h,sync: :mc do
   t,d,e,l=get(:dt),get(:ld),get(:ce),get(:tl)
   if d[:h]
-    tc,to=l[:mi]%2==1,t%16==0&&pi_r(t)>0.8
+    tc = l[:mi]%2==1 || (l[:mi]%4==0 && pi_r(t) > 0.6) 
+    to = t%16==0&&pi_r(t)>0.8
     if tc
-      w=warp(t)
-      sample :drum_cymbal_closed,rate:1.1+w[0]*0.3,
-             amp:[[0.4+w[1]*0.2,0.05].max,2.0].min,
+      w=warp(t,0.5)
+      sample :drum_cymbal_closed,rate:1.1+w[0]*0.2, 
+             amp:[[0.4+w[1]*0.2,0.05].max,1.5].min,
              pan:[[-0.7+pi_r(t*3)*1.4,-0.95].max,0.95].min,hpf:95
     end
     if to
-      sample :drum_cymbal_open,rate:0.9,amp:[[0.15*e,0.05].max,2.0].min,
+      sample :drum_cymbal_open,rate:0.9,amp:[[0.2*e,0.05].max,1.5].min,
              pan:[[-0.9+pi_r(t*7)*1.8,-0.95].max,0.95].min,release:2.0
     end
   end
@@ -153,15 +154,14 @@ end
 # 主旋律
 live_loop :l,sync: :mc do
   t,d,l=get(:dt),get(:ld),get(:tl)
-  if d[:p]&&l[:me]%8==0
+  if (d[:l] && l[:me]%8==0) || (d[:p] && l[:me]%4==0 && pi_r(t) > 0.7)
     use_synth :saw
     h,m,e=get(:ch),get(:mm),get(:ce)
     s=scale(h[0],:major_pentatonic,num_octaves:2)
     if m.size>0&&pi_r(t)>0.6
       n=m.choose[:note]+[0,7,-7].choose
     else
-      w=warp(t)
-      ni=(w[0].abs*s.size).floor%s.size
+      ni = (pi_r(t*3) * s.size).floor % s.size  # 简化warp计算
       n=s[ni]
     end
     if l[:me]%16==0
@@ -173,7 +173,7 @@ live_loop :l,sync: :mc do
       with_fx :reverb,room:0.5,mix:0.15 do
         play n,attack:0.1,release:1.5+e,
              cutoff:[[85+e*20,40].max,125].min,
-             amp:[[0.6*e,0.01].max,3.0].min,
+             amp:[[0.6*e,0.01].max,2.0].min,
              pan:[[-0.4+pi_r(t*5)*0.8,-0.95].max,0.95].min
       end
     end
@@ -184,24 +184,19 @@ end
 # 氛围
 live_loop :a,sync: :mc do
   t,d,l=get(:dt),get(:ld),get(:tl)
-  if d[:p]&&l[:ul]%8==0
+  if d[:p]&&l[:ul]%4==0
     use_synth :blade
     e=get(:ce)
     s=[scale(:c4,:major_pentatonic),scale(:d4,:dorian),scale(:e4,:mixolydian)]
-    cs=s[(l[:ul]/16)%3]
+    cs=s[(l[:ul]/8)%3]
     n=cs.choose
-    2.times do |i|
-      in_thread do
-        sleep i*0.5
-        with_fx :reverb,room:0.85,mix:0.7 do
-          play n+[0,12].choose,attack:3,release:10,
-               amp:[[0.1*e,0.01].max,3.0].min,
-               pan:[[-0.6+pi_r(t+i*7)*1.2,-0.95].max,0.95].min
-        end
-      end
+    with_fx :reverb,room:0.85,mix:0.7 do
+      play n+[0,12].choose,attack:3,release:10,
+           amp:[[0.15*e,0.01].max,2.0].min,
+           pan:[[-0.6+pi_r(t*7)*1.2,-0.95].max,0.95].min
     end
   end
-  sleep 16
+  sleep 8  # 保持原有节拍
 end
 
 # 打击乐
