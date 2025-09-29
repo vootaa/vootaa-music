@@ -10,13 +10,13 @@ end
 
 def get_fusion_el(t)
   if t < SEGMENTS_EL[:intro]
-    clamp(VEL_BASE_EL + (t / SEGMENTS_EL[:intro]) * 0.2, 0, 0.5)
+    clamp(VEL_BASE_EL + (t / SEGMENTS_EL[:intro]) * 0.3, 0, 0.6)
   elsif t < SEGMENTS_EL[:intro] + SEGMENTS_EL[:drive]
-    clamp(0.5 + ((t - SEGMENTS_EL[:intro]) / SEGMENTS_EL[:drive]) * 0.4, 0.5, 0.9)
+    clamp(0.6 + ((t - SEGMENTS_EL[:intro]) / SEGMENTS_EL[:drive]) * 0.4, 0.6, 1.0)
   elsif t < SEGMENTS_EL[:intro] + SEGMENTS_EL[:drive] + SEGMENTS_EL[:peak]
-    0.9
+    1.0
   else
-    clamp(0.9 - ((t - (SEGMENTS_EL[:intro] + SEGMENTS_EL[:drive] + SEGMENTS_EL[:peak])) / SEGMENTS_EL[:outro]), 0, 0.9)
+    clamp(1.0 - ((t - (SEGMENTS_EL[:intro] + SEGMENTS_EL[:drive] + SEGMENTS_EL[:peak])) / SEGMENTS_EL[:outro]), 0, 1.0)
   end
 end
 
@@ -37,23 +37,26 @@ drift = 0
 event_subsets = []
 subset_size = [3, (EVENT_POOL_EL.length.to_f / VARIANT_COUNT_EL).ceil].max  # Ensure at least 3
 VARIANT_COUNT_EL.times do |i|
-  start = i * (subset_size - 1)
+  start = i * (subset_size - 1)  # Overlap step for衔接
   subset = []
   subset_size.times do |j|
-    idx = (start + j) % EVENT_POOL_EL.length
+    idx = (start + j) % EVENT_POOL_EL.length  # Loop to cover all events
     subset << EVENT_POOL_EL[idx]
   end
   event_subsets << subset
 end
+
+# Global for variant start beat
+$variant_start_beat = 0
 
 # Live loops with variant evolution
 live_loop :kick do
   if variant_index >= VARIANT_COUNT_EL
     stop
   end
-  t = current_beat * (60.0 / BPM_EL)
+  t = (current_beat - $variant_start_beat) * (60.0 / BPM_EL)
   fusion = get_fusion_el(t) + drift
-  amp = clamp(fusion * 0.9, 0.1, 1.0)
+  amp = clamp(fusion * 0.8, 0.1, 1.0)
   pan = S_PAN.call(LANE_PAN_EL.call(t) + VEL_PAN_OFF_EL * fusion)
   sample :bd_haus, amp: amp, pan: pan
   sleep 1.0 / (BPM_EL / 60.0)
@@ -63,12 +66,12 @@ live_loop :bass do
   if variant_index >= VARIANT_COUNT_EL
     stop
   end
-  t = current_beat * (60.0 / BPM_EL)
+  t = (current_beat - $variant_start_beat) * (60.0 / BPM_EL)
   fusion = get_fusion_el(t) + drift
-  amp = clamp(fusion * 0.7, 0.05, 0.9)
-  pan = 0
+  amp = clamp(fusion * 0.6, 0.05, 0.8)
+  pan = 0  # Low freq centered
   note = scale(:c2, :minor)[(melody_seq[(t.to_i % melody_seq.length)] * 7).to_i % 7]  # Fixed: modulo 7 to prevent index out of range (minor scale has 7 notes)
-  synth :saw, note: note, amp: amp, pan: pan, release: 0.6
+  synth :saw, note: note, amp: amp, pan: pan, release: 0.5
   sleep 2.0 / (BPM_EL / 60.0)
 end
 
@@ -76,15 +79,15 @@ live_loop :melody do
   if variant_index >= VARIANT_COUNT_EL
     stop
   end
-  t = current_beat * (60.0 / BPM_EL)
+  t = (current_beat - $variant_start_beat) * (60.0 / BPM_EL)
   fusion = get_fusion_el(t) + drift
-  amp = clamp(fusion * 0.8, 0.1, 1.0)
+  amp = clamp(fusion * 0.7, 0.1, 0.9)
   pan = S_PAN.call(HORIZON_PAN_EL + LANE_PAN_EL.call(t) * 0.2)
   notes = scale(:c4, :major)[(kick_seq[(t.to_i % kick_seq.length)] * 7).to_i % 7]  # Fixed: modulo 7 to prevent index out of range (major scale has 7 notes)
   # Pad layering: multiple synths for harmony
-  synth :saw, note: notes, amp: amp, pan: pan, release: 1.2  # Extended release for progressive feel
-  if fusion > 0.7
-    synth :piano, note: chord_degree(notes, :major, 5), amp: amp * 0.4, pan: pan + 0.2, release: 2.0  # Chord enhancement
+  synth :piano, note: notes, amp: amp, pan: pan, release: 1.0
+  if fusion > 0.5
+    synth :saw, note: chord(notes, :major), amp: amp * 0.5, pan: pan + 0.1, release: 1.5  # Fixed: use chord instead of chord_degree to avoid scale error
     if fusion > 0.8  # Add more chords for richness
       synth :piano, note: chord(:c4, :major7), amp: amp * 0.3, pan: pan - 0.1, release: 2.0  # Full chord layering
     end
@@ -96,11 +99,11 @@ live_loop :percussion do
   if variant_index >= VARIANT_COUNT_EL
     stop
   end
-  t = current_beat * (60.0 / BPM_EL)
+  t = (current_beat - $variant_start_beat) * (60.0 / BPM_EL)
   fusion = get_fusion_el(t) + drift
-  amp = clamp(fusion * 0.6, 0.05, 0.8)
+  amp = clamp(fusion * 0.5, 0.05, 0.7)
   pan = S_PAN.call(LANE_PAN_EL.call(t) * -1)
-  sample :sn_dub, amp: amp, pan: pan if event_seq[(t.to_i % event_seq.length)] < 0.4 + fusion * 0.3
+  sample :sn_dub, amp: amp, pan: pan if event_seq[(t.to_i % event_seq.length)] < 0.4 + fusion * 0.3  # Deterministic replacement for rand
   sleep 0.5 / (BPM_EL / 60.0)
 end
 
@@ -108,15 +111,15 @@ live_loop :fx do
   if variant_index >= VARIANT_COUNT_EL
     stop
   end
-  t = current_beat * (60.0 / BPM_EL)
+  t = (current_beat - $variant_start_beat) * (60.0 / BPM_EL)
   fusion = get_fusion_el(t) + drift
-  amp = clamp(fusion * 0.5, 0.02, 0.7)
-  pan_offset = event_seq[(t.to_i % event_seq.length)] * 0.8 - 0.4
+  amp = clamp(fusion * 0.4, 0.02, 0.6)
+  pan_offset = event_seq[(t.to_i % event_seq.length)] * 0.8 - 0.4  # Deterministic replacement for rand(-0.4..0.4)
   pan = S_PAN.call(HORIZON_PAN_EL + pan_offset * fusion)
   # FX stacking: nested reverb and echo
   with_fx :reverb, room: 0.9, decay: 2.5 + fusion * 2.5 do
     with_fx :echo, phase: 0.3, decay: 0.6 do
-      synth :noise, amp: amp, pan: pan, release: 2.5
+      synth :noise, amp: amp, pan: pan, release: 2.0
     end
   end
   sleep 8.0 / (BPM_EL / 60.0)
@@ -126,15 +129,21 @@ live_loop :events do
   if variant_index >= VARIANT_COUNT_EL
     stop
   end
-  t = current_beat * (60.0 / BPM_EL)
+  t = (current_beat - $variant_start_beat) * (60.0 / BPM_EL)
   fusion = get_fusion_el(t) + drift
-  threshold = BPM_EL > 130 ? 0.7 : 0.8
+  threshold = BPM_EL > 130 ? 0.6 : 0.7  # Velocity-based threshold
+  if DEBUG
+    puts "DEBUG: Variant #{variant_index}, t #{t.round(2)}, Fusion #{fusion.round(2)}, Threshold #{threshold}, Event_subsets exist: #{!event_subsets[variant_index].nil?}"
+  end
   if fusion > threshold && event_subsets[variant_index]
-    event_index = (t.to_i / 16) % event_subsets[variant_index].length
+    event_index = (t.to_i / 16) % event_subsets[variant_index].length  # Deterministic selection
     event = event_subsets[variant_index][event_index]
+    if DEBUG
+      puts "DEBUG: Event triggered: #{event}"
+    end
     case event
     when :bd_haus
-      pan_offset = event_seq[(t.to_i % event_seq.length)] * 1.0 - 0.5
+      pan_offset = event_seq[(t.to_i % event_seq.length)] * 1.0 - 0.5  # Deterministic
       sample :bd_haus, amp: clamp(0.6, 0.1, 1.0), pan: S_PAN.call(pan_offset)
     when :sn_dub
       pan_offset = event_seq[(t.to_i % event_seq.length)] * 1.0 - 0.5
@@ -146,7 +155,7 @@ live_loop :events do
         synth :saw, note: :g4, amp: clamp(0.4, 0.1, 1.0), release: 1.5
       end
     when :amen_fill
-      amen_index = (variant_index + t.to_i) % AMEN_POOL.length
+      amen_index = (variant_index + t.to_i) % AMEN_POOL.length  # Deterministic Amen selection
       sample AMEN_POOL[amen_index], amp: clamp(0.7, 0.1, 1.0), pan: S_PAN.call(event_seq[(t.to_i % event_seq.length)] * 0.8 - 0.4), rate: 1.0
     # Add more cases as needed
     end
@@ -161,20 +170,23 @@ live_loop :variant_ctrl do
     puts "DEBUG: Starting variant #{variant_index + 1} of #{VARIANT_COUNT_EL}"
   end
   
-  # Variant start prompt: unique Synth melody for Progressive Trance with stereo surround and fade-in
-  melody_notes = [:c4, :d4, :e4, :f4, :g4]  # Slow ascending melody for highway progression
+  # Record start beat for this variant
+  $variant_start_beat = current_beat
+  
+  # Variant start prompt: unique Synth melody for House with stereo surround and fade-in
+  melody_notes = [:c4, :e4, :g4, :c5]
   melody_notes.each_with_index do |n, i|
-    fade_amp = (i + 1) / melody_notes.length.to_f * 0.5  # Fade-in amp
-    pan = S_PAN.call(Math.sin(i * PI / 4) * 0.7)
-    synth :saw, note: n, amp: fade_amp, release: 0.5, pan: pan  # Saw with gradual amp increase
-    sleep 0.3  # Moderate sleep for extended feel
+    fade_amp = (i + 1) / melody_notes.length.to_f * 0.4  # Fade-in amp
+    pan = S_PAN.call(Math.sin(i * PI / 3) * 0.6)
+    synth :piano, note: n, amp: fade_amp, release: 0.4, pan: pan
+    sleep 0.25
   end
-  sleep 0.6  # Prompt end, total ~2 sec
+  sleep 0.5  # Prompt end, total ~1.5 sec
   
   total_seg = SEGMENTS_EL.values.sum
   sleep total_seg  # Play variant
   
-  # Breathing gap: 2-sec silence for steady rhythm
+  # Breathing gap: 2-sec silence for rhythm
   sleep 2.0
   
   variant_index += 1
