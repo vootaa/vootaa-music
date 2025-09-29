@@ -1,246 +1,294 @@
-# Dawn Ignition 《晨启》
-# 场景：清晨出发 / 通勤
-# 风格：渐进式 House，节奏从轻快逐渐增强
-# 时长：20-25 分钟
+# Dawn Ignition 《晨启》- Enhanced Version
+# 场景：清晨出发 / 通勤 | 风格：渐进式 House
+# 时长：20-25 分钟 | 车载优化版本
 
 use_bpm 120
 use_debug false
 
-# ========== 核心数学模块 ==========
-
-# 基于π的确定性随机数生成器
+# 核心数学模块
 define :pi_random do |index, min_val = 0, max_val = 1|
-  pi_str = "31415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679"
+  pi_str = "31415926535897932384626433832795028841971693993751"
   digit = pi_str[index % pi_str.length].to_i
   min_val + (digit / 9.0) * (max_val - min_val)
 end
 
-# 黄金比例演进函数
 define :golden_evolution do |time, amplitude = 1.0|
   phi = 1.618033988749895
   Math.sin(time * phi * 0.01) * amplitude
 end
 
-# 斐波那契节奏序列
-define :fibonacci_rhythm do |step|
-  fib_sequence = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144]
-  fib_sequence[step % fib_sequence.length]
+define :fractal_rhythm do |time, depth = 2|
+  return [1] if depth == 0
+  base = [1, 0, 1, 0]
+  sub = fractal_rhythm(time, depth - 1)
+  base.flat_map { |b| b == 1 ? sub : [0] * sub.length }
 end
 
-# 音乐"距离场"函数
-define :harmonic_distance do |note1, note2|
-  Math.abs(note_to_midi(note1) - note_to_midi(note2))
+define :domain_warp do |time, strength = 0.5|
+  x = time * 0.1
+  y = time * 0.05
+  warp_x = Math.sin(x * 3.0) * strength
+  warp_y = Math.cos(y * 2.0) * strength
+  [x + warp_x, y + warp_y]
 end
 
-# 时间波形叠加
-define :time_wave do |global_time, micro_pos|
-  macro = Math.sin(global_time * 0.02)
-  meso = Math.cos(global_time * 0.1) 
-  micro = Math.sin(micro_pos * 4.0)
-  macro * 0.5 + meso * 0.3 + micro * 0.2
+define :texture_sample do |time, texture, speed = 0.1|
+  u = (time * speed) % 1.0
+  texture[(u * texture.length).floor % texture.length]
 end
 
-# ========== 音乐基本单元 ==========
+# 智能参数限制
+define :smart_cutoff do |value|
+  clamped = [[value, 20].max, 125].min
+  clamped
+end
 
-# 全局时间计数器
+define :smart_amp do |value|
+  [[value, 0.01].max, 3.0].min
+end
+
+define :smart_pan do |value|
+  [[value, -0.95].max, 0.95].min
+end
+
+# 车载优化混音系统
+define :car_mix_profile do |element_type|
+  case element_type
+  when :kick then { amp: 1.4, lpf: 85, hpf: 35 }
+  when :bass then { amp: 1.2, lpf: 110, hpf: 45 }
+  when :lead then { amp: 1.0, hpf: 85 }
+  when :ambient then { amp: 0.8, spread: 0.9 }
+  else { amp: 0.8 }
+  end
+end
+
+# 全局控制
 set :dawn_time, 0
+set :energy_level, 0.2
+set :musical_memory, []
 
-# 主时钟
-live_loop :dawn_clock do
+live_loop :dawn_master_clock do
   set :dawn_time, get(:dawn_time) + 1
+  # 20分钟能量弧线 (9600 * 0.125s = 20min)
+  progress = (get(:dawn_time) % 9600) / 9600.0
+  energy = 1.0 / (1.0 + Math.exp(-6 * (progress - 0.5))) # S曲线
+  set :energy_level, 0.2 + energy * 0.8  # 更大的能量范围
   sleep 0.125
 end
 
-# 基础鼓组单元 - 灵感来自参考代码的节拍模式
-live_loop :dawn_kick, sync: :dawn_clock do
+# 分形驱动鼓组
+live_loop :fractal_kick, sync: :dawn_master_clock do
   t = get(:dawn_time)
+  mix = car_mix_profile(:kick)
   
-  # 基于π序列的节拍模式演进
-  kick_intensity = pi_random(t / 8, 0.6, 1.2)
-  kick_pattern = pi_random(t / 16, 0, 1) > 0.3
+  pattern = fractal_rhythm(t / 64, 2)
+  kick_prob = pi_random(t / 8, 0.3, 0.95)
   
-  # 时间波形调制音色
-  wave_mod = time_wave(t, t % 32)
-  cutoff_val = 80 + wave_mod * 40
-  
-  if kick_pattern
-    sample :bd_haus, 
-           amp: kick_intensity, 
-           cutoff: cutoff_val,
-           rate: 1.0 + golden_evolution(t) * 0.1
+  if pattern[t % pattern.length] == 1 && pi_random(t, 0, 1) < kick_prob
+    kick_amp = mix[:amp] * get(:energy_level) * (0.8 + pi_random(t, 0, 0.4))
+    
+    with_fx :hpf, cutoff: mix[:hpf] do
+      with_fx :lpf, cutoff: mix[:lpf] do
+        sample :bd_haus, 
+               amp: smart_amp(kick_amp),
+               rate: 1.0 + golden_evolution(t) * 0.08,
+               cutoff: smart_cutoff(60 + golden_evolution(t * 2) * 15)
+      end
+    end
   end
-  
   sleep 0.5
 end
 
-# 渐进式帽子 - 密度随时间增加
-live_loop :dawn_hats, sync: :dawn_clock do
+live_loop :textured_hats, sync: :dawn_master_clock do
   t = get(:dawn_time)
   
-  # 斐波那契序列控制节奏密度
-  density_factor = fibonacci_rhythm(t / 64) / 144.0
+  # 纹理驱动的帽子节奏
+  hat_texture = [1, 0, 1, 0, 1, 0, 0, 1]
+  hat_hit = texture_sample(t, hat_texture, 0.25)
   
-  # 基于时间的音色演进
-  rate_mod = 1.5 + golden_evolution(t * 1.2) * 0.5
-  amp_mod = 0.3 + density_factor * 0.4
-  
-  # π序列控制是否触发
-  trigger_prob = 0.4 + density_factor * 0.4
-  
-  if pi_random(t, 0, 1) < trigger_prob
+  if hat_hit == 1
+    warped = domain_warp(t, 0.4)
+    hat_energy = get(:energy_level) * (0.6 + pi_random(t * 5, 0, 0.4))
+    
     sample :hat_yosh,
-           rate: rate_mod,
-           amp: amp_mod,
-           pan: pi_random(t * 3, -0.6, 0.6)
+           rate: 1.2 + warped[0] * 0.6 + get(:energy_level) * 0.3,
+           amp: smart_amp(hat_energy * (0.3 + warped[1].abs * 0.4)),
+           pan: smart_pan(pi_random(t * 3, -0.8, 0.8)),
+           cutoff: smart_cutoff(80 + warped[0].abs * 25)
   end
-  
   sleep 0.125
 end
 
-# 晨光合成器主旋律 - 灵感来自AcidWalk的和弦序列
-live_loop :dawn_lead, sync: :dawn_clock do
+# 体积混响低音
+live_loop :volumetric_bass, sync: :dawn_master_clock do
   t = get(:dawn_time)
-  
-  # 基础和弦进行：C Major -> Am -> F -> G
-  chord_progression = [:c4, :a3, :f4, :g4]
-  current_root = chord_progression[(t / 128) % 4]
-  
-  use_synth :prophet
-  
-  # 黄金比例控制滤波器扫描
-  cutoff_sweep = 70 + golden_evolution(t * 0.8) * 50
-  release_time = 0.3 + pi_random(t / 4, 0, 0.4)
-  
-  # 和弦音符的"距离场"选择
-  chord_notes = chord(current_root, :major)
-  selected_note = chord_notes.choose
-  
-  with_fx :reverb, mix: 0.3 + time_wave(t, 0) * 0.2 do
-    with_fx :echo, phase: 0.25, decay: 4, mix: 0.2 do
-      play selected_note,
-           release: release_time,
-           cutoff: cutoff_sweep,
-           amp: 0.6,
-           attack: 0.05
-    end
-  end
-  
-  sleep [0.25, 0.5].choose
-end
-
-# 低音线条 - 渐进式能量累积
-live_loop :dawn_bass, sync: :dawn_clock do
-  t = get(:dawn_time)
+  mix = car_mix_profile(:bass)
   
   use_synth :tb303
   
-  # 基础低音序列
-  bass_notes = [:c2, :c2, :g2, :f2]
-  current_bass = bass_notes[(t / 64) % 4]
+  bass_progression = [:c2, :g2, :f2, :a2]
+  current_bass = bass_progression[(t / 128) % 4]
   
-  # 时间演进的音色调制
-  cutoff_val = 60 + time_wave(t, t % 16) * 30
-  res_val = 0.7 + golden_evolution(t * 0.6) * 0.2
-  
-  # 斐波那契控制节奏复杂度
-  rhythm_complexity = fibonacci_rhythm(t / 32) % 4
-  sleep_time = [1, 0.5, 0.25, 0.125][rhythm_complexity]
-  
-  play current_bass,
-       release: 0.8,
-       cutoff: cutoff_val,
-       res: res_val,
-       amp: 0.8,
-       attack: 0.1
-       
-  sleep sleep_time
+  # 多层混响深度
+  if t % 2 == 0
+    base_cutoff = 65 + get(:energy_level) * 25
+    base_amp = mix[:amp] * get(:energy_level)
+    
+    3.times do |depth|
+      distance = depth / 3.0
+      reverb_mix = Math.exp(-distance * 1.2) * 0.4
+      layer_cutoff = base_cutoff + golden_evolution(t + depth * 100) * 20
+      
+      with_fx :reverb, room: 0.7 + distance * 0.25, mix: reverb_mix do
+        with_fx :lpf, cutoff: mix[:lpf] do
+          with_fx :hpf, cutoff: mix[:hpf] do
+            play current_bass,
+                 release: 0.9 - distance * 0.15,
+                 cutoff: smart_cutoff(layer_cutoff),
+                 res: 0.6 + distance * 0.2,
+                 amp: smart_amp(base_amp * (1.0 - distance * 0.3))
+          end
+        end
+      end
+    end
+  end
+  sleep 1
 end
 
-# 氛围层 - 车载空间感营造
-live_loop :dawn_ambient, sync: :dawn_clock do
+# 记忆系统主旋律 
+live_loop :memory_lead, sync: :dawn_master_clock do
   t = get(:dawn_time)
+  mix = car_mix_profile(:lead)
+  memory = get(:musical_memory).dup
   
-  # 每16拍触发一次氛围音效
-  if t % 128 == 0
+  use_synth :prophet
+  
+  # 主和弦进行
+  chord_prog = [chord(:c4, :major), chord(:a3, :minor), 
+                chord(:f4, :major), chord(:g4, :major)]
+  current_chord = chord_prog[(t / 256) % 4]
+  
+  # 域扭曲音符选择
+  warped = domain_warp(t, 0.5)
+  note_index = ((warped[0].abs * 10) % current_chord.length).floor
+  selected_note = current_chord[note_index]
+  
+  # 记忆系统：每64拍可能回调
+  if t % 64 == 0 && memory.length > 0 && pi_random(t, 0, 1) > 0.65
+    recalled = memory.choose
+    selected_note = recalled[:note] + [-2, -1, 0, 1, 2].choose
+  end
+  
+  # 存储当前音符到记忆
+  if t % 32 == 0
+    memory << { note: selected_note, time: t, energy: get(:energy_level) }
+    memory.shift if memory.length > 12
+    set :musical_memory, memory
+  end
+  
+  # 动态参数计算
+  lead_release = 0.3 + warped[1].abs * 0.5 + get(:energy_level) * 0.3
+  lead_cutoff = 75 + warped[0].abs * 35 + get(:energy_level) * 15
+  lead_amp = mix[:amp] * get(:energy_level) * (0.7 + pi_random(t, 0, 0.3))
+  
+  with_fx :reverb, mix: 0.25 + get(:energy_level) * 0.15 do
+    with_fx :echo, phase: 0.25, decay: 2 + get(:energy_level) * 2, mix: 0.15 do
+      with_fx :hpf, cutoff: mix[:hpf] do
+        play selected_note,
+             release: lead_release,
+             cutoff: smart_cutoff(lead_cutoff),
+             amp: smart_amp(lead_amp),
+             attack: 0.05 + pi_random(t, 0, 0.1)
+      end
+    end
+  end
+  sleep [0.5, 0.25, 0.75, 1.0].ring.tick
+end
+
+# 进化氛围层
+live_loop :evolving_ambient, sync: :dawn_master_clock do
+  t = get(:dawn_time)
+  mix = car_mix_profile(:ambient)
+  
+  if t % 256 == 0  # 每64小节
     use_synth :blade
     
-    # π序列控制音高选择
-    ambient_notes = scale(:c3, :major_pentatonic, num_octaves: 2)
-    note_index = (pi_random(t / 128, 0, 1) * ambient_notes.length).to_i
-    selected_note = ambient_notes[note_index]
+    # 音乐纹理采样
+    ambient_scales = [scale(:c4, :major_pentatonic),
+                     scale(:a4, :minor_pentatonic),
+                     scale(:f4, :dorian)]
+    current_scale = ambient_scales[(t / 512) % 3]
     
-    # 黄金比例控制空间参数
-    room_size = 0.6 + golden_evolution(t * 0.3) * 0.3
-    mix_level = 0.4 + time_wave(t, 0) * 0.2
+    sampled_note = texture_sample(t, current_scale, 0.03)
+    energy_factor = get(:energy_level)
     
-    with_fx :reverb, room: room_size, mix: mix_level do
-      with_fx :echo, phase: 1, decay: 8, mix: 0.3 do
-        play selected_note,
-             release: 8,
-             attack: 2,
-             amp: 0.4,
-             cutoff: 90,
-             pan: pi_random(t, -0.8, 0.8)
+    # 多层体积混响
+    5.times do |layer|
+      depth = layer / 5.0
+      layer_amp = mix[:amp] * energy_factor * (0.4 - depth * 0.06)
+      
+      in_thread do
+        sleep depth * 0.6
+        
+        with_fx :reverb, room: 0.85 + depth * 0.1, 
+                         mix: 0.5 * Math.exp(-depth * 1.8) do
+          play sampled_note + [0, 7, 12].choose,
+               attack: 1.5 + depth * 1.2,
+               release: 5 + depth * 3,
+               amp: smart_amp(layer_amp),
+               pan: smart_pan(pi_random(t + layer, -mix[:spread], mix[:spread])),
+               cutoff: smart_cutoff(90 + depth * 10)
+        end
       end
     end
   end
   
-  sleep 4
+  sleep 8
 end
 
-# 装饰音效 - 细节变化增强
-live_loop :dawn_details, sync: :dawn_clock do
+# 动态细节装饰
+live_loop :fractal_details, sync: :dawn_master_clock do
   t = get(:dawn_time)
   
-  # 基于π序列的稀疏触发
+  # 能量驱动的触发概率
   detail_prob = pi_random(t, 0, 1)
+  trigger_threshold = 0.9 - get(:energy_level) * 0.15  # 能量越高，细节越多
   
-  if detail_prob > 0.85  # 15%概率触发
-    # 选择装饰音效类型
-    detail_type = (detail_prob * 4).to_i
+  if detail_prob > trigger_threshold
+    effect_type = [:perc_bell, :elec_plip, :ambi_glass_rub, :elec_blip].choose
+    warped = domain_warp(t, 0.7)
     
-    case detail_type
-    when 0
-      sample :elec_plip, 
-             rate: pi_random(t * 2, 0.5, 2.0),
-             amp: 0.3
-    when 1
-      sample :perc_bell,
-             rate: golden_evolution(t) + 1.0,
-             amp: 0.2
-    when 2
-      use_synth :sine
-      play :c5 + pi_random(t * 3, -12, 12),
-           release: 0.1,
-           amp: 0.3
-    when 3
-      sample :ambi_soft_buzz,
-             rate: 0.5,
-             amp: 0.15,
-             start: pi_random(t * 4, 0, 0.3)
-    end
+    detail_rate = 0.7 + warped[0].abs * 0.8 + get(:energy_level) * 0.3
+    detail_amp = 0.12 + warped[1].abs * 0.25 + get(:energy_level) * 0.15
+    
+    sample effect_type,
+           rate: detail_rate,
+           amp: smart_amp(detail_amp),
+           pan: smart_pan(pi_random(t * 7, -0.9, 0.9)),
+           cutoff: smart_cutoff(70 + pi_random(t * 11, 0, 40))
   end
-  
   sleep 0.25
 end
 
-# 动态控制器 - 整体音乐弧线
-live_loop :dawn_dynamics, sync: :dawn_clock do
+# 智能动态控制
+live_loop :intelligent_dynamics, sync: :dawn_master_clock do
   t = get(:dawn_time)
   
-  # 20分钟 = 9600个0.125拍
-  progress = (t % 9600) / 9600.0
+  # 多时间尺度音量控制
+  macro = Math.sin(t * 0.003) * 0.25 + 0.75
+  meso = Math.cos(t * 0.04) * 0.15 + 0.85
   
-  # S曲线能量发展
-  energy_curve = 1.0 / (1.0 + Math.exp(-8 * (progress - 0.5)))
+  # 黄金比例相位关系
+  phi_phase = t * 1.618033988749895 * 0.008
+  micro = Math.sin(phi_phase) * 0.08 + 0.92
   
-  # 全局音量调制
-  set :global_amp, 0.4 + energy_curve * 0.6
-  
-  # 每8小节输出进度信息
-  if t % 256 == 0
-    puts "Dawn Ignition Progress: #{(progress * 100).round(1)}% - Energy: #{(energy_curve * 100).round(1)}%"
+  global_volume = macro * meso * micro * get(:energy_level)
+  set :master_volume, global_volume
+
+  if t % 512 == 0
+    progress_pct = ((t % 9600) / 9600.0 * 100).round(1)
+    energy_pct = (get(:energy_level) * 100).round(1)
+    puts "晨启进度: #{progress_pct}% | 能量: #{energy_pct}% | 音量: #{(global_volume * 100).round(1)}%"
   end
-  
   sleep 4
 end
