@@ -1,11 +1,11 @@
-# DEBUG switch: shorten time to 1/5 for quick testing
-DEBUG = true
-
 # CarDJ Edm Constant
 
 P=1.618034
 E=2.718281828
 PI=Math::PI
+
+# DEBUG switch: shorten time to 1/5 for quick testing
+DEBUG = true
 
 MD={
   pi:"314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460955058223172535940812848111745028410270193852110555964462294895493038196",
@@ -14,73 +14,87 @@ MD={
   sqrt2:"141421356237309504880168872420969807856967187537694807317667973799073247846210703885038753432764157273501384623091229702492483605598507372126441214970999358314132226659275055927557999505011527820605714"
 }.freeze
 
-# Amen sample pool for all 6 tracks (filtered for car EDM: clear breaks, varying BPM)
-AMEN_POOL = [
+AP = [
   "/Users/tsb/Pop-Proj/rhythm-lab.com_amen_vol.1/WAV/cw_amen01_175.wav",
   "/Users/tsb/Pop-Proj/rhythm-lab.com_amen_vol.1/WAV/cw_amen04_170.wav",
   "/Users/tsb/Pop-Proj/rhythm-lab.com_amen_vol.1/WAV/cw_amen07_172.wav",
   "/Users/tsb/Pop-Proj/rhythm-lab.com_amen_vol.1/WAV/cw_amen13_173.wav",
   "/Users/tsb/Pop-Proj/rhythm-lab.com_amen_vol.1/WAV/cw_amen18_178.wav"
-]  # Select 5 for variety; use in events for rhythmic fills
+]
 
-# S_PAN mapping for surround stereo (lambda for multi-speaker layout)
-S_PAN = lambda { |pan_val| [-1.0, [pan_val, 1.0].min].max }  # Ensure pan in range, can extend for 5.1 if needed
+S_PAN = lambda { |pan_val| [-1.0, [pan_val, 1.0].min].max }
 
-# Dawn Ignition constants
-BPM_DI = 128
-VARIANT_COUNT_DI = 5  # Number of variants; total duration = VARIANT_COUNT_DI * single variant length (~25 min total)
-SEGMENTS_DI = { intro: DEBUG ? 60 / 5 : 60, drive: DEBUG ? 120 / 5 : 120, peak: DEBUG ? 80 / 5 : 80, outro: DEBUG ? 40 / 5 : 40 }  # Single variant ~5 min (300 sec); adjust for total ~25 min
-VEL_BASE_DI = 0.5
-INT_BASE_DI = 0.3
-FUSION_MAX_DI = 1.0
-LANE_PAN_DI = lambda { |t| Math.sin(t * PI / 10) * 0.3 }
-HORIZON_PAN_DI = 0.5
-VEL_PAN_OFF_DI = 0.1
-EVENT_POOL_DI = [:bd_haus, :sn_dub, :bd_fat, :synth_piano, :synth_saw, :sample_perc, :fx_reverb, :fx_echo, :synth_pad, :amen_fill]
-# Urban Velocity constants
-BPM_UV = 135  # Higher BPM for fast-paced city driving
-VARIANT_COUNT_UV = 4  # Number of variants; total duration ~20 min
-SEGMENTS_UV = { intro: DEBUG ? 45 / 5 : 45, drive: DEBUG ? 90 / 5 : 90, peak: DEBUG ? 60 / 5 : 60, outro: DEBUG ? 30 / 5 : 30 }  # Single variant ~3.75 min; total ~15 min, adjust for 20 min
-VEL_BASE_UV = 0.6
-INT_BASE_UV = 0.4
-FUSION_MAX_UV = 1.0
-LANE_PAN_UV = lambda { |t| Math.sin(t * PI / 8) * 0.4 }  # Faster lane switching for city feel
-HORIZON_PAN_UV = 0.3
-VEL_PAN_OFF_UV = 0.15
-EVENT_POOL_UV = [:bd_tek, :sn_dub, :bd_fat, :synth_pluck, :synth_saw, :sample_perc, :fx_reverb, :fx_echo, :synth_pad, :amen_fill]
+# Dawn Ignition
+BPM_DI = 125
+VC_DI = 5
+S_DI = { intro: DEBUG ? 60/5 : 60, drive: DEBUG ? 120/5 : 120, peak: DEBUG ? 80/5 : 80, outro: DEBUG ? 40/5 : 40 }
+VB_DI = 0.3
+IB_DI = 0.2
+FM_DI = 1.0
+LP_DI = lambda { |t| Math.sin(t * PI / 12) * 0.25 }
+HP_DI = 0.4
+VP_DI = 0.08
+EP_DI = [:bd_haus, :sn_dub, :synth_piano, :fx_reverb, :synth_pad, :perc_bell, :fx_echo, :amen_fill]
+BC_DI = [[:c4, :major], [:f4, :major], [:g4, :major], [:a4, :minor]]
+CE_DI = [:major7, :sus2, :sus4, :minor7]
+PD_DI = [
+  [1, 0, 0.5, 0, 1, 0, 0.7, 0],        # 模式0: 基础4/4
+  [1, 0, 0.3, 0.6, 1, 0, 0.4, 0.8],    # 模式1: 加强版
+  [1, 0.2, 0.5, 0, 0.8, 0.3, 0.7, 0],  # 模式2: 复杂节奏
+  [1, 0, 0.4, 0, 1, 0.5, 0.6, 0.3],    # 模式3: 变化版
+  [0.8, 0.4, 0.6, 0.2, 1, 0.3, 0.5, 0], # 模式4: 密集版
+]
 
-# Endless Lane constants
-BPM_EL = 132  # Steady BPM for long highway cruising
-VARIANT_COUNT_EL = 6  # Number of variants; total duration ~35 min
-SEGMENTS_EL = { intro: DEBUG ? 50 / 5 : 50, drive: DEBUG ? 150 / 5 : 150, peak: DEBUG ? 100 / 5 : 100, outro: DEBUG ? 50 / 5 : 50 }  # Single variant ~6.25 min; total ~37.5 min, adjust for 35 min
-VEL_BASE_EL = 0.4
-INT_BASE_EL = 0.2
-FUSION_MAX_EL = 1.0
-LANE_PAN_EL = lambda { |t| Math.sin(t * PI / 12) * 0.2 }  # Gentle lane sway for highway feel
-HORIZON_PAN_EL = 0.4
-VEL_PAN_OFF_EL = 0.05
-EVENT_POOL_EL = [:bd_haus, :sn_dub, :bd_fat, :synth_saw, :synth_pad, :sample_perc, :fx_reverb, :fx_echo, :synth_pluck, :amen_fill]
+BD_DI = [  # 装饰音模式
+  [0, 0, 0, 0, 0, 0, 0, 0],         # 模式0: 无装饰
+  [0, 0, 0.3, 0, 0, 0, 0.4, 0],     # 模式1: 简单装饰
+  [0, 0.2, 0, 0.3, 0, 0.2, 0, 0.4], # 模式2: 复杂装饰
+  [0.3, 0, 0, 0.5, 0, 0, 0.3, 0],   # 模式3: 不规则装饰
+]
+# Urban Velocity
+BPM_UV = 135
+VC_UV = 4
+S_UV = { intro: DEBUG ? 45/5 : 45, drive: DEBUG ? 90/5 : 90, peak: DEBUG ? 60/5 : 60, outro: DEBUG ? 30/5 : 30 }
+VB_UV = 0.6
+IB_UV = 0.4
+FM_UV = 1.0
+LP_UV = lambda { |t| Math.sin(t * PI / 8) * 0.4 }
+HP_UV = 0.3
+VP_UV = 0.15
+EP_UV = [:bd_tek, :sn_dub, :bd_fat, :synth_pluck, :synth_saw, :sample_perc, :fx_reverb, :fx_echo, :synth_pad, :amen_fill]
 
-# Midnight Horizon constants
-BPM_MH = 138  # Uplifting BPM for night driving
-VARIANT_COUNT_MH = 5  # Number of variants; total duration ~30 min
-SEGMENTS_MH = { intro: DEBUG ? 40 / 5 : 40, drive: DEBUG ? 100 / 5 : 100, peak: DEBUG ? 80 / 5 : 80, outro: DEBUG ? 40 / 5 : 40 }  # Single variant ~4.33 min; total ~21.67 min, adjust for 30 min
-VEL_BASE_MH = 0.3
-INT_BASE_MH = 0.5
-FUSION_MAX_MH = 1.0
-LANE_PAN_MH = lambda { |t| Math.sin(t * PI / 10) * 0.5 }  # Wider sway for ambient night feel
-HORIZON_PAN_MH = 0.6
-VEL_PAN_OFF_MH = 0.2
-EVENT_POOL_MH = [:bd_haus, :sn_dub, :bd_fat, :synth_pad, :synth_saw, :sample_perc, :fx_reverb, :fx_echo, :synth_pluck, :amen_fill]
+# Endless Lane
+BPM_EL = 132
+VC_EL = 6
+S_EL = { intro: DEBUG ? 50/5 : 50, drive: DEBUG ? 150/5 : 150, peak: DEBUG ? 100/5 : 100, outro: DEBUG ? 50/5 : 50 }
+VB_EL = 0.4
+IB_EL = 0.2
+FM_EL = 1.0
+LP_EL = lambda { |t| Math.sin(t * PI / 12) * 0.2 }
+HP_EL = 0.4
+VP_EL = 0.05
+EP_EL = [:bd_haus, :sn_dub, :bd_fat, :synth_saw, :synth_pad, :sample_perc, :fx_reverb, :fx_echo, :synth_pluck, :amen_fill]
 
-# Station Dreams constants
-BPM_SD = 100  # Lower BPM for chillout relaxation
-VARIANT_COUNT_SD = 4  # Number of variants; total duration ~18 min
-SEGMENTS_SD = { intro: DEBUG ? 30 / 5 : 30, drive: DEBUG ? 60 / 5 : 60, peak: DEBUG ? 40 / 5 : 40, outro: DEBUG ? 20 / 5 : 20 }  # Single variant ~2.5 min; total ~10 min, adjust for 18 min
-VEL_BASE_SD = 0.2
-INT_BASE_SD = 0.1
-FUSION_MAX_SD = 0.8
-LANE_PAN_SD = lambda { |t| Math.sin(t * PI / 15) * 0.1 }  # Subtle sway for restful feel
-HORIZON_PAN_SD = 0.7
-VEL_PAN_OFF_SD = 0.05
-EVENT_POOL_SD = [:bd_haus, :sn_dub, :bd_fat, :synth_pad, :synth_saw, :sample_perc, :fx_reverb, :fx_echo, :synth_pluck, :amen_fill]
+# Midnight Horizon
+BPM_MH = 138
+VC_MH = 5
+S_MH = { intro: DEBUG ? 40/5 : 40, drive: DEBUG ? 100/5 : 100, peak: DEBUG ? 80/5 : 80, outro: DEBUG ? 40/5 : 40 }
+VB_MH = 0.3
+IB_MH = 0.5
+FM_MH = 1.0
+LP_MH = lambda { |t| Math.sin(t * PI / 10) * 0.5 }
+HP_MH = 0.6
+VP_MH = 0.2
+EP_MH = [:bd_haus, :sn_dub, :bd_fat, :synth_pad, :synth_saw, :sample_perc, :fx_reverb, :fx_echo, :synth_pluck, :amen_fill]
+
+# Station Dreams
+BPM_SD = 100
+VC_SD = 4
+S_SD = { intro: DEBUG ? 30/5 : 30, drive: DEBUG ? 60/5 : 60, peak: DEBUG ? 40/5 : 40, outro: DEBUG ? 20/5 : 20 }
+VB_SD = 0.2
+IB_SD = 0.1
+FM_SD = 0.8
+LP_SD = lambda { |t| Math.sin(t * PI / 15) * 0.1 }
+HP_SD = 0.7
+VP_SD = 0.05
+EP_SD = [:bd_haus, :sn_dub, :bd_fat, :synth_pad, :synth_saw, :sample_perc, :fx_reverb, :fx_echo, :synth_pluck, :amen_fill]
