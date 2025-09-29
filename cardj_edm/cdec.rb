@@ -36,7 +36,7 @@ FUSION_MAX_DI = 1.0
 LANE_PAN_DI = lambda { |t| Math.sin(t * PI / 10) * 0.3 }
 HORIZON_PAN_DI = 0.5
 VEL_PAN_OFF_DI = 0.1
-EVENT_POOL_DI = [:bd_haus, :sn_dub, :bd_fat, :synth_piano, :synth_saw, :sample_perc, :fx_reverb, :fx_echo, :synth_pad, :amen_fill, :midi_anchor]
+EVENT_POOL_DI = [:bd_haus, :sn_dub, :bd_fat, :synth_piano, :synth_saw, :sample_perc, :fx_reverb, :fx_echo, :synth_pad, :amen_fill]
 # Urban Velocity constants
 BPM_UV = 135  # Higher BPM for fast-paced city driving
 VARIANT_COUNT_UV = 4  # Number of variants; total duration ~20 min
@@ -47,7 +47,7 @@ FUSION_MAX_UV = 1.0
 LANE_PAN_UV = lambda { |t| Math.sin(t * PI / 8) * 0.4 }  # Faster lane switching for city feel
 HORIZON_PAN_UV = 0.3
 VEL_PAN_OFF_UV = 0.15
-EVENT_POOL_UV = [:bd_tek, :sn_dub, :bd_fat, :synth_pluck, :synth_saw, :sample_perc, :fx_reverb, :fx_echo, :synth_pad, :amen_fill, :midi_anchor]
+EVENT_POOL_UV = [:bd_tek, :sn_dub, :bd_fat, :synth_pluck, :synth_saw, :sample_perc, :fx_reverb, :fx_echo, :synth_pad, :amen_fill]
 
 # Endless Lane constants
 BPM_EL = 132  # Steady BPM for long highway cruising
@@ -59,7 +59,7 @@ FUSION_MAX_EL = 1.0
 LANE_PAN_EL = lambda { |t| Math.sin(t * PI / 12) * 0.2 }  # Gentle lane sway for highway feel
 HORIZON_PAN_EL = 0.4
 VEL_PAN_OFF_EL = 0.05
-EVENT_POOL_EL = [:bd_haus, :sn_dub, :bd_fat, :synth_saw, :synth_pad, :sample_perc, :fx_reverb, :fx_echo, :synth_pluck, :amen_fill, :midi_anchor]
+EVENT_POOL_EL = [:bd_haus, :sn_dub, :bd_fat, :synth_saw, :synth_pad, :sample_perc, :fx_reverb, :fx_echo, :synth_pluck, :amen_fill]
 
 # Midnight Horizon constants
 BPM_MH = 138  # Uplifting BPM for night driving
@@ -71,7 +71,7 @@ FUSION_MAX_MH = 1.0
 LANE_PAN_MH = lambda { |t| Math.sin(t * PI / 10) * 0.5 }  # Wider sway for ambient night feel
 HORIZON_PAN_MH = 0.6
 VEL_PAN_OFF_MH = 0.2
-EVENT_POOL_MH = [:bd_haus, :sn_dub, :bd_fat, :synth_pad, :synth_saw, :sample_perc, :fx_reverb, :fx_echo, :synth_pluck, :amen_fill, :midi_anchor]
+EVENT_POOL_MH = [:bd_haus, :sn_dub, :bd_fat, :synth_pad, :synth_saw, :sample_perc, :fx_reverb, :fx_echo, :synth_pluck, :amen_fill]
 
 # Station Dreams constants
 BPM_SD = 100  # Lower BPM for chillout relaxation
@@ -83,4 +83,4 @@ FUSION_MAX_SD = 0.8
 LANE_PAN_SD = lambda { |t| Math.sin(t * PI / 15) * 0.1 }  # Subtle sway for restful feel
 HORIZON_PAN_SD = 0.7
 VEL_PAN_OFF_SD = 0.05
-EVENT_POOL_SD = [:bd_haus, :sn_dub, :bd_fat, :synth_pad, :synth_saw, :sample_perc, :fx_reverb, :fx_echo, :synth_pluck, :amen_fill, :midi_anchor]
+EVENT_POOL_SD = [:bd_haus, :sn_dub, :bd_fat, :synth_pad, :synth_saw, :sample_perc, :fx_reverb, :fx_echo, :synth_pluck, :amen_fill]

@@ -122,6 +122,7 @@
 - **FX空间堆叠**：多层Reverb/Echo效果器叠加，创造深度氛围；实现：with_fx块嵌套，decay参数随fusion动态，pan随机偏移匹配车载立体感。
 - **合成器Pad层叠**：多音Synth叠加渐进能量；实现：synth调用数组，release渐长，note从scale随机选择，amp随时间曲线递增。
 - **动态参数漂移**：数学函数（如sin）驱动累积变化；实现：drift变量递增，应用于amp/pan，阈值clamp防止突变。
+- **事件池分配**：使用重叠滑动窗口分配，确保每个变体至少3个事件，前后变体重叠1个事件（衔接），每个事件至少出现一次。代码简洁：subset_size = ceil(pool_length / variant_count)，start = i * (subset_size - 1)，循环取事件。
 
 ### 实现与扩展
 

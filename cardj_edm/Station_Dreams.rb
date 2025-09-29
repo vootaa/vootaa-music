@@ -35,10 +35,15 @@ event_seq = get_md_seq("sqrt2", EVENT_POOL_SD.length)
 variant_index = 0
 drift = 0
 event_subsets = []
-subset_size = (EVENT_POOL_SD.length / VARIANT_COUNT_SD).to_i
+subset_size = [3, (EVENT_POOL_SD.length.to_f / VARIANT_COUNT_SD).ceil].max  # Ensure at least 3
 VARIANT_COUNT_SD.times do |i|
-  start = i * subset_size
-  event_subsets << EVENT_POOL_SD[start...(start + subset_size)]
+  start = i * (subset_size - 1)
+  subset = []
+  subset_size.times do |j|
+    idx = (start + j) % EVENT_POOL_SD.length
+    subset << EVENT_POOL_SD[idx]
+  end
+  event_subsets << subset
 end
 
 # Live loops with variant evolution
@@ -95,7 +100,7 @@ live_loop :percussion do
   fusion = get_fusion_sd(t) + drift
   amp = clamp(fusion * 0.3, 0.02, 0.5)
   pan = S_PAN.call(LANE_PAN_SD.call(t) * -1)
-  sample :sn_dub, amp: amp, pan: pan if rand < 0.2 + fusion * 0.3
+  sample :sn_dub, amp: amp, pan: pan if event_seq[(t.to_i % event_seq.length)] < 0.2 + fusion * 0.3
   sleep 0.5 / (BPM_SD / 60.0)
 end
 
@@ -106,7 +111,8 @@ live_loop :fx do
   t = current_beat * (60.0 / BPM_SD)
   fusion = get_fusion_sd(t) + drift
   amp = clamp(fusion * 0.7, 0.02, 0.9)
-  pan = S_PAN.call(HORIZON_PAN_SD + rand(-0.5..0.5) * fusion)
+  pan_offset = event_seq[(t.to_i % event_seq.length)] * 1.0 - 0.5
+  pan = S_PAN.call(HORIZON_PAN_SD + pan_offset * fusion)
   # FX stacking: nested reverb and echo
   with_fx :reverb, room: 0.98, decay: 4.0 + fusion * 4.0 do
     with_fx :echo, phase: 0.5, decay: 1.0 do
@@ -124,12 +130,15 @@ live_loop :events do
   fusion = get_fusion_sd(t) + drift
   threshold = BPM_SD > 130 ? 0.4 : 0.5
   if fusion > threshold && event_subsets[variant_index]
-    event = event_subsets[variant_index].sample
+    event_index = (t.to_i / 16) % event_subsets[variant_index].length
+    event = event_subsets[variant_index][event_index]
     case event
     when :bd_haus
-      sample :bd_haus, amp: clamp(0.4, 0.1, 1.0), pan: S_PAN.call(rand(-0.5..0.5))
+      pan_offset = event_seq[(t.to_i % event_seq.length)] * 1.0 - 0.5
+      sample :bd_haus, amp: clamp(0.4, 0.1, 1.0), pan: S_PAN.call(pan_offset)
     when :sn_dub
-      sample :sn_dub, amp: clamp(0.3, 0.1, 1.0), pan: S_PAN.call(rand(-0.5..0.5))
+      pan_offset = event_seq[(t.to_i % event_seq.length)] * 1.0 - 0.5
+      sample :sn_dub, amp: clamp(0.3, 0.1, 1.0), pan: S_PAN.call(pan_offset)
     when :synth_pad
       synth :saw, note: :d4, amp: clamp(0.7, 0.1, 1.0), pan: S_PAN.call(HORIZON_PAN_SD)
     when :fx_reverb
@@ -137,7 +146,8 @@ live_loop :events do
         synth :saw, note: :f4, amp: clamp(0.4, 0.1, 1.0), release: 1.8
       end
     when :amen_fill
-      sample AMEN_POOL.sample, amp: clamp(0.5, 0.1, 1.0), pan: S_PAN.call(rand(-0.2..0.2)), rate: 0.8  # Slower rate for chill
+      amen_index = (variant_index + t.to_i) % AMEN_POOL.length
+      sample AMEN_POOL[amen_index], amp: clamp(0.5, 0.1, 1.0), pan: S_PAN.call(event_seq[(t.to_i % event_seq.length)] * 0.8 - 0.4), rate: 0.8  # Slower rate for chill
     # Add more cases as needed
     end
   end
