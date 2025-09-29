@@ -9,14 +9,14 @@ def clamp(val, min, max)
 end
 
 def get_fusion_mh(t)
-  if t < SEGMENTS_MH[:intro]
-    clamp(VEL_BASE_MH + (t / SEGMENTS_MH[:intro]) * 0.3, 0, 0.6)
-  elsif t < SEGMENTS_MH[:intro] + SEGMENTS_MH[:drive]
-    clamp(0.6 + ((t - SEGMENTS_MH[:intro]) / SEGMENTS_MH[:drive]) * 0.4, 0.6, 1.0)
-  elsif t < SEGMENTS_MH[:intro] + SEGMENTS_MH[:drive] + SEGMENTS_MH[:peak]
+  if t < S_MH[:intro]
+    clamp(VB_MH + (t / S_MH[:intro]) * 0.3, 0, 0.6)
+  elsif t < S_MH[:intro] + S_MH[:drive]
+    clamp(0.6 + ((t - S_MH[:intro]) / S_MH[:drive]) * 0.4, 0.6, 1.0)
+  elsif t < S_MH[:intro] + S_MH[:drive] + S_MH[:peak]
     1.0
   else
-    clamp(1.0 - ((t - (SEGMENTS_MH[:intro] + SEGMENTS_MH[:drive] + SEGMENTS_MH[:peak])) / SEGMENTS_MH[:outro]), 0, 1.0)
+    clamp(1.0 - ((t - (S_MH[:intro] + S_MH[:drive] + S_MH[:peak])) / S_MH[:outro]), 0, 1.0)
   end
 end
 
@@ -29,19 +29,19 @@ end
 kick_seq = get_md_seq("pi", 100)
 bass_seq = get_md_seq("golden", 100)
 melody_seq = get_md_seq("e", 200)
-event_seq = get_md_seq("sqrt2", EVENT_POOL_MH.length)
+event_seq = get_md_seq("sqrt2", EP_MH.length)
 
 # Initialize sequences and variant logic
 variant_index = 0
 drift = 0
 event_subsets = []
-subset_size = [3, (EVENT_POOL_MH.length.to_f / VARIANT_COUNT_MH).ceil].max  # Ensure at least 3
-VARIANT_COUNT_MH.times do |i|
+subset_size = [3, (EP_MH.length.to_f / VC_MH).ceil].max  # Ensure at least 3
+VC_MH.times do |i|
   start = i * (subset_size - 1)  # Overlap step for衔接
   subset = []
   subset_size.times do |j|
-    idx = (start + j) % EVENT_POOL_MH.length  # Loop to cover all events
-    subset << EVENT_POOL_MH[idx]
+    idx = (start + j) % EP_MH.length  # Loop to cover all events
+    subset << EP_MH[idx]
   end
   event_subsets << subset
 end
@@ -51,19 +51,19 @@ $variant_start_beat = 0
 
 # Live loops with variant evolution
 live_loop :kick do
-  if variant_index >= VARIANT_COUNT_MH
+  if variant_index >= VC_MH
     stop
   end
   t = (current_beat - $variant_start_beat) * (60.0 / BPM_MH)
   fusion = get_fusion_mh(t) + drift
   amp = clamp(fusion * 0.8, 0.1, 1.0)
-  pan = S_PAN.call(LANE_PAN_MH.call(t) + VEL_PAN_OFF_MH * fusion)
+  pan = S_PAN.call(LP_MH.call(t) + VP_MH * fusion)
   sample :bd_haus, amp: amp, pan: pan
   sleep 1.0 / (BPM_MH / 60.0)
 end
 
 live_loop :bass do
-  if variant_index >= VARIANT_COUNT_MH
+  if variant_index >= VC_MH
     stop
   end
   t = (current_beat - $variant_start_beat) * (60.0 / BPM_MH)
@@ -76,13 +76,13 @@ live_loop :bass do
 end
 
 live_loop :melody do
-  if variant_index >= VARIANT_COUNT_MH
+  if variant_index >= VC_MH
     stop
   end
   t = (current_beat - $variant_start_beat) * (60.0 / BPM_MH)
   fusion = get_fusion_mh(t) + drift
   amp = clamp(fusion * 0.7, 0.1, 0.9)
-  pan = S_PAN.call(HORIZON_PAN_MH + LANE_PAN_MH.call(t) * 0.2)
+  pan = S_PAN.call(HP_MH + LP_MH.call(t) * 0.2)
   notes = scale(:c4, :major)[(kick_seq[(t.to_i % kick_seq.length)] * 7).to_i % 7]  # Fixed: modulo 7 to prevent index out of range (major scale has 7 notes)
   # Pad layering: multiple synths for harmony
   synth :piano, note: notes, amp: amp, pan: pan, release: 1.0
@@ -96,26 +96,26 @@ live_loop :melody do
 end
 
 live_loop :percussion do
-  if variant_index >= VARIANT_COUNT_MH
+  if variant_index >= VC_MH
     stop
   end
   t = (current_beat - $variant_start_beat) * (60.0 / BPM_MH)
   fusion = get_fusion_mh(t) + drift
   amp = clamp(fusion * 0.5, 0.05, 0.7)
-  pan = S_PAN.call(LANE_PAN_MH.call(t) * -1)
+  pan = S_PAN.call(LP_MH.call(t) * -1)
   sample :sn_dub, amp: amp, pan: pan if event_seq[(t.to_i % event_seq.length)] < 0.3 + fusion * 0.4  # Deterministic replacement for rand
   sleep 0.5 / (BPM_MH / 60.0)
 end
 
 live_loop :fx do
-  if variant_index >= VARIANT_COUNT_MH
+  if variant_index >= VC_MH
     stop
   end
   t = (current_beat - $variant_start_beat) * (60.0 / BPM_MH)
   fusion = get_fusion_mh(t) + drift
   amp = clamp(fusion * 0.4, 0.02, 0.6)
   pan_offset = event_seq[(t.to_i % event_seq.length)] * 1.2 - 0.6  # Deterministic replacement for rand(-0.6..0.6)
-  pan = S_PAN.call(HORIZON_PAN_MH + pan_offset * fusion)
+  pan = S_PAN.call(HP_MH + pan_offset * fusion)
   # FX stacking: nested reverb and echo
   with_fx :reverb, room: 0.8, decay: 2.0 + fusion * 2.0 do
     with_fx :echo, phase: 0.25, decay: 0.5 do
@@ -126,7 +126,7 @@ live_loop :fx do
 end
 
 live_loop :events do
-  if variant_index >= VARIANT_COUNT_MH
+  if variant_index >= VC_MH
     stop
   end
   t = (current_beat - $variant_start_beat) * (60.0 / BPM_MH)
@@ -149,14 +149,14 @@ live_loop :events do
       pan_offset = event_seq[(t.to_i % event_seq.length)] * 1.0 - 0.5
       sample :sn_dub, amp: clamp(0.4, 0.1, 1.0), pan: S_PAN.call(pan_offset)
     when :synth_pad
-      synth :saw, note: :a4, amp: clamp(0.8, 0.1, 1.0), pan: S_PAN.call(HORIZON_PAN_MH)
+      synth :saw, note: :a4, amp: clamp(0.8, 0.1, 1.0), pan: S_PAN.call(HP_MH)
     when :fx_reverb
       with_fx :reverb do
         synth :saw, note: :c4, amp: clamp(0.5, 0.1, 1.0), release: 2.0
       end
     when :amen_fill
-      amen_index = (variant_index + t.to_i) % AMEN_POOL.length  # Deterministic Amen selection
-      sample AMEN_POOL[amen_index], amp: clamp(0.6, 0.1, 1.0), pan: S_PAN.call(event_seq[(t.to_i % event_seq.length)] * 0.8 - 0.4), rate: 0.9
+      amen_index = (variant_index + t.to_i) % AP.length  # Deterministic Amen selection
+      sample AP[amen_index], amp: clamp(0.6, 0.1, 1.0), pan: S_PAN.call(event_seq[(t.to_i % event_seq.length)] * 0.8 - 0.4), rate: 0.9
     # Add more cases as needed
     end
   end
@@ -167,7 +167,7 @@ end
 live_loop :variant_ctrl do
   # DEBUG: Print progress if in DEBUG mode
   if DEBUG
-    puts "DEBUG: Starting variant #{variant_index + 1} of #{VARIANT_COUNT_MH}"
+    puts "DEBUG: Starting variant #{variant_index + 1} of #{VC_MH}"
   end
   
   # Record start beat for this variant
@@ -183,7 +183,7 @@ live_loop :variant_ctrl do
   end
   sleep 0.5  # Prompt end, total ~1.5 sec
   
-  total_seg = SEGMENTS_MH.values.sum
+  total_seg = S_MH.values.sum
   sleep total_seg  # Play variant
   
   # Breathing gap: 2-sec silence for rhythm
@@ -191,5 +191,5 @@ live_loop :variant_ctrl do
   
   variant_index += 1
   drift += 0.01  # Cumulative drift
-  stop if variant_index >= VARIANT_COUNT_MH
+  stop if variant_index >= VC_MH
 end
