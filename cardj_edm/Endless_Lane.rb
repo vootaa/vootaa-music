@@ -62,7 +62,7 @@ live_loop :bass do
   fusion = get_fusion_el(t) + drift
   amp = clamp(fusion * 0.7, 0.05, 0.9)
   pan = 0
-  note = scale(:c2, :minor)[(melody_seq[(t.to_i % melody_seq.length)] * 7).to_i]
+  note = scale(:c2, :minor)[(melody_seq[(t.to_i % melody_seq.length)] * 7).to_i % 7]  # Fixed: modulo 7 to prevent index out of range (minor scale has 7 notes)
   synth :saw, note: note, amp: amp, pan: pan, release: 0.6
   sleep 2.0 / (BPM_EL / 60.0)
 end
@@ -75,7 +75,7 @@ live_loop :melody do
   fusion = get_fusion_el(t) + drift
   amp = clamp(fusion * 0.8, 0.1, 1.0)
   pan = S_PAN.call(HORIZON_PAN_EL + LANE_PAN_EL.call(t) * 0.2)
-  notes = scale(:c4, :major)[(kick_seq[(t.to_i % kick_seq.length)] * 7).to_i]
+  notes = scale(:c4, :major)[(kick_seq[(t.to_i % kick_seq.length)] * 7).to_i % 7]  # Fixed: modulo 7 to prevent index out of range (major scale has 7 notes)
   # Pad layering: multiple synths for harmony
   synth :saw, note: notes, amp: amp, pan: pan, release: 1.2  # Extended release for progressive feel
   if fusion > 0.7

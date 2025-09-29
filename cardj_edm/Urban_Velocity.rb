@@ -62,7 +62,7 @@ live_loop :bass do
   fusion = get_fusion_uv(t) + drift
   amp = clamp(fusion * 0.8, 0.1, 0.9)
   pan = 0
-  note = scale(:c2, :minor)[(melody_seq[(t.to_i % melody_seq.length)] * 7).to_i]
+  note = scale(:c2, :minor)[(melody_seq[(t.to_i % melody_seq.length)] * 7).to_i % 7]  # Fixed: modulo 7 to prevent index out of range (minor scale has 7 notes)
   synth :saw, note: note, amp: amp, pan: pan, release: 0.3  # Shorter release for punchy bass
   sleep 1.0 / (BPM_UV / 60.0)  # Faster bass for intensity
 end
@@ -75,7 +75,7 @@ live_loop :melody do
   fusion = get_fusion_uv(t) + drift
   amp = clamp(fusion * 0.9, 0.2, 1.0)
   pan = S_PAN.call(HORIZON_PAN_UV + LANE_PAN_UV.call(t) * 0.3)
-  notes = scale(:c5, :major)[(kick_seq[(t.to_i % kick_seq.length)] * 7).to_i]
+  notes = scale(:c5, :major)[(kick_seq[(t.to_i % kick_seq.length)] * 7).to_i % 7]  # Fixed: modulo 7 to prevent index out of range (major scale has 7 notes)
   # Pad layering: multiple synths for harmony
   synth :pluck, note: notes, amp: amp, pan: pan, release: 0.2  # Pluck for staccato Electro feel
   if fusion > 0.6
