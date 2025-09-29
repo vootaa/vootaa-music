@@ -148,7 +148,7 @@ end
 live_loop :variant_ctrl do
   # DEBUG: Print progress if in DEBUG mode
   if DEBUG
-    puts "DEBUG: Starting variant #{variant_index + 1} of #{VARIANT_COUNT_DI}"
+    puts "DEBUG: Starting variant #{variant_index + 1} of #{VARIANT_COUNT_SD}"
   end
   
   # Variant start prompt: unique Synth melody for Chillout with stereo surround and fade-in
