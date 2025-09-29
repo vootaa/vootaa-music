@@ -43,3 +43,39 @@ LANE_PAN_UV = lambda { |t| Math.sin(t * PI / 8) * 0.4 }  # Faster lane switching
 HORIZON_PAN_UV = 0.3
 VEL_PAN_OFF_UV = 0.15
 EVENT_POOL_UV = [:bd_tek, :sn_dub, :bd_fat, :synth_pluck, :synth_saw, :sample_perc, :fx_reverb, :fx_echo, :synth_pad, :amen_fill]
+
+# Endless Lane constants
+BPM_EL = 132  # Steady BPM for long highway cruising
+VARIANT_COUNT_EL = 6  # Number of variants; total duration ~35 min
+SEGMENTS_EL = { intro: 50, drive: 150, peak: 100, outro: 50 }  # Single variant ~6.25 min; total ~37.5 min, adjust for 35 min
+VEL_BASE_EL = 0.4
+INT_BASE_EL = 0.2
+FUSION_MAX_EL = 1.0
+LANE_PAN_EL = lambda { |t| Math.sin(t * PI / 12) * 0.2 }  # Gentle lane sway for highway feel
+HORIZON_PAN_EL = 0.4
+VEL_PAN_OFF_EL = 0.05
+EVENT_POOL_EL = [:bd_haus, :sn_dub, :bd_fat, :synth_saw, :synth_pad, :sample_perc, :fx_reverb, :fx_echo, :synth_pluck, :amen_fill]
+
+# Midnight Horizon constants
+BPM_MH = 138  # Uplifting BPM for night driving
+VARIANT_COUNT_MH = 5  # Number of variants; total duration ~30 min
+SEGMENTS_MH = { intro: 40, drive: 100, peak: 80, outro: 40 }  # Single variant ~4.33 min; total ~21.67 min, adjust for 30 min
+VEL_BASE_MH = 0.3
+INT_BASE_MH = 0.5
+FUSION_MAX_MH = 1.0
+LANE_PAN_MH = lambda { |t| Math.sin(t * PI / 10) * 0.5 }  # Wider sway for ambient night feel
+HORIZON_PAN_MH = 0.6
+VEL_PAN_OFF_MH = 0.2
+EVENT_POOL_MH = [:bd_haus, :sn_dub, :bd_fat, :synth_pad, :synth_saw, :sample_perc, :fx_reverb, :fx_echo, :synth_pluck, :amen_fill]
+
+# Station Dreams constants
+BPM_SD = 100  # Lower BPM for chillout relaxation
+VARIANT_COUNT_SD = 4  # Number of variants; total duration ~18 min
+SEGMENTS_SD = { intro: 30, drive: 60, peak: 40, outro: 20 }  # Single variant ~2.5 min; total ~10 min, adjust for 18 min
+VEL_BASE_SD = 0.2
+INT_BASE_SD = 0.1
+FUSION_MAX_SD = 0.8
+LANE_PAN_SD = lambda { |t| Math.sin(t * PI / 15) * 0.1 }  # Subtle sway for restful feel
+HORIZON_PAN_SD = 0.7
+VEL_PAN_OFF_SD = 0.05
+EVENT_POOL_SD = [:bd_haus, :sn_dub, :bd_fat, :synth_pad, :synth_saw, :sample_perc, :fx_reverb, :fx_echo, :synth_pluck, :amen_fill]
