@@ -7,14 +7,14 @@ def clamp(val, min, max)
 end
 
 def get_fusion(t)
-  if t < SEG_DI[:intro]
-    clamp(VEL_BASE_DI + (t / SEG_DI[:intro]) * 0.3, 0, 0.6)
-  elsif t < SEG_DI[:intro] + SEG_DI[:drive]
-    clamp(0.6 + ((t - SEG_DI[:intro]) / SEG_DI[:drive]) * 0.4, 0.6, 1.0)
-  elsif t < SEG_DI[:intro] + SEG_DI[:drive] + SEG_DI[:peak]
+  if t < SEGMENTS_DI[:intro]
+    clamp(VEL_BASE_DI + (t / SEGMENTS_DI[:intro]) * 0.3, 0, 0.6)
+  elsif t < SEGMENTS_DI[:intro] + SEGMENTS_DI[:drive]
+    clamp(0.6 + ((t - SEGMENTS_DI[:intro]) / SEGMENTS_DI[:drive]) * 0.4, 0.6, 1.0)
+  elsif t < SEGMENTS_DI[:intro] + SEGMENTS_DI[:drive] + SEGMENTS_DI[:peak]
     1.0
   else
-    clamp(1.0 - ((t - (SEG_DI[:intro] + SEG_DI[:drive] + SEG_DI[:peak])) / SEG_DI[:outro]), 0, 1.0)
+    clamp(1.0 - ((t - (SEGMENTS_DI[:intro] + SEGMENTS_DI[:drive] + SEGMENTS_DI[:peak])) / SEGMENTS_DI[:outro]), 0, 1.0)
   end
 end
 
@@ -101,16 +101,30 @@ live_loop :events do
       with_fx :reverb do
         synth :saw, note: :e4, amp: 0.3, release: 1.0
       end
+    when :amen_fill
+      sample AMEN_POOL.sample, amp: 0.6, pan: rand(-0.3..0.3), rate: 1.0  # External WAV for rhythmic fill
     # Add more cases as needed
     end
   end
   sleep 16.0 / (BPM_DI / 60.0)
 end
 
-# Variant control
+# Variant control with prompt and breathing gap
 live_loop :variant_ctrl do
-  total_seg = SEG_DI.values.sum
-  sleep total_seg  # Wait for one full variant
+  # Variant start prompt: unique Synth notes with fade-in for smooth recognition
+  notes = [:c4, :e4, :g4]  # Bright chord for House style
+  notes.each_with_index do |n, i|
+    synth :piano, note: n, amp: (i + 1) * 0.2, release: 0.5, pan: 0  # Fade-in via amp increase
+    sleep 0.3
+  end
+  sleep 0.5  # Prompt end
+  
+  total_seg = SEGMENTS_DI.values.sum
+  sleep total_seg  # Play variant
+  
+  # Breathing gap: 2-sec silence for rhythm
+  sleep 2.0
+  
   variant_index += 1
   drift = Math.sin(variant_index * PI / VARIANT_COUNT_DI) * 0.1
   stop if variant_index >= VARIANT_COUNT_DI

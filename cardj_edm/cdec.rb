@@ -11,14 +11,23 @@ MD={
   sqrt2:"141421356237309504880168872420969807856967187537694807317667973799073247846210703885038753432764157273501384623091229702492483605598507372126441214970999358314132226659275055927557999505011527820605714"
 }.freeze
 
+# Amen sample pool for all 6 tracks (filtered for car EDM: clear breaks, varying BPM)
+AMEN_POOL = [
+  "/Users/tsb/Pop-Proj/rhythm-lab.com_amen_vol.1/WAV/cw_amen01_175.wav",
+  "/Users/tsb/Pop-Proj/rhythm-lab.com_amen_vol.1/WAV/cw_amen04_170.wav",
+  "/Users/tsb/Pop-Proj/rhythm-lab.com_amen_vol.1/WAV/cw_amen07_172.wav",
+  "/Users/tsb/Pop-Proj/rhythm-lab.com_amen_vol.1/WAV/cw_amen13_173.wav",
+  "/Users/tsb/Pop-Proj/rhythm-lab.com_amen_vol.1/WAV/cw_amen18_178.wav"
+]  # Select 5 for variety; use in events for rhythmic fills
+
 # Dawn Ignition constants
 BPM_DI = 128
 VARIANT_COUNT_DI = 5  # Number of variants; total duration = VARIANT_COUNT_DI * single variant length (~25 min total)
-SEG_DI = { intro: 60, drive: 120, peak: 80, outro: 40 }  # Single variant ~5 min (300 sec); adjust for total ~25 min
+SEGMENTS_DI = { intro: 60, drive: 120, peak: 80, outro: 40 }  # Single variant ~5 min (300 sec); adjust for total ~25 min
 VEL_BASE_DI = 0.5
 INT_BASE_DI = 0.3
 FUSION_MAX_DI = 1.0
 LANE_PAN_DI = lambda { |t| Math.sin(t * PI / 10) * 0.3 }
 HORIZON_PAN_DI = 0.5
 VEL_PAN_OFF_DI = 0.1
-EVENT_POOL_DI = [:bd_haus, :sn_dub, :bd_fat, :synth_piano, :synth_saw, :sample_perc, :fx_reverb, :fx_echo, :synth_pad]  # Filtered for car House style; subsets per variant
+EVENT_POOL_DI = [:bd_haus, :sn_dub, :bd_fat, :synth_piano, :synth_saw, :sample_perc, :fx_reverb, :fx_echo, :synth_pad, :amen_fill]
