@@ -29,7 +29,7 @@ end
 kick_seq = get_md_seq("golden", 100)
 bass_seq = get_md_seq("pi", 100)
 melody_seq = get_md_seq("e", 200)
-event_seq = get_md_seq("pi", EVENT_POOL_DI.length)
+event_seq = get_md_seq("sqrt2", EVENT_POOL_DI.length)
 
 # Initialize sequences and variant logic
 variant_index = 0
@@ -46,12 +46,15 @@ VARIANT_COUNT_DI.times do |i|
   event_subsets << subset
 end
 
+# Global for variant start beat
+$variant_start_beat = 0
+
 # Live loops with variant evolution
 live_loop :kick do
   if variant_index >= VARIANT_COUNT_DI
     stop
   end
-  t = current_beat * (60.0 / BPM_DI)
+  t = (current_beat - $variant_start_beat) * (60.0 / BPM_DI)
   fusion = get_fusion(t) + drift
   amp = clamp(fusion * 0.8, 0.1, 1.0)
   pan = S_PAN.call(LANE_PAN_DI.call(t) + VEL_PAN_OFF_DI * fusion)
@@ -63,7 +66,7 @@ live_loop :bass do
   if variant_index >= VARIANT_COUNT_DI
     stop
   end
-  t = current_beat * (60.0 / BPM_DI)
+  t = (current_beat - $variant_start_beat) * (60.0 / BPM_DI)
   fusion = get_fusion(t) + drift
   amp = clamp(fusion * 0.6, 0.05, 0.8)
   pan = 0  # Low freq centered
@@ -76,7 +79,7 @@ live_loop :melody do
   if variant_index >= VARIANT_COUNT_DI
     stop
   end
-  t = current_beat * (60.0 / BPM_DI)
+  t = (current_beat - $variant_start_beat) * (60.0 / BPM_DI)
   fusion = get_fusion(t) + drift
   amp = clamp(fusion * 0.7, 0.1, 0.9)
   pan = S_PAN.call(HORIZON_PAN_DI + LANE_PAN_DI.call(t) * 0.2)
@@ -84,7 +87,7 @@ live_loop :melody do
   # Pad layering: multiple synths for harmony
   synth :piano, note: notes, amp: amp, pan: pan, release: 1.0
   if fusion > 0.5
-    synth :saw, note: chord_degree(notes, :major, 3), amp: amp * 0.5, pan: pan + 0.1, release: 1.5  # Chord enhancement
+    synth :saw, note: chord(notes, :major), amp: amp * 0.5, pan: pan + 0.1, release: 1.5  # Fixed: use chord instead of chord_degree to avoid scale error
     if fusion > 0.8  # Add more chords for richness
       synth :piano, note: chord(:c4, :major7), amp: amp * 0.3, pan: pan - 0.1, release: 2.0  # Full chord layering
     end
@@ -96,7 +99,7 @@ live_loop :percussion do
   if variant_index >= VARIANT_COUNT_DI
     stop
   end
-  t = current_beat * (60.0 / BPM_DI)
+  t = (current_beat - $variant_start_beat) * (60.0 / BPM_DI)
   fusion = get_fusion(t) + drift
   amp = clamp(fusion * 0.5, 0.05, 0.7)
   pan = S_PAN.call(LANE_PAN_DI.call(t) * -1)
@@ -108,7 +111,7 @@ live_loop :fx do
   if variant_index >= VARIANT_COUNT_DI
     stop
   end
-  t = current_beat * (60.0 / BPM_DI)
+  t = (current_beat - $variant_start_beat) * (60.0 / BPM_DI)
   fusion = get_fusion(t) + drift
   amp = clamp(fusion * 0.4, 0.02, 0.6)
   pan_offset = event_seq[(t.to_i % event_seq.length)] * 1.0 - 0.5  # Deterministic replacement for rand(-0.5..0.5)
@@ -126,12 +129,18 @@ live_loop :events do
   if variant_index >= VARIANT_COUNT_DI
     stop
   end
-  t = current_beat * (60.0 / BPM_DI)
+  t = (current_beat - $variant_start_beat) * (60.0 / BPM_DI)
   fusion = get_fusion(t) + drift
   threshold = BPM_DI > 130 ? 0.6 : 0.7  # Velocity-based threshold
+  if DEBUG
+    puts "DEBUG: Variant #{variant_index}, t #{t.round(2)}, Fusion #{fusion.round(2)}, Threshold #{threshold}, Event_subsets exist: #{!event_subsets[variant_index].nil?}"
+  end
   if fusion > threshold && event_subsets[variant_index]
     event_index = (t.to_i / 16) % event_subsets[variant_index].length  # Deterministic selection
     event = event_subsets[variant_index][event_index]
+    if DEBUG
+      puts "DEBUG: Event triggered: #{event}"
+    end
     case event
     when :bd_haus
       pan_offset = event_seq[(t.to_i % event_seq.length)] * 1.0 - 0.5  # Deterministic
@@ -149,8 +158,6 @@ live_loop :events do
       amen_index = (variant_index + t.to_i) % AMEN_POOL.length  # Deterministic Amen selection
       sample AMEN_POOL[amen_index], amp: clamp(0.6, 0.1, 1.0), pan: S_PAN.call(event_seq[(t.to_i % event_seq.length)] * 0.8 - 0.4), rate: 1.0
     # Add more cases as needed
-    # when :midi_anchor  # New: Anchor point for external MIDI (replace with actual path later)
-    #   sample "/path/to/external_midi_anchor.wav", amp: clamp(0.8, 0.1, 1.0), pan: S_PAN.call(HORIZON_PAN_DI)  # Placeholder for rendered MIDI
     end
   end
   sleep 16.0 / (BPM_DI / 60.0)
@@ -162,6 +169,9 @@ live_loop :variant_ctrl do
   if DEBUG
     puts "DEBUG: Starting variant #{variant_index + 1} of #{VARIANT_COUNT_DI}"
   end
+  
+  # Record start beat for this variant
+  $variant_start_beat = current_beat
   
   # Variant start prompt: unique Synth melody for House with stereo surround and fade-in
   melody_notes = [:c4, :e4, :g4, :c5]
