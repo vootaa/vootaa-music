@@ -129,7 +129,7 @@ Example:
   - out/
     - midi/
     - wav/
-  - sonic-pi-code/
+  - sonic-pi/
     - cardj_playback.rb
   - tests/
     - smoke_generation.py
