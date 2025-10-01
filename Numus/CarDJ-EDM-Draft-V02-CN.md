@@ -2,525 +2,544 @@
 
 ## 项目概述
 
-基于Numus算法机制，构建专为车载环境设计的长时EDM生成系统。系统通过多章节组合、智能过渡和车载音响优化，实现3小时连续播放的《动感旅途》专辑。
+基于Numus算法机制，构建专为车载环境设计的长时EDM生成系统。系统通过章节化组合、程序化DJ过渡和车载音响优化，实现《动感旅途》专辑的6首独立EDM乐曲。
 
 ---
 
 ## 1. 系统架构设计
 
-### 1.1 三层架构扩展
+### 1.1 层级管理架构
+
+```
+专辑《动感旅途》
+├── 乐曲1: Dawn Ignition (20-25分钟)
+│   ├── 章节1: Gentle Awakening (2-3分钟)
+│   ├── 章节2: Morning Energy (2-3分钟)
+│   ├── ...
+│   └── 章节N: Dawn Peak (2-3分钟)
+├── 乐曲2: Urban Velocity (20分钟)
+│   ├── 章节1: City Entrance (2-3分钟)
+│   └── ...
+└── 乐曲6: Final Ascent (20分钟)
+```
+
+### 1.2 三层生成架构
 
 #### DNA层（音乐基因库）
-
 ```python
-# DNA基因定义
-CHAPTER_DNA = {
+# 专辑级DNA配置
+ALBUM_DNA = {
+    "motion_groove": {
+        "global_energy_curve": [0.3, 0.7, 0.9, 0.8, 0.3, 0.95],  # 6首乐曲的整体能量
+        "key_relationships": ["C", "Am", "F", "Dm", "G", "C"],    # 调性关联
+        "style_evolution": ["progressive_house", "electro_house", "trance", "ambient_trance", "chillout", "uplifting_trance"]
+    }
+}
+
+# 乐曲级DNA配置
+TRACK_DNA = {
     "dawn_ignition": {
-        "style": "progressive_house",
+        "duration_minutes": 25,
+        "chapter_count": 8,
+        "local_energy_curve": [0.2, 0.4, 0.6, 0.8, 0.9, 0.7, 0.8, 0.6],
         "key": "C_major",
         "bpm": 120,
-        "energy_curve": [0.3, 0.7, 0.9, 0.6],
-        "signature_elements": ["warm_pad", "light_kick", "morning_bells"],
-        "duration_minutes": 25
-    },
-    "urban_velocity": {
-        "style": "electro_house", 
-        "key": "E_minor",
-        "bpm": 128,
-        "energy_curve": [0.8, 0.9, 1.0, 0.8],
-        "signature_elements": ["hard_kick", "synth_stabs", "urban_fx"],
-        "duration_minutes": 20
+        "style": "progressive_house",
+        "chapter_templates": [
+            {"name": "gentle_awakening", "energy": 0.2, "duration": 180},
+            {"name": "morning_stir", "energy": 0.4, "duration": 180},
+            {"name": "urban_preparation", "energy": 0.6, "duration": 180},
+            # ...更多章节
+        ]
     }
-    # ...其他章节
+}
+
+# 章节级DNA配置  
+CHAPTER_DNA = {
+    "gentle_awakening": {
+        "structure": "intro_build_sustain_outro",
+        "signature_elements": ["warm_pad", "subtle_kick", "birds_sample"],
+        "energy_evolution": [0.1, 0.2, 0.25, 0.15],
+        "edm_backbone": {
+            "kick_pattern": "minimal_four_four",
+            "synth_layers": ["warm_pad", "morning_bells"],
+            "effects_chain": ["reverb_large", "filter_sweep"]
+        },
+        "midi_decoration": {
+            "melody_instruments": ["piano", "flute"],
+            "harmony_layers": ["strings", "choir"],
+            "ornamental_elements": ["bird_samples", "nature_fx"]
+        }
+    }
 }
 ```
 
 #### 算法生成层（Numus Engine）
-
 ```python
 class NumusEngine:
-    def __init__(self, dna_config):
-        self.dna = dna_config
-        self.pi_sequence = self._generate_pi_sequence(1000)
-        self.phi_sequence = self._generate_phi_sequence(1000)
+    def __init__(self):
+        self.pi_sequence = self._generate_pi_sequence(10000)
+        self.phi_sequence = self._generate_phi_sequence(10000)
     
-    def generate_chapter(self, chapter_name, duration_bars=64):
-        """生成单个章节的MIDI数据"""
-        dna = self.dna[chapter_name]
+    def generate_track(self, track_name):
+        """生成完整乐曲（包含多个章节）"""
+        track_dna = TRACK_DNA[track_name]
+        chapters = []
         
-        # 基于数学序列生成
-        melody = self._generate_melody_pi(dna, duration_bars)
-        harmony = self._generate_harmony_phi(dna, duration_bars) 
-        rhythm = self._generate_rhythm_fractal(dna, duration_bars)
+        for chapter_template in track_dna["chapter_templates"]:
+            chapter_data = self.generate_chapter(
+                chapter_template["name"], 
+                chapter_template["duration"],
+                track_dna
+            )
+            chapters.append(chapter_data)
+        
+        # 生成章节间过渡
+        transitions = self._generate_chapter_transitions(chapters)
         
         return {
-            "melody": melody,
-            "harmony": harmony, 
-            "rhythm": rhythm,
-            "metadata": dna
+            "track_name": track_name,
+            "chapters": chapters,
+            "transitions": transitions,
+            "metadata": track_dna
         }
     
-    def _generate_pi_sequence(self, length):
-        """基于π生成确定性序列"""
-        pi_str = "31415926535897932384626433832795..."
-        return [int(d)/9.0 for d in pi_str[:length]]
+    def generate_chapter(self, chapter_name, duration_seconds, parent_track_dna):
+        """生成单个章节（2-3分钟完整结构）"""
+        chapter_dna = CHAPTER_DNA[chapter_name]
+        
+        # EDM骨干生成
+        edm_backbone = self._generate_edm_backbone(chapter_dna, duration_seconds)
+        
+        # MIDI装饰生成
+        midi_decoration = self._generate_midi_decoration(chapter_dna, duration_seconds)
+        
+        return {
+            "chapter_name": chapter_name,
+            "duration": duration_seconds,
+            "edm_backbone": edm_backbone,
+            "midi_decoration": midi_decoration,
+            "structure": self._generate_chapter_structure(chapter_dna),
+            "metadata": chapter_dna
+        }
 ```
 
-#### 融合输出层（Sonic Pi Integration）
-
+#### 融合输出层（Sonic Pi + MIDI渲染）
 ```ruby
-# 车载音响空间配置
-CAR_SPEAKER_CONFIG = {
-  front_left: { pan: -0.8, priority: :melody },
-  front_right: { pan: 0.8, priority: :melody },
-  rear_left: { pan: -0.6, priority: :ambient },
-  rear_right: { pan: 0.6, priority: :ambient },
-  subwoofer: { pan: 0.0, priority: :bass }
-}
-
-# 章节播放管理器
-define :play_chapter do |chapter_data, car_config|
-  live_loop :chapter_master do
-    # 根据车载配置分配音轨
-    distribute_tracks_to_speakers(chapter_data, car_config)
-    sync :chapter_clock
+# 乐曲播放控制器
+define :play_track do |track_data|
+  live_loop :track_master do
+    track_data[:chapters].each_with_index do |chapter, index|
+      # 播放章节
+      play_chapter(chapter)
+      
+      # 执行程序化DJ过渡（如果不是最后一章）
+      if index < track_data[:chapters].length - 1
+        next_chapter = track_data[:chapters][index + 1]
+        transition_data = track_data[:transitions][index]
+        execute_dj_transition(chapter, next_chapter, transition_data)
+      end
+    end
+    
+    stop  # 乐曲播放完成
   end
 end
 ```
 
 ---
 
-## 2. 章节化音乐结构
+## 2. 乐曲内章节化结构
 
 ### 2.1 章节完整性设计
 
-每个章节（2-3分钟）包含：
-
-- **Intro段**（16小节）：建立调性和节奏
-- **Build段**（16小节）：逐渐加入元素
-- **Drop段**（16小节）：高潮展现
-- **Outro段**（16小节）：为过渡做准备
+每个章节（2-3分钟）包含完整EDM结构：
+- **Intro段**（32秒）：建立氛围和调性
+- **Build段**（32秒）：逐渐加入元素，增强张力
+- **Drop段**（64秒）：高潮展现，主要内容
+- **Breakdown段**（32秒）：能量回落，准备过渡
+- **Outro段**（20秒）：为下一章节做准备
 
 ```python
 class ChapterStructure:
-    def __init__(self, dna, total_bars=64):
-        self.dna = dna
-        self.structure = {
-            "intro": self._generate_intro(0, 16),
-            "build": self._generate_build(16, 32), 
-            "drop": self._generate_drop(32, 48),
-            "outro": self._generate_outro(48, 64)
+    def __init__(self, chapter_dna, duration_seconds=180):
+        self.dna = chapter_dna
+        self.sections = {
+            "intro": {"start": 0, "duration": 32, "energy_range": (0.1, 0.3)},
+            "build": {"start": 32, "duration": 32, "energy_range": (0.3, 0.7)},
+            "drop": {"start": 64, "duration": 64, "energy_range": (0.7, 1.0)},
+            "breakdown": {"start": 128, "duration": 32, "energy_range": (1.0, 0.4)},
+            "outro": {"start": 160, "duration": 20, "energy_range": (0.4, 0.2)}
         }
     
-    def _generate_intro(self, start_bar, end_bar):
-        """渐进式引入元素"""
-        elements = []
-        for bar in range(start_bar, end_bar):
-            density = (bar - start_bar) / 16.0  # 0到1渐进
-            elements.append({
-                "bar": bar,
-                "kick_density": density * 0.5,
-                "melody_presence": density * 0.3,
-                "pad_volume": density * 0.8
-            })
-        return elements
+    def generate_section_content(self, section_name):
+        """生成段落内容"""
+        section = self.sections[section_name]
+        
+        # EDM骨干内容
+        edm_content = {
+            "kick_density": self._calculate_kick_density(section),
+            "synth_layers": self._select_synth_layers(section),
+            "effects_intensity": self._calculate_effects(section)
+        }
+        
+        # MIDI装饰内容
+        midi_content = {
+            "melody_presence": self._calculate_melody_presence(section),
+            "harmony_complexity": self._calculate_harmony_complexity(section),
+            "ornamental_density": self._calculate_ornaments(section)
+        }
+        
+        return {"edm": edm_content, "midi": midi_content}
 ```
 
-### 2.2 DNA差异化设计
-
-不同章节通过DNA参数体现独特性：
+### 2.2 EDM骨干 + MIDI装饰结构
 
 ```python
-# 场景化DNA配置
-DNA_VARIATIONS = {
-    "morning_commute": {
-        "tempo_range": (118, 122),
-        "brightness": 0.8,  # 明亮度
-        "complexity": 0.6,  # 复杂度
-        "warmth": 0.9       # 温暖感
-    },
-    "highway_cruise": {
-        "tempo_range": (126, 130), 
-        "brightness": 0.6,
-        "complexity": 0.4,  # 简洁有力
-        "driving_power": 0.9
-    }
-}
+class LayeredGeneration:
+    def generate_edm_backbone(self, chapter_dna, duration):
+        """生成EDM骨干（Sonic Pi负责）"""
+        backbone = {
+            "kick_pattern": self._generate_kick_pattern(chapter_dna),
+            "bass_line": self._generate_bass_line(chapter_dna),
+            "synth_layers": {
+                "pad": self._generate_pad_progression(chapter_dna),
+                "lead": self._generate_lead_synth(chapter_dna),
+                "fx": self._generate_fx_elements(chapter_dna)
+            },
+            "effects_automation": self._generate_effects_automation(chapter_dna)
+        }
+        return backbone
+    
+    def generate_midi_decoration(self, chapter_dna, duration):
+        """生成MIDI装饰（渲染为WAV采样）"""
+        decoration = {
+            "melody": self._generate_melody_midi(chapter_dna, duration),
+            "harmony": self._generate_harmony_midi(chapter_dna, duration),
+            "ornaments": self._generate_ornamental_midi(chapter_dna, duration)
+        }
+        
+        # 渲染为WAV文件
+        midi_paths = {}
+        for layer_name, midi_data in decoration.items():
+            midi_path = f"out/midi/{chapter_dna['name']}_{layer_name}.mid"
+            wav_path = f"out/wav/{chapter_dna['name']}_{layer_name}.wav"
+            
+            self._save_midi(midi_data, midi_path)
+            self._render_midi_to_wav(midi_path, wav_path)
+            midi_paths[layer_name] = wav_path
+        
+        return midi_paths
 ```
 
 ---
 
-## 3. 智能过渡系统
+## 3. 程序化DJ过渡系统
 
-### 3.1 DJ过渡技术库
-
-参考人类DJ技巧，构建参数化过渡方法：
+### 3.1 章节间过渡技术
 
 ```python
-class TransitionEngine:
+class ChapterTransitionEngine:
     def __init__(self):
         self.transition_methods = [
-            "crossfade_mix",
-            "filter_sweep", 
-            "beat_match_sync",
-            "element_isolation",
-            "harmonic_bridge"
+            "beat_match_crossfade",    # 节拍匹配交叉淡化
+            "filter_sweep_transition", # 滤波器扫频过渡
+            "element_handoff",         # 元素交接过渡
+            "harmonic_bridge",         # 和声桥接过渡
+            "breakdown_rebuild"        # 分解重建过渡
         ]
     
-    def crossfade_mix(self, track_a, track_b, duration_bars=8):
-        """经典交叉淡化"""
-        transition = []
-        for bar in range(duration_bars):
-            fade_position = bar / duration_bars
-            transition.append({
-                "track_a_volume": 1.0 - fade_position,
-                "track_b_volume": fade_position,
-                "bar": bar
-            })
-        return transition
-    
-    def element_isolation(self, track_a, track_b, bridge_element="kick"):
-        """元素隔离过渡法"""
-        # 1. 逐步移除track_a的非桥接元素
-        # 2. 保持桥接元素（如鼓点）
-        # 3. 逐步引入track_b的元素
-        # 4. 最终移除桥接元素
+    def generate_transition(self, chapter_a, chapter_b):
+        """根据章节DNA特征选择和生成过渡"""
+        # 分析章节特征差异
+        energy_diff = abs(chapter_b["energy"] - chapter_a["energy"])
+        key_diff = self._calculate_key_distance(chapter_a["key"], chapter_b["key"])
+        style_diff = self._calculate_style_distance(chapter_a["style"], chapter_b["style"])
         
-        isolation_sequence = {
-            "phase_1": self._remove_elements(track_a, keep=[bridge_element]),
-            "phase_2": self._maintain_bridge(bridge_element),
-            "phase_3": self._introduce_elements(track_b, except_element=bridge_element),
-            "phase_4": self._remove_bridge(bridge_element)
-        }
-        return isolation_sequence
+        # 智能选择过渡方式
+        if energy_diff > 0.4:
+            method = "breakdown_rebuild"
+        elif key_diff > 3:
+            method = "harmonic_bridge"
+        elif style_diff > 0.6:
+            method = "filter_sweep_transition"
+        else:
+            method = "beat_match_crossfade"
+        
+        return self._generate_transition_sequence(chapter_a, chapter_b, method)
+    
+    def _generate_transition_sequence(self, chapter_a, chapter_b, method):
+        """生成具体的过渡序列"""
+        if method == "element_handoff":
+            return {
+                "method": method,
+                "duration_bars": 8,
+                "sequence": [
+                    {"bar": 0, "action": "fade_out_melody_a", "intensity": 0.8},
+                    {"bar": 2, "action": "maintain_rhythm_a", "intensity": 1.0},
+                    {"bar": 4, "action": "fade_in_pad_b", "intensity": 0.3},
+                    {"bar": 6, "action": "switch_rhythm_to_b", "intensity": 1.0},
+                    {"bar": 8, "action": "full_chapter_b", "intensity": 1.0}
+                ]
+            }
+        # ...其他过渡方法
 ```
 
 ### 3.2 Sonic Pi过渡实现
 
 ```ruby
-# 智能过渡控制器
-define :smart_transition do |from_chapter, to_chapter, method = :element_isolation|
+# 程序化DJ过渡控制器
+define :execute_dj_transition do |chapter_a, chapter_b, transition_data|
+  method = transition_data[:method]
+  sequence = transition_data[:sequence]
+  
   case method
-  when :element_isolation
-    # 第1阶段：移除来源章节的非核心元素
-    8.times do |i|
-      fade_factor = 1.0 - (i / 8.0)
-      
-      # 逐渐淡出旋律和和声
-      control_synth :melody, amp: fade_factor * 0.8
-      control_synth :harmony, amp: fade_factor * 0.6
-      
-      # 保持节奏元素
-      sample :bd_tek, amp: 0.8  # 桥接鼓点
-      sleep 1
-    end
-    
-    # 第2阶段：引入目标章节元素
-    8.times do |i|
-      intro_factor = i / 8.0
-      
-      # 逐渐引入新元素
-      with_synth to_chapter[:melody_synth] do
-        play to_chapter[:melody_notes].tick, amp: intro_factor * 0.6
+  when :element_handoff
+    # 执行元素交接过渡
+    sequence.each do |step|
+      case step[:action]
+      when "fade_out_melody_a"
+        control_layer :melody_a, amp: step[:intensity] * 0.5, amp_slide: 2
+      when "maintain_rhythm_a" 
+        # 保持A章节的节奏元素
+        continue_layer :rhythm_a
+      when "fade_in_pad_b"
+        start_layer :pad_b, amp: step[:intensity] * 0.4
+      when "switch_rhythm_to_b"
+        crossfade_layer :rhythm_a, :rhythm_b, duration: 4
+      when "full_chapter_b"
+        start_full_chapter chapter_b
       end
       
-      sample :bd_tek, amp: 0.8  # 保持桥接
-      sleep 1
+      sleep 2  # 每2拍执行一个动作
     end
     
-    # 第3阶段：完全切换到新章节
-    start_new_chapter(to_chapter)
+  when :filter_sweep_transition
+    # 执行滤波器扫频过渡
+    16.times do |i|
+      cutoff_value = 8000 - (i * 400)  # 从8kHz降到1.6kHz
+      control_layer :all_layers_a, cutoff: cutoff_value
+      
+      if i > 8
+        fade_factor = (i - 8) / 8.0
+        control_layer :all_layers_b, amp: fade_factor
+      end
+      
+      sleep 0.5
+    end
   end
 end
-```
-
-### 3.3 多样化过渡策略
-
-```python
-# 过渡方式参数化配置
-TRANSITION_CONFIGS = {
-    "smooth_crossfade": {
-        "duration_bars": 8,
-        "curve_type": "linear",
-        "overlap_percentage": 0.5
-    },
-    "dramatic_filter_sweep": {
-        "duration_bars": 4,
-        "filter_type": "lowpass",
-        "cutoff_range": (100, 8000),
-        "resonance": 0.7
-    },
-    "element_shuffle": {
-        "duration_bars": 16,
-        "isolation_element": "kick",
-        "bridge_duration": 4
-    }
-}
-
-class AdaptiveTransition:
-    def select_transition(self, from_dna, to_dna):
-        """根据DNA差异智能选择过渡方式"""
-        energy_diff = abs(to_dna["energy"] - from_dna["energy"])
-        key_diff = self._calculate_key_distance(from_dna["key"], to_dna["key"])
-        
-        if energy_diff > 0.3:
-            return "dramatic_filter_sweep"
-        elif key_diff > 3:  # 远关系调性
-            return "harmonic_bridge"
-        else:
-            return "smooth_crossfade"
 ```
 
 ---
 
 ## 4. 车载音响优化
 
-### 4.1 多喇叭分配策略
+### 4.1 分层音响映射
 
 ```ruby
-# 车载音响映射系统
-define :car_audio_mapper do |track_elements|
-  track_elements.each do |element|
-    case element[:type]
-    when :bass, :kick
-      # 低频 -> 前置 + 重低音
-      with_fx :hpf, cutoff: 20 do
-        route_to_speakers(element, [:front_left, :front_right, :subwoofer])
-      end
-      
-    when :melody, :lead
-      # 旋律 -> 前置主要，后置辅助
-      route_to_speakers(element, [:front_left, :front_right], pan_spread: 0.6)
-      route_to_speakers(element, [:rear_left, :rear_right], amp: 0.3)
-      
-    when :ambient, :pad
-      # 氛围 -> 后置环绕
-      route_to_speakers(element, [:rear_left, :rear_right], pan_spread: 0.8)
-      
-    when :percussion
-      # 打击乐 -> 全频段分布
-      route_to_speakers(element, :all_speakers, pan_variation: true)
-    end
-  end
-end
-
-# 动态空间效果
-define :dynamic_car_space do |time_position|
-  # 模拟车内声场的动态变化
-  road_noise_compensation = calculate_road_noise(time_position)
-  doppler_simulation = calculate_doppler_effect(time_position)
-  
-  with_fx :reverb, room: 0.3 + road_noise_compensation * 0.2 do
-    with_fx :echo, phase: doppler_simulation do
-      yield  # 播放音乐内容
-    end
-  end
-end
-```
-
-### 4.2 频响补偿
-
-```python
-# 车载环境频响补偿
-CAR_FREQUENCY_COMPENSATION = {
-    "low_freq": {
-        "range": (20, 80),
-        "boost": 3.0,  # dB提升，利用车内共鸣
-        "q_factor": 0.7
-    },
-    "mid_freq": {
-        "range": (200, 2000), 
-        "boost": -1.0,  # 轻微衰减，避免车内反射
-        "clarity_enhance": True
-    },
-    "high_freq": {
-        "range": (4000, 16000),
-        "boost": 2.0,  # 补偿车内高频损失
-        "presence_enhance": True
-    }
+# 车载音响分层策略
+CAR_AUDIO_LAYERS = {
+  edm_backbone: {
+    kick: { speakers: [:front_left, :front_right, :subwoofer], priority: :high },
+    bass: { speakers: [:subwoofer], priority: :high },
+    synth_pad: { speakers: [:rear_left, :rear_right], priority: :medium },
+    lead_synth: { speakers: [:front_left, :front_right], priority: :medium }
+  },
+  midi_decoration: {
+    melody: { speakers: [:front_left, :front_right], priority: :high },
+    harmony: { speakers: [:rear_left, :rear_right], priority: :medium },
+    ornaments: { speakers: [:all], priority: :low, spatial: true }
+  }
 }
 
-def apply_car_eq(audio_signal, config):
-    """应用车载环境均衡"""
-    for band, params in config.items():
-        audio_signal = apply_eq_band(
-            audio_signal,
-            frequency_range=params["range"],
-            gain=params["boost"],
-            q=params.get("q_factor", 1.0)
-        )
-    return audio_signal
+define :route_to_car_speakers do |element_type, audio_data|
+  routing = CAR_AUDIO_LAYERS[element_type[:category]][element_type[:layer]]
+  
+  routing[:speakers].each do |speaker|
+    case speaker
+    when :front_left
+      pan_value = -0.8
+    when :front_right  
+      pan_value = 0.8
+    when :rear_left
+      pan_value = -0.6
+    when :rear_right
+      pan_value = 0.6
+    when :subwoofer
+      pan_value = 0.0
+      # 应用低通滤波
+      audio_data = apply_lpf(audio_data, cutoff: 120)
+    end
+    
+    output_to_speaker(audio_data, speaker, pan: pan_value, amp: routing[:priority_amp])
+  end
+end
 ```
 
 ---
 
-## 5. 长时播放管理
+## 5. 层级能量管理
 
-### 5.1 宏观能量管理
+### 5.1 专辑级能量管理
 
 ```python
-class EnergyManagement:
-    def __init__(self, total_duration_minutes=180):
-        self.total_duration = total_duration_minutes
-        self.energy_curve = self._design_global_curve()
+class AlbumEnergyManager:
+    def __init__(self):
+        self.global_curve = [0.3, 0.7, 0.9, 0.8, 0.3, 0.95]  # 6首乐曲的能量分配
     
-    def _design_global_curve(self):
-        """设计3小时的整体能量曲线"""
-        # 早晨激活 -> 城市高峰 -> 高速巡航 -> 夜间舒缓 -> 休息 -> 终章高潮
-        keypoints = [
-            (0, 0.3),      # 晨启：低能量开始
-            (25, 0.7),     # 晨启结束：中等能量
-            (45, 0.9),     # 疾城高峰：高能量
-            (75, 0.6),     # 无尽车道：稳定巡航
-            (105, 0.8),    # 午夜地平线：氛围高点
-            (135, 0.3),    # 驻梦：低能量休息
-            (155, 0.95)    # 终极攀升：最高能量
-        ]
-        return self._interpolate_curve(keypoints)
+    def get_track_target_energy(self, track_index):
+        """获取乐曲的目标能量水平"""
+        return self.global_curve[track_index]
     
-    def get_target_energy(self, current_minute):
-        """获取当前时间点的目标能量"""
-        return self.energy_curve[current_minute]
+    def design_track_energy_curve(self, track_index, chapter_count):
+        """设计乐曲内部的能量曲线"""
+        target_energy = self.get_track_target_energy(track_index)
+        
+        # 根据专辑位置调整乐曲内部的能量分布模式
+        if track_index == 0:  # 首曲：渐进式启动
+            return self._gradual_rise_curve(chapter_count, target_energy)
+        elif track_index == len(self.global_curve) - 1:  # 尾曲：高潮收束
+            return self._climax_resolution_curve(chapter_count, target_energy)
+        else:  # 中间曲目：稳定波动
+            return self._stable_wave_curve(chapter_count, target_energy)
 ```
 
-### 5.2 微观变化保持
+### 5.2 乐曲级能量管理
 
 ```python
-# 防止长时间单调的变化策略
-class MicroVariationEngine:
-    def __init__(self):
-        self.phi = 1.618033988749895  # 黄金比例
-        self.variation_cycles = [
-            {"period": 16, "amplitude": 0.1},   # 细微变化
-            {"period": 64, "amplitude": 0.2},   # 中等变化  
-            {"period": 256, "amplitude": 0.3}   # 宏观变化
-        ]
+class TrackEnergyManager:
+    def __init__(self, track_dna, album_target_energy):
+        self.track_dna = track_dna
+        self.album_target = album_target_energy
+        self.local_curve = self._design_local_curve()
     
-    def apply_micro_variations(self, base_parameters, time_position):
-        """应用多层次的微观变化"""
-        varied_params = base_parameters.copy()
+    def _design_local_curve(self):
+        """设计乐曲内部的章节能量分布"""
+        chapter_count = len(self.track_dna["chapter_templates"])
         
-        for cycle in self.variation_cycles:
-            phase = (time_position / cycle["period"]) * 2 * math.pi
-            variation = math.sin(phase * self.phi) * cycle["amplitude"]
-            
-            # 应用到不同参数
-            varied_params["cutoff_offset"] += variation * 20
-            varied_params["reverb_mix"] += variation * 0.1
-            varied_params["pan_drift"] += variation * 0.2
-            
-        return varied_params
+        # 基于专辑目标能量调整局部模式
+        if self.album_target < 0.4:  # 低能量乐曲
+            return self._gentle_wave_pattern(chapter_count)
+        elif self.album_target > 0.8:  # 高能量乐曲  
+            return self._intense_build_pattern(chapter_count)
+        else:  # 中等能量乐曲
+            return self._balanced_evolution_pattern(chapter_count)
+    
+    def get_chapter_energy(self, chapter_index):
+        """获取指定章节的目标能量"""
+        return self.local_curve[chapter_index]
 ```
 
 ---
 
 ## 6. 实现工作流
 
-### 6.1 开发阶段
-
-1. **DNA库构建**
-
-   ```bash
-   python scripts/build_dna_library.py --chapters dawn_ignition,urban_velocity
-   ```
-
-2. **章节生成**
-
-   ```bash
-   python numus_engine.py generate --chapter dawn_ignition --duration 25min
-   ```
-
-3. **过渡测试**
-
-   ```bash
-   python transition_test.py --from dawn_ignition --to urban_velocity --method element_isolation
-   ```
-
-4. **Sonic Pi集成**
-
-   ```bash
-   ruby sonic-pi/cardj_integration.rb
-   ```
-
-### 6.2 生产流程
+### 6.1 专辑制作流程
 
 ```python
-# 完整专辑生成流程
 class AlbumProducer:
-    def produce_motion_groove(self):
-        chapters = ["dawn_ignition", "urban_velocity", "endless_lane", 
-                   "midnight_horizon", "station_dreams", "final_ascent"]
+    def produce_motion_groove_album(self):
+        """制作完整专辑《动感旅途》"""
         
-        for i, chapter in enumerate(chapters):
-            # 生成章节
-            chapter_data = self.numus_engine.generate_chapter(chapter)
+        # 第1步：制作6首独立乐曲
+        tracks = []
+        for track_name in ["dawn_ignition", "urban_velocity", "endless_lane", 
+                          "midnight_horizon", "station_dreams", "final_ascent"]:
             
-            # 渲染MIDI到WAV
-            midi_path = f"out/midi/{chapter}.mid"
-            wav_path = f"out/wav/{chapter}.wav"
-            self.render_midi_to_wav(chapter_data["midi"], wav_path)
+            print(f"制作乐曲: {track_name}")
+            track_data = self.produce_single_track(track_name)
+            tracks.append(track_data)
             
-            # 生成过渡（除了最后一章）
-            if i < len(chapters) - 1:
-                next_chapter = chapters[i + 1]
-                transition = self.transition_engine.generate_transition(
-                    chapter, next_chapter
-                )
-                self.save_transition(transition, f"out/transitions/{chapter}_to_{next_chapter}.json")
+            # 生成独立的WAV文件
+            self.render_track_to_wav(track_data, f"out/album/{track_name}.wav")
         
-        # 生成Sonic Pi主控脚本
-        self.generate_sonic_pi_master_script(chapters)
+        # 第2步：生成专辑元数据
+        album_metadata = {
+            "album_name": "Motion Groove",
+            "total_duration_minutes": sum(t["duration_minutes"] for t in tracks),
+            "track_count": len(tracks),
+            "tracks": [t["metadata"] for t in tracks]
+        }
+        
+        # 第3步：可选的专辑级优化
+        self.apply_album_mastering(tracks)
+        
+        return {
+            "album_metadata": album_metadata,
+            "tracks": tracks,
+            "output_files": [f"out/album/{t['name']}.wav" for t in tracks]
+        }
+    
+    def produce_single_track(self, track_name):
+        """制作单首乐曲（包含多个章节）"""
+        track_dna = TRACK_DNA[track_name]
+        
+        # 生成所有章节
+        chapters = []
+        for chapter_template in track_dna["chapter_templates"]:
+            chapter = self.numus_engine.generate_chapter(
+                chapter_template["name"],
+                chapter_template["duration"], 
+                track_dna
+            )
+            chapters.append(chapter)
+        
+        # 生成章节间过渡
+        transitions = []
+        for i in range(len(chapters) - 1):
+            transition = self.transition_engine.generate_transition(
+                chapters[i], chapters[i + 1]
+            )
+            transitions.append(transition)
+        
+        return {
+            "name": track_name,
+            "chapters": chapters,
+            "transitions": transitions,
+            "duration_minutes": track_dna["duration_minutes"],
+            "metadata": track_dna
+        }
 ```
 
-### 6.3 车载部署
+### 6.2 单曲制作详细流程
 
-```ruby
-# 车载播放主控制器
-live_loop :cardj_master do
-  album_chapters = load_album_structure("motion_groove")
-  
-  album_chapters.each_with_index do |chapter, index|
-    # 播放章节
-    play_chapter(chapter, car_speaker_config)
-    
-    # 执行过渡（如果不是最后一章）
-    if index < album_chapters.length - 1
-      next_chapter = album_chapters[index + 1]
-      transition_config = load_transition_config(chapter[:name], next_chapter[:name])
-      execute_transition(chapter, next_chapter, transition_config)
-    end
-  end
-  
-  # 专辑播放完成，可选择循环或停止
-  stop
-end
+```bash
+# 制作单首乐曲的完整流程
+python scripts/produce_track.py --track dawn_ignition --output out/album/
+
+# 流程说明：
+# 1. 加载乐曲DNA配置
+# 2. 生成各章节的EDM骨干（Sonic Pi脚本）
+# 3. 生成各章节的MIDI装饰
+# 4. 渲染MIDI为WAV采样
+# 5. 生成章节间过渡逻辑
+# 6. 合成完整乐曲WAV文件
 ```
 
 ---
 
 ## 7. 技术要点总结
 
-### 7.1 核心创新
+### 7.1 核心架构修正
 
-- **章节化架构**：避免简单循环，每个章节完整且独特
-- **智能过渡**：多样化DJ技术的算法实现
-- **车载优化**：多喇叭分配和频响补偿
-- **确定性变化**：基于数学序列的无限演进
+- **专辑独立性**：6首乐曲完全独立，各自输出WAV文件
+- **乐曲章节化**：每首乐曲由8-12个章节组成，章节间程序化DJ过渡
+- **层级能量管理**：专辑级 + 乐曲级 + 章节级三层能量曲线
+- **双层音乐结构**：EDM骨干（Sonic Pi）+ MIDI装饰（渲染采样）
 
-### 7.2 技术栈
+### 7.2 制作输出
 
-- **后端**：Python + mido/pretty_midi + FluidSynth
-- **实时合成**：Sonic Pi + OSC控制
-- **数学引擎**：π、φ、分形算法
-- **音频处理**：车载环境优化
+- **专辑输出**：6个独立WAV文件（每首20-40分钟）
+- **技术输出**：章节生成脚本、过渡逻辑配置、车载优化参数
+- **播放兼容**：支持单曲播放、专辑连续播放
 
-### 7.3 预期输出
+### 7.3 核心创新
 
-- 6个独立章节（各20-40分钟）
-- 5个智能过渡段（各2-4分钟）
-- 完整专辑WAV文件（约3小时）
-- 车载播放脚本和配置文件
+- **程序化DJ**：算法实现的章节间过渡技术
+- **分层生成**：EDM骨干与MIDI装饰的有机结合  
+- **车载专门化**：多喇叭分配和车内声学优化
+- **确定性演化**：数学序列驱动的无限变化
 
 ---
 
-通过这套技术方案，《动感旅途》将成为首个真正为车载环境设计的算法生成EDM专辑，融合了数学之美与驾驶体验，为长途旅行提供完美的音乐伴侣。
+通过这套修正后的技术方案，《动感旅途》将作为6首独立而又有机关联的EDM乐曲，每首都具备完整的章节化结构和程序化DJ过渡，既可独立欣赏，也可连续播放，为车载音乐体验提供专业级的算法生成解决方案。
