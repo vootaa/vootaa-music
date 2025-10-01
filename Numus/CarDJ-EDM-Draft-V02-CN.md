@@ -439,7 +439,7 @@ class MicroVariationEngine:
 4. **Sonic Pi集成**
 
    ```bash
-   ruby sonic-pi-code/cardj_integration.rb
+   ruby sonic-pi/cardj_integration.rb
    ```
 
 ### 6.2 生产流程
