@@ -1,0 +1,51 @@
+{
+  "track_id": "dawn_ignition",
+  "bpm": 120,
+  "key": "C",
+  "scale": "major",
+  "chord_progression": ["C", "G", "Am", "F"], 
+  "chapters": {
+    "ch1": {
+      "sections": {
+        "sec1": {"start_time": 0, "duration": 60, "energy": 0.3, "density": 0.2, "active_parts": ["pad"], "chord_index": 0, "kick_sparse": true},
+        "sec2": {"start_time": 60, "duration": 90, "energy": 0.35, "density": 0.3, "active_parts": ["pad", "kick"], "chord_index": 1, "fx_riser": true},
+        "sec3": {"start_time": 150, "duration": 90, "energy": 0.4, "density": 0.25, "active_parts": ["pad", "kick"], "chord_index": 2}
+      }
+    },
+    "ch2": {
+      "sections": {
+        "sec1": {"start_time": 240, "duration": 60, "energy": 0.4, "density": 0.4, "active_parts": ["pad", "kick", "bass"], "chord_index": 3, "distortion": 0.3},
+        "sec2": {"start_time": 300, "duration": 90, "energy": 0.5, "density": 0.5, "active_parts": ["pad", "kick", "bass"], "chord_index": 0, "fx_riser": true},
+        "sec3": {"start_time": 390, "duration": 90, "energy": 0.6, "density": 0.45, "active_parts": ["pad", "kick", "bass"], "chord_index": 1}
+      }
+    },
+    "ch3": {
+      "sections": {
+        "sec1": {"start_time": 480, "duration": 60, "energy": 0.6, "density": 0.5, "active_parts": ["pad", "kick", "bass", "lead"], "chord_index": 2, "snare": true},
+        "sec2": {"start_time": 540, "duration": 90, "energy": 0.7, "density": 0.6, "active_parts": ["pad", "kick", "bass", "lead"], "chord_index": 3, "fx_riser": true, "filter_sweep": true},
+        "sec3": {"start_time": 630, "duration": 90, "energy": 0.8, "density": 0.55, "active_parts": ["pad", "kick", "bass", "lead", "snare"], "chord_index": 0}
+      }
+    },
+    "ch4": {
+      "sections": {
+        "sec1": {"start_time": 720, "duration": 60, "energy": 0.8, "density": 0.5, "active_parts": ["pad", "kick", "bass", "lead"], "chord_index": 1, "delay": 0.4},
+        "sec2": {"start_time": 780, "duration": 90, "energy": 0.8, "density": 0.45, "active_parts": ["pad", "kick", "bass", "lead"], "chord_index": 2},
+        "sec3": {"start_time": 870, "duration": 90, "energy": 0.8, "density": 0.4, "active_parts": ["pad", "kick", "bass"], "chord_index": 3}
+      }
+    },
+    "ch5": {
+      "sections": {
+        "sec1": {"start_time": 960, "duration": 60, "energy": 0.8, "density": 0.6, "active_parts": ["pad", "kick", "bass", "lead", "snare"], "chord_index": 0, "reverb": 0.5, "distortion": 0.4},
+        "sec2": {"start_time": 1020, "duration": 90, "energy": 0.85, "density": 0.7, "active_parts": ["pad", "kick", "bass", "lead", "snare"], "chord_index": 1, "fx_riser": true},
+        "sec3": {"start_time": 1110, "duration": 90, "energy": 0.9, "density": 0.65, "active_parts": ["pad", "kick", "bass", "lead", "snare"], "chord_index": 2}
+      }
+    },
+    "ch6": {
+      "sections": {
+        "sec1": {"start_time": 1200, "duration": 90, "energy": 0.8, "density": 0.5, "active_parts": ["pad", "kick", "bass", "lead"], "chord_index": 3, "sub_fade": true},
+        "sec2": {"start_time": 1290, "duration": 90, "energy": 0.7, "density": 0.4, "active_parts": ["pad", "kick", "lead"], "chord_index": 0},
+        "sec3": {"start_time": 1380, "duration": 120, "energy": 0.6, "density": 0.3, "active_parts": ["pad"], "chord_index": 1}
+      }
+    }
+  }
+}
