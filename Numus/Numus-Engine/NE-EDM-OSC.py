@@ -207,6 +207,8 @@ def main():
 
     if not args.dry_run:
         send_debug(client, "DONE all_sections_sent")
+        client.send_message("/engine/stop", 1)
+        print("[INFO] Sent /engine/stop")
     print("[DONE] 全部 Section 已发送。")
 
 if __name__ == "__main__":
