@@ -50,6 +50,8 @@ define :safe_chord_notes do |root|
   end
 end
 
+set_param_num :master_amp, 1.0
+
 $pattern_library={
  "kick_four_on_floor"=>->(b,_bar,_g){[0,1,2,3].include?(b)},
  "kick_half"=>->(b,_bar,_g){[0,2].include?(b)},
@@ -78,6 +80,7 @@ live_loop :osc_energy do
   use_real_time
   v=sync "/osc*/engine/energy"
   set :energy,v[0].to_f
+  puts "[OSC] energy=#{get(:energy)}"
 end
 live_loop :osc_density do
   use_real_time
@@ -98,6 +101,7 @@ live_loop :osc_parts do
   use_real_time
   v=sync "/osc*/engine/parts"
   set :active_parts,v[0].to_s.split(",").map(&:strip)
+  puts "[OSC] parts=#{get(:active_parts)}"
 end
 live_loop :osc_lead_seq do
   use_real_time
@@ -122,11 +126,12 @@ end
   end
 end
 
-[:sweep_progress,:sub_fade_level,:pad_cutoff].each do |pn|
+[:sweep_progress,:sub_fade_level,:pad_cutoff,:master_amp].each do |pn|
   live_loop ("osc_param_"+pn.to_s).to_sym do
     use_real_time
     v=sync "/osc*/engine/param/#{pn}"
     set_param_num pn, v[0]
+    puts "[OSC] param #{pn}=#{param_num(pn)}" if pn==:master_amp
   end
 end
 
@@ -172,7 +177,8 @@ live_loop :kick do
   hit=pattern_hit?("kick",lb,bar,beat)
   hit||=true unless pattern_of("kick")
   if hit
-    sample :bd_tek, amp:[[0.2,get(:energy)].max,1.5].min
+    base = [[0.35,get(:energy)+0.15].max,1.0].min
+    sample :bd_tek, amp: base * param_num(:master_amp,1.0)
   end
 end
 
@@ -186,7 +192,7 @@ live_loop :snare do
   bar=get(:bar_counter)
   hit=pattern_hit?("snare",lb,bar,beat)
   hit||=[1,3].include?(lb) unless pattern_of("snare")
-  sample :sn_dolf, amp:get(:energy)*0.8 if hit
+  sample :sn_dolf, amp:get(:energy)*0.8 * param_num(:master_amp,1.0) if hit
 end
 
 live_loop :bass do
@@ -201,7 +207,9 @@ live_loop :bass do
   if hit
     n=note(current_chord_root)-12
     amp_mul=toggle?("sub_fade") ? param_num(:sub_fade_level,1.0) : 1.0
-    synth :tb303, note:n, sustain:0.6, release:0.2, cutoff:60+get(:energy)*40, amp:get(:energy)*0.9*amp_mul
+    synth :tb303, note:n, sustain:0.6, release:0.2,
+      cutoff:60+get(:energy)*40,
+      amp:get(:energy)*0.9*amp_mul * param_num(:master_amp,1.0)
   end
 end
 
@@ -214,7 +222,8 @@ live_loop :pad do
   notes=safe_chord_notes(current_chord_root)
   with_fx :reverb, mix:0.35, room:0.7 do
     with_fx :lpf, cutoff:(toggle?("filter_sweep") ? param_num(:pad_cutoff,90) : 120) do
-      synth :prophet, notes:notes, sustain:bpb*0.9, release:1, amp:get(:energy)*0.6
+      synth :prophet, notes:notes, sustain:bpb*0.9, release:1,
+        amp:(0.3 + get(:energy)*0.7) * param_num(:master_amp,1.0) 
     end
   end
 end
@@ -235,7 +244,9 @@ live_loop :lead do
     sc=scale(note(current_chord_root),:major,num_octaves:2)
     nt=sc[deg % sc.length]
     with_fx :echo, phase:0.25, mix:0.2 do
-      synth :blade, note:nt, sustain:0.3, release:0.2, cutoff:90+get(:energy)*40, amp:0.5+get(:energy)*0.5
+      synth :blade, note:nt, sustain:0.3, release:0.2,
+        cutoff:90+get(:energy)*40,
+        amp:(0.4+get(:energy)*0.6) * param_num(:master_amp,1.0)
     end
   end
 end
@@ -247,7 +258,9 @@ live_loop :fx_riser do
   beat=get(:tick_counter)-1
   if (beat % bpb)==0
     with_fx :slicer, phase:0.25, mix:0.3 do
-      synth :noise, sustain:bpb*0.9, release:0.5, amp:get(:energy)*0.4, cutoff:100+get(:energy)*20
+      synth :noise, sustain:bpb*0.9, release:0.5,
+        amp:get(:energy)*0.4 * param_num(:master_amp,1.0),
+        cutoff:100+get(:energy)*20
     end
   end
 end
@@ -277,12 +290,18 @@ live_loop :decor_play do
     path=arr[idx]
     if File.exists?(path)
       with_fx :reverb, mix:0.35 do
-        sample path, amp:0.6+get(:energy)*0.4
+        sample path, amp:(0.6+get(:energy)*0.4) * param_num(:master_amp,1.0)
       end
     else
       puts "WARN missing sample: #{path}"
     end
   end
+end
+
+live_loop :osc_debug_any do
+  use_real_time
+  v = sync "/osc*/engine/debug"
+  puts "[DEBUG] #{v.inspect}"
 end
 
 puts "Numus-Engine engine ready."

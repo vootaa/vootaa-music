@@ -27,6 +27,7 @@ CORE_FIELDS = {
     "density": "/engine/density",
     "chord_index": "/engine/chord_index",
     "active_parts": "/engine/parts"
+
 }
 
 RESERVED_FIELDS = set([
@@ -79,6 +80,12 @@ class DNATimeline:
 def send(client, addr, value):
     client.send_message(addr, value)
 
+def send_debug(client, text: str):
+    try:
+        client.send_message("/engine/debug", text)
+    except Exception as e:
+        print(f"[WARN] debug send failed: {e}")
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dna", required=True, help="DNA JSON path")
@@ -87,6 +94,7 @@ def main():
     ap.add_argument("--time-scale", type=float, default=1.0, help="时间缩放 (<1 加速)")
     ap.add_argument("--start-chapter", help="从指定 chapter 开始")
     ap.add_argument("--start-section", help="与 --start-chapter 配合，用该 section 开始")
+    ap.add_argument("--no-section-debug", action="store_true", help="不在每个 Section 发送 debug OSC")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
@@ -111,6 +119,8 @@ def main():
 
     bpm = dna.get("bpm", 120)
     chord_prog = dna.get("chord_progression", [])
+    track_id = dna.get("track_id","unknown_track")
+
     if chord_prog:
         print(f"[SEND] chord_prog={chord_prog}")
         if not args.dry_run:
@@ -118,6 +128,12 @@ def main():
 
     if not args.dry_run:
         send(client, "/engine/bpm", bpm)
+        # 启动调试信息
+        total_secs = 0
+        if sections:
+            last = sections[-1][2]
+            total_secs = last.get("start_time",0)+last.get("duration",0)
+        send_debug(client, f"INIT track={track_id} bpm={bpm} sections={len(sections)} total_time={total_secs:.1f}s")
 
     # 收集所有潜在布尔 & 数值字段（用于重置）
     bool_keys = set()
@@ -184,7 +200,13 @@ def main():
         active_toggles = [k for k,v in sec_bool.items() if v == 1]
         if active_toggles:
             print(f"  toggles_on={active_toggles}")
+        
+        if not args.no_section_debug and not args.dry_run:
+            dbg_parts = "/".join(parts) if parts else "-"
+            send_debug(client, f"SECTION {ch}.{sk} ci={chord_index} E={energy} D={density} parts={dbg_parts}")
 
+    if not args.dry_run:
+        send_debug(client, "DONE all_sections_sent")
     print("[DONE] 全部 Section 已发送。")
 
 if __name__ == "__main__":
