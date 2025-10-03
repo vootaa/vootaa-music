@@ -190,6 +190,7 @@ def main():
             send(client,addr,val); bool_state[name]=val
 
     total_duration=sections[-1][2]["start_time"]+sections[-1][2].get("duration",0)
+    scaled_total_duration = total_duration / args.time_scale
     for idx,(ch,sk,sec) in enumerate(sections):
         st=sec["start_time"]/args.time_scale
         now=time.time()-start_wall
@@ -221,7 +222,7 @@ def main():
             dbg(client,f"SEC {idx} {ch}.{sk} E={energy} D={density} parts={len(parts)}")
         if args.progress:
             elapsed=time.time()-start_wall
-            pct=elapsed/total_duration if total_duration>0 else 0
+            pct=elapsed/scaled_total_duration if scaled_total_duration>0 else 0
             bar_len=min(40,max(10,int(w*0.25)))
             fill=int(bar_len*pct)
             bar="["+"#"*fill+"-"*(bar_len-fill)+"]"
