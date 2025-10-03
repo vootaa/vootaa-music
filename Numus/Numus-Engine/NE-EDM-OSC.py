@@ -35,6 +35,12 @@ RESERVED_FIELDS = set([
     "track_id","bpm","key","scale","chord_progression","chapters"
 ])
 
+PATTERN_KEY = "pattern_overrides"
+
+def send_pattern_overrides(client, po: Dict[str,str]):
+    for part, pid in po.items():
+        send(client, f"/engine/pattern/{part}", pid)
+
 def is_bool_like(v: Any) -> bool:
     if isinstance(v, bool):
         return True
@@ -168,6 +174,11 @@ def main():
             send(client, CORE_FIELDS["energy"], energy)
             send(client, CORE_FIELDS["density"], density)
             send(client, CORE_FIELDS["active_parts"], ",".join(parts))
+        
+        # pattern overrides
+        po = data.get(PATTERN_KEY)
+        if po and isinstance(po, dict) and not args.dry_run:
+            send_pattern_overrides(client, po)
 
         # 字段分类发送
         # 先构建该 section 实际使用的 bool/num

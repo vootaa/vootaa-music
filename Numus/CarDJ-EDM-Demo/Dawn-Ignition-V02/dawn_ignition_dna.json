@@ -1,0 +1,412 @@
+{
+  "meta_version": 2,
+  "schema_notes": "Extended fields for richer transitions / contrast / callbacks.",
+  "track_id": "dawn_ignition",
+  "bpm": 120,
+  "key": "C",
+  "scale": "major",
+  "chord_progression": ["C", "G", "Am", "F"],
+  "math_sources": {
+    "sparkle": "pi:800-960",
+    "pad_mod": "phi:300-450",
+    "bass_shape_future": "e:0-100"
+  },
+  "chapters": {
+    "ch1_awakening_drift": {
+      "label": "Awakening Drift",
+      "sections": {
+        "intro_air": {
+          "start_time": 0,
+            "duration": 60,
+            "energy": 0.20,
+            "density": 0.18,
+            "chord_index": 0,
+            "active_parts": ["pad"],
+            "chord_inversion": 1,
+            "hat_density": 0,
+            "sidechain_depth": 0.0,
+            "reverb_bus": 0.22,
+            "delay_mix": 0.08,
+            "stereo_spread": 0.4,
+            "pad_cutoff_curve": "low",
+            "texture_air": true,
+            "air_hold": true,
+            "micro_energy": 0
+        },
+        "light_pulse": {
+          "start_time": 60,
+            "duration": 55,
+            "energy": 0.26,
+            "density": 0.25,
+            "chord_index": 1,
+            "active_parts": ["pad","kick"],
+            "pattern_overrides": { "kick": "kick_sparse_intro" },
+            "hat_density": 0,
+            "sidechain_depth": 0.05,
+            "reverb_bus": 0.20,
+            "stereo_spread": 0.45,
+            "pad_cutoff_curve": "low",
+            "micro_energy": 1
+        },
+        "air_hold_contrast": {
+          "start_time": 115,
+            "duration": 45,
+            "energy": 0.24,
+            "density": 0.20,
+            "chord_index": 2,
+            "active_parts": ["pad"],
+            "air_hold": true,
+            "texture_air": true,
+            "hat_density": 0,
+            "sidechain_depth": 0.0,
+            "reverb_bus": 0.25,
+            "delay_mix": 0.10,
+            "micro_energy": 0
+        }
+      }
+    },
+    "ch2_pulse_formation": {
+      "label": "Pulse Formation",
+      "sections": {
+        "pulse_entry": {
+          "start_time": 160,
+            "duration": 60,
+            "energy": 0.33,
+            "density": 0.32,
+            "chord_index": 3,
+            "active_parts": ["pad","kick","bass"],
+            "pattern_overrides": { "kick": "kick_half", "bass": "bass_on_beats" },
+            "bass_drive": 0.18,
+            "hat_density": 1,
+            "sidechain_depth": 0.12,
+            "reverb_bus": 0.18,
+            "micro_energy": 1
+        },
+        "pulse_solidify": {
+          "start_time": 220,
+            "duration": 55,
+            "energy": 0.40,
+            "density": 0.38,
+            "chord_index": 0,
+            "active_parts": ["pad","kick","bass","hat"],
+            "pattern_overrides": { "kick": "kick_four_on_floor", "hat": "hat_offbeat" },
+            "bass_drive": 0.25,
+            "hat_density": 1,
+            "sidechain_depth": 0.18,
+            "reverb_bus": 0.18,
+            "micro_energy": 2
+        }
+      }
+    },
+    "ch3_contrast_break": {
+      "label": "Contrast Break",
+      "sections": {
+        "low_release_gap": {
+          "start_time": 275,
+            "duration": 40,
+            "energy": 0.30,
+            "density": 0.22,
+            "chord_index": 1,
+            "active_parts": ["pad","hat"],
+            "drop_gap": true,
+            "sub_fade": true,
+            "sub_fade_level": 0.4,
+            "hat_density": 1,
+            "sidechain_depth": 0.05,
+            "reverb_bus": 0.24,
+            "delay_mix": 0.14,
+            "micro_energy": 1
+        },
+        "borrowed_prep": {
+          "start_time": 315,
+            "duration": 35,
+            "energy": 0.34,
+            "density": 0.28,
+            "chord_index": 2,
+            "active_parts": ["pad","hat"],
+            "chord_mode": "borrowed",
+            "alt_chord": "Bb",
+            "hat_density": 2,
+            "sidechain_depth": 0.10,
+            "reverb_bus": 0.26,
+            "micro_energy": 1
+        }
+      }
+    },
+    "ch4_first_lift": {
+      "label": "First Lift",
+      "sections": {
+        "lift_lead_intro": {
+          "start_time": 350,
+            "duration": 55,
+            "energy": 0.46,
+            "density": 0.42,
+            "chord_index": 3,
+            "active_parts": ["pad","kick","bass","hat","lead"],
+            "pattern_overrides": { "lead": "lead_every_2beats" },
+            "lead_detune": 0.2,
+            "bass_drive": 0.28,
+            "hat_density": 2,
+            "filter_sweep": true,
+            "sweep_phase_start": 0.0,
+            "sweep_phase_end": 0.4,
+            "sidechain_depth": 0.22,
+            "reverb_bus": 0.20,
+            "delay_mix": 0.12,
+            "micro_energy": 2
+        },
+        "lift_build": {
+          "start_time": 405,
+            "duration": 55,
+            "energy": 0.54,
+            "density": 0.50,
+            "chord_index": 0,
+            "active_parts": ["pad","kick","bass","hat","lead","snare"],
+            "pattern_overrides": { "lead": "lead_syncopated" },
+            "lead_detune": 0.28,
+            "bass_drive": 0.32,
+            "hat_density": 2,
+            "filter_sweep": true,
+            "sweep_phase_start": 0.4,
+            "sweep_phase_end": 0.75,
+            "sidechain_depth": 0.30,
+            "reverb_bus": 0.22,
+            "snare_fill": true,
+            "micro_energy": 2
+        },
+        "lift_pre_peak": {
+          "start_time": 460,
+            "duration": 45,
+            "energy": 0.60,
+            "density": 0.55,
+            "chord_index": 1,
+            "active_parts": ["pad","kick","bass","hat","lead","snare"],
+            "lead_detune": 0.34,
+            "bass_drive": 0.35,
+            "hat_density": 3,
+            "filter_sweep": true,
+            "sweep_phase_start": 0.75,
+            "sweep_phase_end": 1.0,
+            "snare_roll": true,
+            "sidechain_depth": 0.40,
+            "reverb_bus": 0.24,
+            "delay_mix": 0.18,
+            "micro_energy": 3
+        },
+        "lift_plateau": {
+          "start_time": 505,
+            "duration": 50,
+            "energy": 0.62,
+            "density": 0.52,
+            "chord_index": 2,
+            "active_parts": ["pad","kick","bass","hat","lead"],
+            "lead_detune": 0.30,
+            "bass_drive": 0.33,
+            "hat_density": 2,
+            "sidechain_depth": 0.38,
+            "reverb_bus": 0.22,
+            "delay_mix": 0.20,
+            "micro_energy": 2
+        }
+      }
+    },
+    "ch5_cruise_glide": {
+      "label": "Cruise Glide",
+      "sections": {
+        "cruise_entry": {
+          "start_time": 555,
+            "duration": 70,
+            "energy": 0.55,
+            "density": 0.48,
+            "chord_index": 3,
+            "active_parts": ["pad","kick","bass","hat","lead"],
+            "hat_density": 2,
+            "lead_detune": 0.25,
+            "sidechain_depth": 0.34,
+            "reverb_bus": 0.20,
+            "delay_mix": 0.16,
+            "micro_energy": 2
+        },
+        "cruise_callback_prep": {
+          "start_time": 625,
+            "duration": 40,
+            "energy": 0.50,
+            "density": 0.40,
+            "chord_index": 0,
+            "active_parts": ["pad","kick","hat"],
+            "callback_theme": true,
+            "hat_density": 1,
+            "sidechain_depth": 0.26,
+            "reverb_bus": 0.26,
+            "micro_energy": 1
+        }
+      }
+    },
+    "ch6_callback_interlude": {
+      "label": "Callback Interlude",
+      "sections": {
+        "callback_air": {
+          "start_time": 665,
+            "duration": 50,
+            "energy": 0.45,
+            "density": 0.34,
+            "chord_index": 1,
+            "active_parts": ["pad","hat"],
+            "callback_theme": true,
+            "texture_grain": true,
+            "hat_density": 1,
+            "reverb_bus": 0.30,
+            "delay_mix": 0.18,
+            "sidechain_depth": 0.18,
+            "micro_energy": 1
+        }
+      }
+    },
+    "ch7_second_lift_anti_drop": {
+      "label": "Second Lift & Anti-Drop",
+      "sections": {
+        "second_build_a": {
+          "start_time": 715,
+            "duration": 55,
+            "energy": 0.64,
+            "density": 0.56,
+            "chord_index": 2,
+            "active_parts": ["pad","kick","bass","hat","lead","snare"],
+            "filter_sweep": true,
+            "sweep_phase_start": 0.0,
+            "sweep_phase_end": 0.55,
+            "hat_density": 2,
+            "bass_drive": 0.40,
+            "lead_detune": 0.32,
+            "sidechain_depth": 0.46,
+            "reverb_bus": 0.24,
+            "micro_energy": 3
+        },
+        "second_build_b": {
+          "start_time": 770,
+            "duration": 50,
+            "energy": 0.70,
+            "density": 0.60,
+            "chord_index": 3,
+            "active_parts": ["pad","kick","bass","hat","lead","snare"],
+            "filter_sweep": true,
+            "sweep_phase_start": 0.55,
+            "sweep_phase_end": 1.0,
+            "snare_roll": true,
+            "hat_density": 3,
+            "bass_drive": 0.45,
+            "lead_detune": 0.36,
+            "sidechain_depth": 0.55,
+            "reverb_bus": 0.26,
+            "micro_energy": 3
+        },
+        "second_peak": {
+          "start_time": 820,
+            "duration": 55,
+            "energy": 0.74,
+            "density": 0.58,
+            "chord_index": 0,
+            "active_parts": ["pad","kick","bass","hat","lead"],
+            "hat_density": 2,
+            "bass_drive": 0.43,
+            "lead_detune": 0.34,
+            "sidechain_depth": 0.58,
+            "reverb_bus": 0.24,
+            "delay_mix": 0.22,
+            "micro_energy": 2
+        },
+        "anti_drop_space": {
+          "start_time": 875,
+            "duration": 35,
+            "energy": 0.50,
+            "density": 0.30,
+            "chord_index": 1,
+            "active_parts": ["pad","hat","lead"],
+            "anti_drop": true,
+            "drop_gap": true,
+            "sub_fade": true,
+            "sub_fade_level": 0.25,
+            "hat_density": 1,
+            "reverb_bus": 0.30,
+            "delay_mix": 0.26,
+            "micro_energy": 1
+        },
+        "re_lift_extend": {
+          "start_time": 910,
+            "duration": 55,
+            "energy": 0.68,
+            "density": 0.54,
+            "chord_index": 2,
+            "active_parts": ["pad","kick","bass","hat","lead"],
+            "texture_grain": true,
+            "hat_density": 2,
+            "bass_drive": 0.42,
+            "lead_detune": 0.30,
+            "sidechain_depth": 0.50,
+            "reverb_bus": 0.26,
+            "delay_mix": 0.24,
+            "micro_energy": 2
+        }
+      }
+    },
+    "ch8_soft_dissolve": {
+      "label": "Soft Dissolve",
+      "sections": {
+        "release_a": {
+          "start_time": 965,
+            "duration": 55,
+            "energy": 0.48,
+            "density": 0.32,
+            "chord_index": 3,
+            "active_parts": ["pad","hat"],
+            "sub_fade": true,
+            "sub_fade_level": 0.6,
+            "hat_density": 1,
+            "reverb_bus": 0.32,
+            "delay_mix": 0.20,
+            "sidechain_depth": 0.25,
+            "micro_energy": 1
+        },
+        "release_b_callback": {
+          "start_time": 1020,
+            "duration": 50,
+            "energy": 0.42,
+            "density": 0.28,
+            "chord_index": 0,
+            "active_parts": ["pad"],
+            "callback_theme": true,
+            "chord_inversion": 2,
+            "reverb_bus": 0.36,
+            "delay_mix": 0.24,
+            "sidechain_depth": 0.18,
+            "micro_energy": 0
+        },
+        "release_c_tail": {
+          "start_time": 1070,
+            "duration": 55,
+            "energy": 0.36,
+            "density": 0.22,
+            "chord_index": 2,
+            "active_parts": ["pad"],
+            "texture_air": true,
+            "reverb_bus": 0.40,
+            "delay_mix": 0.30,
+            "sidechain_depth": 0.10,
+            "micro_energy": 0
+        },
+        "release_d_silence_fade": {
+          "start_time": 1125,
+            "duration": 40,
+            "energy": 0.28,
+            "density": 0.12,
+            "chord_index": 3,
+            "active_parts": ["pad"],
+            "reverb_bus": 0.42,
+            "delay_mix": 0.32,
+            "sidechain_depth": 0.05,
+            "micro_energy": 0
+        }
+      }
+    }
+  }
+}
