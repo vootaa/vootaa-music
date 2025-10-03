@@ -6,7 +6,7 @@ Section播放器
 from typing import List, Dict, Optional
 import time
 import threading
-from CoreDataStructure import Section
+from CoreDataStructure import Section, Segment
 from SegmentPlayer import SegmentPlayer
 from SegmentLibraryManager import SegmentLibrary
 
@@ -19,14 +19,14 @@ class SectionPlayer:
         初始化Section播放器
         
         Args:
-            segment_player: SegmentPlayer实例
+            segment_player: Segment播放器实例
             segment_library: Segment素材库实例
         """
         self.segment_player = segment_player
         self.segment_library = segment_library
         self.current_section: Optional[Section] = None
         self.section_start_time: Optional[float] = None
-        self.active_track_names: List[str] = []
+        self.active_loop_names: List[str] = []
         self.is_playing = False
         self.playback_thread: Optional[threading.Thread] = None
     
@@ -35,7 +35,7 @@ class SectionPlayer:
                      track_id: str,
                      chapter_id: str,
                      bpm: int,
-                     override_params: Optional[Dict] = None) -> List[str]:
+                     override_params: Optional[Dict] = None):
         """
         播放一个Section
         
@@ -45,31 +45,21 @@ class SectionPlayer:
             chapter_id: Chapter标识
             bpm: 当前BPM
             override_params: 全局覆盖参数
-        
-        Returns:
-            启动的track名称列表
         """
         self.current_section = section
         self.section_start_time = time.time()
         self.is_playing = True
-        self.active_track_names.clear()
+        self.active_loop_names.clear()
         
-        print(f"\n开始播放Section: {section.name}")
-        print(f"类型: {section.section_type.value}")
-        print(f"时长: {section.duration_bars} bars")
-        
-        # 计算小节时长
+        # 计算小节时长（秒）
         bar_duration = (60.0 / bpm) * 4  # 假设4/4拍
         
         # 启动播放线程
         self.playback_thread = threading.Thread(
             target=self._playback_worker,
-            args=(section, track_id, chapter_id, bpm, bar_duration, override_params),
-            daemon=True
+            args=(section, track_id, chapter_id, bpm, bar_duration, override_params)
         )
         self.playback_thread.start()
-        
-        return self.active_track_names
     
     def _playback_worker(self, 
                         section: Section,
@@ -78,10 +68,10 @@ class SectionPlayer:
                         bpm: int,
                         bar_duration: float,
                         override_params: Optional[Dict]):
-        """Section播放工作线程"""
+        """播放工作线程"""
         current_bar = 0
         
-        # 遍历segment_sequence
+        # 解析segment_sequence
         for seq_item in section.segment_sequence:
             if not self.is_playing:
                 break
@@ -94,13 +84,12 @@ class SectionPlayer:
             # 从库中加载Segment
             segment = self.segment_library.get_segment(segment_id)
             if not segment:
-                print(f"警告: Segment {segment_id} 未找到，跳过")
+                print(f"警告: Segment {segment_id} 未找到")
                 continue
             
             # 等待到start_bar
-            wait_bars = start_bar - current_bar
-            if wait_bars > 0:
-                wait_time = wait_bars * bar_duration
+            wait_time = (start_bar - current_bar) * bar_duration
+            if wait_time > 0:
                 time.sleep(wait_time)
                 current_bar = start_bar
             
@@ -112,39 +101,34 @@ class SectionPlayer:
             }
             
             # 播放Segment
-            track_name = self.segment_player.play_segment(
+            loop_name = self.segment_player.play_segment(
                 segment=segment,
                 track_id=track_id,
                 chapter_id=chapter_id,
                 section_id=section.id,
                 override_params=merged_params
             )
-            self.active_track_names.append(track_name)
+            self.active_loop_names.append(loop_name)
             
-            # 如果指定了duration，在结束时自动停止
+            # 如果指定了duration，在结束时停止
             if duration_bars:
-                stop_time = duration_bars * bar_duration
                 threading.Timer(
-                    stop_time,
-                    lambda tn=track_name: self.segment_player.stop_segment(tn)
+                    duration_bars * bar_duration,
+                    lambda: self.segment_player.stop_segment(loop_name)
                 ).start()
-                current_bar += duration_bars
-            else:
-                # 使用segment自身的duration
-                segment_duration = segment.playback_params.duration_bars
-                current_bar += segment_duration
+            
+            current_bar += (duration_bars or segment.musical_params.duration_bars)
     
     def stop_section(self):
         """停止当前Section播放"""
         self.is_playing = False
         
         # 停止所有活跃的segment
-        for track_name in self.active_track_names:
-            self.segment_player.stop_segment(track_name)
+        for loop_name in self.active_loop_names:
+            self.segment_player.stop_segment(loop_name)
         
-        self.active_track_names.clear()
+        self.active_loop_names.clear()
         self.current_section = None
-        print("Section播放已停止")
     
     def get_section_progress(self) -> Dict:
         """获取Section播放进度"""
@@ -152,15 +136,13 @@ class SectionPlayer:
             return {"progress": 0.0, "elapsed_bars": 0}
         
         elapsed = time.time() - self.section_start_time
-        # 简化：假设120 BPM
+        # 简化计算，假设120 BPM
         elapsed_bars = elapsed / 2.0
         progress = min(elapsed_bars / self.current_section.duration_bars, 1.0)
         
         return {
             "section_id": self.current_section.id,
-            "section_name": self.current_section.name,
             "progress": progress,
-            "elapsed_bars": int(elapsed_bars),
-            "total_bars": self.current_section.duration_bars,
-            "active_tracks": len(self.active_track_names)
+            "elapsed_bars": elapsed_bars,
+            "total_bars": self.current_section.duration_bars
         }

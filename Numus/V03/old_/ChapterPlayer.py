@@ -1,12 +1,12 @@
 """
 Chapter播放器
-管理Chapter内Section序列播放，不处理Chapter间过渡
+管理Chapter内Section序列播放和Section间过渡
 """
 
 from typing import Optional, Dict, List
 import time
 import threading
-from CoreDataStructure import Chapter, PatternDNA
+from CoreDataStructure import Chapter, Section, PatternDNA
 from SectionPlayer import SectionPlayer
 from SegmentPlayer import SegmentPlayer
 from SegmentLibraryManager import SegmentLibrary
@@ -20,7 +20,7 @@ class ChapterPlayer:
         初始化Chapter播放器
         
         Args:
-            segment_player: SegmentPlayer实例
+            segment_player: Segment播放器实例
             segment_library: Segment素材库实例
         """
         self.section_player = SectionPlayer(segment_player, segment_library)
@@ -28,14 +28,13 @@ class ChapterPlayer:
         self.current_chapter: Optional[Chapter] = None
         self.is_playing = False
         self.playback_thread: Optional[threading.Thread] = None
-        self.current_section_tracks: List[str] = []
     
     def play_chapter(self,
                      chapter: Chapter,
                      track_id: str,
                      core_bpm: int,
                      pattern_dna: PatternDNA,
-                     override_params: Optional[Dict] = None) -> List[str]:
+                     override_params: Optional[Dict] = None):
         """
         播放一个Chapter
         
@@ -45,33 +44,16 @@ class ChapterPlayer:
             core_bpm: 核心BPM
             pattern_dna: 模式DNA
             override_params: 全局覆盖参数
-        
-        Returns:
-            最后一个Section的活跃track列表（用于Chapter间过渡）
         """
         self.current_chapter = chapter
         self.is_playing = True
-        self.current_section_tracks.clear()
-        
-        print(f"\n{'='*70}")
-        print(f"播放Chapter: {chapter.name}")
-        print(f"风格: {chapter.style}")
-        print(f"时长: {chapter.duration_bars} bars")
-        print(f"包含 {len(chapter.sections)} 个Section")
-        print(f"{'='*70}")
         
         # 启动播放线程
         self.playback_thread = threading.Thread(
             target=self._playback_worker,
-            args=(chapter, track_id, core_bpm, pattern_dna, override_params),
-            daemon=True
+            args=(chapter, track_id, core_bpm, pattern_dna, override_params)
         )
         self.playback_thread.start()
-        
-        # 等待播放完成
-        self.playback_thread.join()
-        
-        return self.current_section_tracks
     
     def _playback_worker(self,
                         chapter: Chapter,
@@ -81,20 +63,20 @@ class ChapterPlayer:
                         override_params: Optional[Dict]):
         """Chapter播放工作线程"""
         
-        # 应用Chapter级别的Pattern DNA变体
+        # 应用Chapter级别的Pattern DNA变体（如果有）
         chapter_params = override_params or {}
         if chapter.pattern_dna_variant:
             chapter_params.update(chapter.pattern_dna_variant)
         
         # 依次播放每个Section
-        for i, section in enumerate(chapter.sections):
+        for section in chapter.sections:
             if not self.is_playing:
                 break
             
-            print(f"\n  Section {i+1}/{len(chapter.sections)}: {section.name}")
+            print(f"播放Section: {section.name} (类型: {section.section_type.value})")
             
             # 播放Section
-            section_tracks = self.section_player.play_section(
+            self.section_player.play_section(
                 section=section,
                 track_id=track_id,
                 chapter_id=chapter.id,
@@ -102,18 +84,14 @@ class ChapterPlayer:
                 override_params=chapter_params
             )
             
-            self.current_section_tracks = section_tracks
-            
             # 等待Section完成
             section_duration = self._calculate_section_duration(section, core_bpm)
             time.sleep(section_duration)
             
             # 停止当前Section
             self.section_player.stop_section()
-        
-        print(f"\nChapter播放完成: {chapter.name}")
     
-    def _calculate_section_duration(self, section, bpm: int) -> float:
+    def _calculate_section_duration(self, section: Section, bpm: int) -> float:
         """计算Section时长（秒）"""
         bar_duration = (60.0 / bpm) * 4  # 4/4拍
         return section.duration_bars * bar_duration
@@ -123,11 +101,6 @@ class ChapterPlayer:
         self.is_playing = False
         self.section_player.stop_section()
         self.current_chapter = None
-        self.current_section_tracks.clear()
-    
-    def get_current_section_tracks(self) -> List[str]:
-        """获取当前Section的活跃track列表"""
-        return self.current_section_tracks.copy()
     
     def get_chapter_progress(self) -> Dict:
         """获取Chapter播放进度"""
