@@ -1,0 +1,233 @@
+{
+  "section_library": {
+    "ambient_intro": {
+      "style": "ambient",
+      "energy_range": [0.1, 0.3],
+      "duration_bars": 16,
+      "elements": {
+        "pad": {
+          "synth": "pad",
+          "notes": ["chord(:a2, :minor)", "chord(:f2, :major)"],
+          "attack": 2.0,
+          "sustain": 6.0,
+          "release": 2.0,
+          "cutoff": 60,
+          "amp": 0.4
+        },
+        "texture": {
+          "synth": "noise",
+          "fx": ["reverb", "hpf"],
+          "fx_params": {"reverb": {"room": 0.8}, "hpf": {"cutoff": 100}},
+          "pattern": [1, 0, 0, 0, 0, 0, 1, 0],
+          "amp": 0.1
+        }
+      },
+      "car_audio": {
+        "bass_compensation": 0.8,
+        "midrange_boost": 1.1,
+        "spatial_width": 0.9
+      }
+    },
+    
+    "house_foundation": {
+      "style": "deep_house",
+      "energy_range": [0.3, 0.6],
+      "duration_bars": 32,
+      "elements": {
+        "kick": {
+          "sample": ":bd_haus",
+          "pattern": [1, 0, 0, 0, 1, 0, 0, 0],
+          "amp_curve": "linear",
+          "sidechain": true,
+          "car_boost": 1.3
+        },
+        "bass": {
+          "synth": "bass_foundation",
+          "notes": [":a1", ":a1", ":e1", ":a1"],
+          "cutoff": 50,
+          "release": 0.8,
+          "pattern_offset": 0.5,
+          "car_emphasis": 1.2
+        },
+        "hihat": {
+          "sample": ":drum_cymbal_closed",
+          "pattern": [0, 0, 1, 0, 0, 0, 1, 0],
+          "amp": 0.3,
+          "hpf": 8000
+        }
+      }
+    },
+    
+    "trance_buildup": {
+      "style": "trance",
+      "energy_range": [0.5, 0.8],
+      "duration_bars": 48,
+      "elements": {
+        "kick": {
+          "sample": ":bd_tek",
+          "pattern": [1, 0, 1, 0, 1, 0, 1, 0],
+          "amp_progression": [0.6, 0.7, 0.8, 0.9],
+          "sidechain_depth": 0.7
+        },
+        "bass": {
+          "synth": "supersaw",
+          "notes": [":a1", ":a1", ":c2", ":e2"],
+          "cutoff_sweep": [30, 80],
+          "resonance": 0.6,
+          "car_punch": 1.4
+        },
+        "lead": {
+          "synth": "lead",
+          "scale": "scale(:a3, :minor)",
+          "pattern_density": "increasing",
+          "fx": ["reverb", "delay"],
+          "cutoff_automation": true
+        },
+        "riser": {
+          "synth": "noise",
+          "fx": ["hpf", "reverb"],
+          "sweep_bars": 16,
+          "trigger_energy": 0.6
+        }
+      }
+    },
+    
+    "peak_drive": {
+      "style": "progressive_house",
+      "energy_range": [0.7, 0.95],
+      "duration_bars": 64,
+      "elements": {
+        "kick": {
+          "sample": ":bd_boom",
+          "pattern": [1, 0, 0, 0, 1, 0, 0, 0],
+          "amp": 0.9,
+          "punch": 1.2,
+          "sidechain": true
+        },
+        "bass": {
+          "synth": "bass_highend",
+          "notes": [":a1", ":f1", ":c2", ":g1"],
+          "drive": 0.8,
+          "car_presence": 1.3
+        },
+        "lead": {
+          "synth": "supersaw",
+          "chord_progression": true,
+          "voicing": "spread",
+          "cutoff_motion": "rhythmic",
+          "car_clarity": 1.1
+        },
+        "percussion": {
+          "elements": ["clap", "perc", "cymbal"],
+          "pattern_complexity": "high",
+          "spatial_placement": true
+        }
+      }
+    },
+    
+    "breakdown_emotional": {
+      "style": "emotional_breakdown",
+      "energy_range": [0.8, 0.3],
+      "duration_bars": 32,
+      "elements": {
+        "pad": {
+          "synth": "dark_ambience",
+          "chord_quality": "minor_extended",
+          "reverb_size": "cathedral",
+          "car_warmth": 1.2
+        },
+        "lead": {
+          "synth": "emotional_lead",
+          "melody_type": "solo",
+          "expression": "high",
+          "delay_feedback": 0.6
+        },
+        "texture": {
+          "type": "vinyl_crackle",
+          "nostalgic_processing": true,
+          "car_intimate": true
+        }
+      }
+    },
+    
+    "final_climax": {
+      "style": "festival_anthem",
+      "energy_range": [0.4, 0.98],
+      "duration_bars": 64,
+      "elements": {
+        "kick": {
+          "sample": ":bd_boom",
+          "pattern": "four_on_floor_intense",
+          "layers": ["sub", "punch", "click"],
+          "car_impact": 1.5
+        },
+        "bass": {
+          "synth": "festival_bass",
+          "saw_stack": true,
+          "octave_doubling": true,
+          "car_rumble": 1.4
+        },
+        "lead": {
+          "synth": "anthem_lead",
+          "unison": 7,
+          "detune": 0.1,
+          "melody": "triumphant",
+          "car_soar": 1.2
+        },
+        "fx": {
+          "risers": true,
+          "impacts": true,
+          "sweeps": true,
+          "car_excitement": 1.3
+        }
+      }
+    }
+  },
+  
+  "dj_transitions": {
+    "energy_crossfade": {
+      "duration_bars": 8,
+      "techniques": ["volume_fade", "filter_sweep", "reverb_tail"],
+      "car_smoothness": 1.2
+    },
+    "filter_sweep": {
+      "duration_bars": 4,
+      "cutoff_range": [20, 20000],
+      "resonance": 0.3,
+      "car_dramatic": true
+    },
+    "breakdown_build": {
+      "duration_bars": 16,
+      "elements_fade_order": ["kick", "bass", "lead", "pad"],
+      "riser_introduction": 8,
+      "car_anticipation": 1.3
+    },
+    "impact_drop": {
+      "duration_bars": 2,
+      "silence_beats": 1,
+      "impact_sample": ":bd_boom",
+      "car_punch": 1.8
+    }
+  },
+  
+  "car_audio_profiles": {
+    "sedan_standard": {
+      "bass_boost": 1.2,
+      "midrange_clarity": 1.0,
+      "treble_enhance": 1.1,
+      "spatial_compensation": 0.9
+    },
+    "suv_premium": {
+      "bass_boost": 1.1,
+      "midrange_clarity": 1.1,
+      "treble_enhance": 1.0,
+      "spatial_compensation": 1.0
+    },
+    "sports_car": {
+      "bass_boost": 1.3,
+      "midrange_clarity": 0.9,
+      "treble_enhance": 1.2,
+      "spatial_compensation": 0.8
+    }
+  }
+}

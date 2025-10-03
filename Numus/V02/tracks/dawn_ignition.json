@@ -1,75 +1,135 @@
 {
   "name": "Dawn Ignition",
   "album": "Motion Groove",
-  "duration_minutes": 20,
+  "artist": "Numus Engine",
+  "duration_minutes": 22,
   "global_bpm": 125,
   "global_key": "Am",
-  "description": "晨启 - 清晨出发的渐进能量",
+  "description": "晨启 - 清晨出发的渐进能量，车载 EDM 长篇",
+  "car_optimized": true,
   
   "chapters": [
     {
       "id": "gentle_awakening",
-      "name": "Gentle Awakening", 
+      "name": "Gentle Awakening",
+      "description": "清晨的轻柔唤醒",
       "duration_bars": 32,
       "energy_start": 0.1,
       "energy_end": 0.3,
-      "elements": ["pad"]
+      "style_hint": "ambient",
+      "elements": ["pad"],
+      "car_notes": "重点优化中频清晰度，适合清晨驾驶"
     },
     {
-      "id": "pulse_forming",
+      "id": "pulse_forming", 
       "name": "Pulse Forming",
-      "duration_bars": 32, 
+      "description": "节拍开始形成",
+      "duration_bars": 32,
       "energy_start": 0.3,
       "energy_end": 0.5,
-      "elements": ["kick", "bass", "pad"]
+      "style_hint": "deep_house",
+      "elements": ["kick", "bass", "pad"],
+      "car_notes": "引入低频，测试车载低音系统"
     },
     {
       "id": "energy_rise",
-      "name": "Energy Rise",
+      "name": "Energy Rise", 
+      "description": "能量逐步上升",
       "duration_bars": 48,
       "energy_start": 0.5,
       "energy_end": 0.7,
-      "elements": ["kick", "bass", "pad", "percussion"]
+      "style_hint": "trance",
+      "elements": ["kick", "bass", "pad", "percussion"],
+      "car_notes": "增加打击乐层次，丰富车载立体声"
     },
     {
-      "id": "peak_drive", 
+      "id": "peak_drive",
       "name": "Peak Drive",
+      "description": "高峰驾驶时段",
       "duration_bars": 64,
       "energy_start": 0.7,
       "energy_end": 0.9,
-      "elements": ["kick", "bass", "pad", "lead", "percussion"]
+      "style_hint": "progressive_house", 
+      "elements": ["kick", "bass", "pad", "lead", "percussion"],
+      "car_notes": "全频段发力，车载音响系统完整体验"
     },
     {
       "id": "sustained_cruise",
-      "name": "Sustained Cruise", 
+      "name": "Sustained Cruise",
+      "description": "持续巡航状态",
       "duration_bars": 80,
       "energy_start": 0.8,
       "energy_end": 0.8,
-      "elements": ["kick", "bass", "pad", "lead"]
+      "style_hint": "progressive_house",
+      "elements": ["kick", "bass", "pad", "lead"],
+      "car_notes": "稳定高能量输出，适合高速公路巡航"
     },
     {
       "id": "emotional_breakdown",
-      "name": "Emotional Breakdown",
+      "name": "Emotional Breakdown", 
+      "description": "情感释放段落",
       "duration_bars": 48,
       "energy_start": 0.8,
-      "energy_end": 0.4, 
-      "elements": ["pad", "lead"]
+      "energy_end": 0.4,
+      "style_hint": "emotional_breakdown",
+      "elements": ["pad", "lead"],
+      "car_notes": "突出情感表达，中高频细节丰富"
     },
     {
       "id": "final_ascent",
       "name": "Final Ascent",
-      "duration_bars": 64,
+      "description": "最终冲刺",
+      "duration_bars": 64, 
       "energy_start": 0.4,
       "energy_end": 0.95,
-      "elements": ["kick", "bass", "pad", "lead", "percussion"]
+      "style_hint": "festival_anthem",
+      "elements": ["kick", "bass", "pad", "lead", "percussion"],
+      "car_notes": "最强能量输出，测试车载系统极限"
     },
     {
-      "id": "dawn_complete", 
+      "id": "dawn_complete",
       "name": "Dawn Complete",
+      "description": "晨光完整呈现",
       "duration_bars": 32,
       "energy_start": 0.9,
       "energy_end": 0.2,
-      "elements": ["pad"]
+      "style_hint": "ambient",
+      "elements": ["pad"],
+      "car_notes": "温和结束，回归舒适驾驶状态"
     }
-  ]
+  ],
+  
+  "ornament_settings": {
+    "density": "sparse",
+    "types": ["bell", "lead", "pad", "texture"],
+    "trigger_threshold": 0.85,
+    "car_volume_compensation": 0.8
+  },
+  
+  "car_audio_optimization": {
+    "preferred_profile": "sedan_standard",
+    "bass_focus_chapters": ["pulse_forming", "peak_drive", "final_ascent"],
+    "clarity_focus_chapters": ["gentle_awakening", "emotional_breakdown", "dawn_complete"],
+    "full_range_chapters": ["peak_drive", "sustained_cruise", "final_ascent"],
+    "dynamic_range": "moderate",
+    "fatigue_prevention": true
+  },
+  
+  "transition_preferences": {
+    "gentle_awakening_to_pulse_forming": "energy_crossfade",
+    "pulse_forming_to_energy_rise": "filter_sweep", 
+    "energy_rise_to_peak_drive": "breakdown_build",
+    "peak_drive_to_sustained_cruise": "energy_crossfade",
+    "sustained_cruise_to_emotional_breakdown": "breakdown_build",
+    "emotional_breakdown_to_final_ascent": "impact_drop",
+    "final_ascent_to_dawn_complete": "filter_sweep"
+  },
+  
+  "metadata": {
+    "creation_date": "2024-12-19",
+    "numus_version": "V2.0",
+    "target_audience": "车载 EDM 爱好者",
+    "listening_context": "长途驾驶，清晨出发",
+    "technical_notes": "使用数学序列确定性生成，π、e、φ序列驱动"
+  }
 }
