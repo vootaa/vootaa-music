@@ -1,0 +1,75 @@
+{
+  "name": "Dawn Ignition",
+  "album": "Motion Groove",
+  "duration_minutes": 20,
+  "global_bpm": 125,
+  "global_key": "Am",
+  "description": "晨启 - 清晨出发的渐进能量",
+  
+  "chapters": [
+    {
+      "id": "gentle_awakening",
+      "name": "Gentle Awakening", 
+      "duration_bars": 32,
+      "energy_start": 0.1,
+      "energy_end": 0.3,
+      "elements": ["pad"]
+    },
+    {
+      "id": "pulse_forming",
+      "name": "Pulse Forming",
+      "duration_bars": 32, 
+      "energy_start": 0.3,
+      "energy_end": 0.5,
+      "elements": ["kick", "bass", "pad"]
+    },
+    {
+      "id": "energy_rise",
+      "name": "Energy Rise",
+      "duration_bars": 48,
+      "energy_start": 0.5,
+      "energy_end": 0.7,
+      "elements": ["kick", "bass", "pad", "percussion"]
+    },
+    {
+      "id": "peak_drive", 
+      "name": "Peak Drive",
+      "duration_bars": 64,
+      "energy_start": 0.7,
+      "energy_end": 0.9,
+      "elements": ["kick", "bass", "pad", "lead", "percussion"]
+    },
+    {
+      "id": "sustained_cruise",
+      "name": "Sustained Cruise", 
+      "duration_bars": 80,
+      "energy_start": 0.8,
+      "energy_end": 0.8,
+      "elements": ["kick", "bass", "pad", "lead"]
+    },
+    {
+      "id": "emotional_breakdown",
+      "name": "Emotional Breakdown",
+      "duration_bars": 48,
+      "energy_start": 0.8,
+      "energy_end": 0.4, 
+      "elements": ["pad", "lead"]
+    },
+    {
+      "id": "final_ascent",
+      "name": "Final Ascent",
+      "duration_bars": 64,
+      "energy_start": 0.4,
+      "energy_end": 0.95,
+      "elements": ["kick", "bass", "pad", "lead", "percussion"]
+    },
+    {
+      "id": "dawn_complete", 
+      "name": "Dawn Complete",
+      "duration_bars": 32,
+      "energy_start": 0.9,
+      "energy_end": 0.2,
+      "elements": ["pad"]
+    }
+  ]
+}
