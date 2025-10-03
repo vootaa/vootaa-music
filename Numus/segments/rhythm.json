@@ -1,0 +1,370 @@
+{
+  "library_info": {
+    "name": "Numus Rhythm Library",
+    "version": "3.0",
+    "category": "rhythm",
+    "total_segments": 18
+  },
+  "segments": [
+    {
+      "id": "RHY_kick_4floor__a3f8b2c1",
+      "name": "Four-on-Floor Kick Foundation",
+      "category": "rhythm",
+      "sub_type": "kick_pattern",
+      "playback_params": {
+        "pattern": [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0],
+        "synth": ":bd_haus",
+        "amp": 1.0,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.6,
+        "complexity": 0.2,
+        "suitable_sections": ["drop", "verse", "build_up"],
+        "mood_tags": ["driving", "steady", "foundation"],
+        "bpm_range": [120, 130]
+      }
+    },
+    {
+      "id": "RHY_kick_deep__7d2a9f3e",
+      "name": "Deep House Kick Modern",
+      "category": "rhythm",
+      "sub_type": "kick_pattern",
+      "playback_params": {
+        "pattern": [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0],
+        "synth": ":bd_boom",
+        "amp": 1.2,
+        "cutoff": 80,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.7,
+        "complexity": 0.2,
+        "suitable_sections": ["drop", "verse"],
+        "mood_tags": ["deep", "powerful", "modern"],
+        "bpm_range": [120, 126]
+      }
+    },
+    {
+      "id": "RHY_kick_night__5c8e1b4d",
+      "name": "Modern Night House Kick",
+      "category": "rhythm",
+      "sub_type": "kick_pattern",
+      "playback_params": {
+        "pattern": [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0],
+        "synth": ":bd_fat",
+        "amp": 1.1,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.65,
+        "complexity": 0.2,
+        "suitable_sections": ["drop", "verse", "climax"],
+        "mood_tags": ["nocturnal", "groovy", "urban"],
+        "bpm_range": [118, 125]
+      }
+    },
+    {
+      "id": "RHY_snare_minimal__9a3f7c2e",
+      "name": "Minimal Snare Pattern",
+      "category": "rhythm",
+      "sub_type": "snare_pattern",
+      "playback_params": {
+        "pattern": [0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0],
+        "synth": ":drum_snare_hard",
+        "amp": 0.8,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.5,
+        "complexity": 0.3,
+        "suitable_sections": ["verse", "drop", "build_up"],
+        "mood_tags": ["minimal", "crisp", "punchy"],
+        "bpm_range": [120, 130]
+      }
+    },
+    {
+      "id": "RHY_hihat_prog__4e9d2a1f",
+      "name": "Progressive Hi-Hat Open/Closed",
+      "category": "rhythm",
+      "sub_type": "hihat_pattern",
+      "playback_params": {
+        "pattern": [1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,1],
+        "synth": ":drum_cymbal_closed",
+        "open_synth": ":drum_cymbal_open",
+        "amp": 0.5,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.6,
+        "complexity": 0.5,
+        "suitable_sections": ["build_up", "drop", "verse"],
+        "mood_tags": ["progressive", "energetic", "dynamic"],
+        "bpm_range": [125, 132]
+      }
+    },
+    {
+      "id": "RHY_hihat_minimal__8f1c5d3a",
+      "name": "Minimal Deep House Hi-Hat",
+      "category": "rhythm",
+      "sub_type": "hihat_pattern",
+      "playback_params": {
+        "pattern": [1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0],
+        "synth": ":drum_cymbal_closed",
+        "amp": 0.4,
+        "cutoff": 100,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.4,
+        "complexity": 0.3,
+        "suitable_sections": ["intro", "verse", "outro"],
+        "mood_tags": ["minimal", "subtle", "groove"],
+        "bpm_range": [118, 124]
+      }
+    },
+    {
+      "id": "RHY_perc_shaker__3b7e9d2c",
+      "name": "Percussion Shaker Layer",
+      "category": "rhythm",
+      "sub_type": "percussion_layer",
+      "playback_params": {
+        "pattern": [1,0,1,1,0,1,0,1,1,0,1,1,0,1,0,1],
+        "synth": ":drum_cymbal_pedal",
+        "amp": 0.3,
+        "rate": 1.5,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.35,
+        "complexity": 0.4,
+        "suitable_sections": ["verse", "breakdown"],
+        "mood_tags": ["organic", "rhythmic", "layered"],
+        "bpm_range": [115, 128]
+      }
+    },
+    {
+      "id": "RHY_perc_conga__6d4a8f1e",
+      "name": "Conga Percussion Groove",
+      "category": "rhythm",
+      "sub_type": "percussion_layer",
+      "playback_params": {
+        "pattern": [1,0,0,1,0,0,1,1,0,0,1,0,0,1,0,0],
+        "synth": ":drum_tom_mid_hard",
+        "amp": 0.6,
+        "rate": 0.8,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.5,
+        "complexity": 0.6,
+        "suitable_sections": ["verse", "breakdown", "build_up"],
+        "mood_tags": ["latin", "groovy", "organic"],
+        "bpm_range": [120, 128]
+      }
+    },
+    {
+      "id": "RHY_break_dnb__2f9c7e1d",
+      "name": "DnB Breakbeat Pattern",
+      "category": "rhythm",
+      "sub_type": "breakbeat",
+      "playback_params": {
+        "kick_pattern": [1,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0],
+        "snare_pattern": [0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,0],
+        "kick_synth": ":bd_boom",
+        "snare_synth": ":drum_snare_hard",
+        "amp": 0.9,
+        "duration_bars": 2
+      },
+      "metadata": {
+        "energy_level": 0.9,
+        "complexity": 0.8,
+        "suitable_sections": ["drop", "climax"],
+        "mood_tags": ["intense", "breakbeat", "fast"],
+        "bpm_range": [160, 180]
+      }
+    },
+    {
+      "id": "RHY_break_idm__5a8d3f2c",
+      "name": "IDM Glitch Breakbeat",
+      "category": "rhythm",
+      "sub_type": "breakbeat",
+      "playback_params": {
+        "kick_pattern": [1,0,0,1,0,0,0,1,1,0,0,0,0,1,0,0],
+        "snare_pattern": [0,0,1,0,0,1,0,0,0,0,1,0,1,0,0,0],
+        "kick_synth": ":bd_tek",
+        "snare_synth": ":elec_blip",
+        "amp": 0.8,
+        "duration_bars": 2
+      },
+      "metadata": {
+        "energy_level": 0.85,
+        "complexity": 0.9,
+        "suitable_sections": ["breakdown", "climax"],
+        "mood_tags": ["glitchy", "experimental", "complex"],
+        "bpm_range": [140, 170]
+      }
+    },
+    {
+      "id": "RHY_bossa__7e2c9a3f",
+      "name": "Bossa Nova Rhythm Pattern",
+      "category": "rhythm",
+      "sub_type": "percussion_layer",
+      "playback_params": {
+        "pattern": [1,0,0,1,0,1,0,0,1,0,0,1,0,1,0,0],
+        "synth": ":drum_tom_lo_hard",
+        "amp": 0.5,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.45,
+        "complexity": 0.6,
+        "suitable_sections": ["verse", "breakdown"],
+        "mood_tags": ["latin", "smooth", "syncopated"],
+        "bpm_range": [110, 125]
+      }
+    },
+    {
+      "id": "RHY_tribal__4c1e8d9a",
+      "name": "Tribal Percussion Layer",
+      "category": "rhythm",
+      "sub_type": "percussion_layer",
+      "playback_params": {
+        "pattern": [1,0,1,0,0,1,0,1,1,0,1,0,0,1,0,0],
+        "synth": ":drum_tom_mid_soft",
+        "amp": 0.55,
+        "rate": 0.9,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.5,
+        "complexity": 0.5,
+        "suitable_sections": ["verse", "breakdown", "build_up"],
+        "mood_tags": ["ethnic", "organic", "primal"],
+        "bpm_range": [115, 130]
+      }
+    },
+    {
+      "id": "RHY_samba__9d3f7a2e",
+      "name": "Samba Percussion Pattern",
+      "category": "rhythm",
+      "sub_type": "percussion_layer",
+      "playback_params": {
+        "pattern": [1,1,0,1,1,0,1,1,1,1,0,1,1,0,1,1],
+        "synth": ":drum_cymbal_pedal",
+        "amp": 0.45,
+        "rate": 1.2,
+        "duration_bars": 2
+      },
+      "metadata": {
+        "energy_level": 0.7,
+        "complexity": 0.7,
+        "suitable_sections": ["drop", "climax"],
+        "mood_tags": ["brazilian", "festive", "energetic"],
+        "bpm_range": [125, 140]
+      }
+    },
+    {
+      "id": "RHY_tabla__6a8e2d1f",
+      "name": "Ethnic Tabla Pattern",
+      "category": "rhythm",
+      "sub_type": "percussion_layer",
+      "playback_params": {
+        "pattern": [1,0,0,1,0,1,1,0,1,0,0,1,1,0,1,0],
+        "synth": ":drum_tom_hi_hard",
+        "amp": 0.6,
+        "rate": 1.1,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.55,
+        "complexity": 0.65,
+        "suitable_sections": ["verse", "breakdown"],
+        "mood_tags": ["ethnic", "indian", "melodic"],
+        "bpm_range": [100, 120]
+      }
+    },
+    {
+      "id": "RHY_combo_kick_bass__3f9e7c2a",
+      "name": "Deep House Kick+Bass Combo",
+      "category": "rhythm",
+      "sub_type": "full_drum_kit",
+      "playback_params": {
+        "kick_pattern": [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0],
+        "kick_synth": ":bd_haus",
+        "kick_amp": 1.0,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.65,
+        "complexity": 0.3,
+        "suitable_sections": ["drop", "verse"],
+        "mood_tags": ["tight", "foundation", "groovy"],
+        "bpm_range": [120, 126],
+        "note": "Combined with bass in original, separated here"
+      }
+    },
+    {
+      "id": "RHY_coastal_dnb__8d2f9e1c",
+      "name": "Coastal Fragrance DnB",
+      "category": "rhythm",
+      "sub_type": "full_drum_kit",
+      "playback_params": {
+        "kick_pattern": [1,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0],
+        "snare_pattern": [0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,1],
+        "hihat_pattern": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+        "kick_synth": ":bd_boom",
+        "snare_synth": ":drum_snare_hard",
+        "hihat_synth": ":drum_cymbal_closed",
+        "amp": 0.85,
+        "duration_bars": 2
+      },
+      "metadata": {
+        "energy_level": 0.9,
+        "complexity": 0.8,
+        "suitable_sections": ["drop", "climax"],
+        "mood_tags": ["atmospheric", "fast", "liquid"],
+        "bpm_range": [170, 180]
+      }
+    },
+    {
+      "id": "RHY_drill_sub__5c7a9d3e",
+      "name": "UK Drill Sub Pattern",
+      "category": "rhythm",
+      "sub_type": "kick_pattern",
+      "playback_params": {
+        "pattern": [1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,0],
+        "synth": ":bd_boom",
+        "amp": 1.3,
+        "cutoff": 70,
+        "duration_bars": 2
+      },
+      "metadata": {
+        "energy_level": 0.8,
+        "complexity": 0.6,
+        "suitable_sections": ["drop", "verse"],
+        "mood_tags": ["aggressive", "uk", "syncopated"],
+        "bpm_range": [130, 145]
+      }
+    },
+    {
+      "id": "RHY_techno_offbeat__2e9f7d1c",
+      "name": "Techno Offbeat Kick",
+      "category": "rhythm",
+      "sub_type": "kick_pattern",
+      "playback_params": {
+        "pattern": [1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0],
+        "synth": ":bd_tek",
+        "amp": 0.95,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.75,
+        "complexity": 0.4,
+        "suitable_sections": ["build_up", "drop"],
+        "mood_tags": ["techno", "driving", "hypnotic"],
+        "bpm_range": [128, 138]
+      }
+    }
+  ]
+}

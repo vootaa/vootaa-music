@@ -1,0 +1,281 @@
+{
+  "library_info": {
+    "name": "Numus Bass Library",
+    "version": "3.0",
+    "category": "bass",
+    "total_segments": 12
+  },
+  "segments": [
+    {
+      "id": "BASS_deep_sub__7d9e4a12",
+      "name": "Deep Sub Bass Foundation",
+      "category": "bass",
+      "sub_type": "sub_bass",
+      "playback_params": {
+        "notes": ["c2", "c2", "as1", "as1"],
+        "synth": ":bass_foundation",
+        "amp": 0.9,
+        "cutoff": 70,
+        "res": 0.3,
+        "release": 0.8,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.5,
+        "complexity": 0.2,
+        "suitable_sections": ["intro", "verse", "outro"],
+        "mood_tags": ["deep", "foundation", "sub"],
+        "bpm_range": [120, 128]
+      }
+    },
+    {
+      "id": "BASS_deep_house__5c2f8e90",
+      "name": "Deep House Sub Bass v2",
+      "category": "bass",
+      "sub_type": "sub_bass",
+      "playback_params": {
+        "notes": ["c2", "c2", "g1", "g1"],
+        "synth": ":bass_foundation",
+        "amp": 1.0,
+        "cutoff": 65,
+        "res": 0.4,
+        "release": 1.0,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.55,
+        "complexity": 0.2,
+        "suitable_sections": ["verse", "drop"],
+        "mood_tags": ["deep", "warm", "sustained"],
+        "bpm_range": [118, 125]
+      }
+    },
+    {
+      "id": "BASS_groove_minor__3a9d7e2f",
+      "name": "Bass Line Groove Minor",
+      "category": "bass",
+      "sub_type": "bass_line",
+      "playback_params": {
+        "notes": ["c2", "ds2", "g2", "as2", "c3", "as2", "g2", "ds2"],
+        "synth": ":bass_highend",
+        "amp": 0.75,
+        "cutoff": 85,
+        "res": 0.3,
+        "attack": 0.01,
+        "release": 0.3,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.65,
+        "complexity": 0.6,
+        "suitable_sections": ["verse", "drop"],
+        "mood_tags": ["groovy", "melodic", "minor"],
+        "bpm_range": [120, 130]
+      }
+    },
+    {
+      "id": "BASS_elegant_house__8f4c9a1e",
+      "name": "Elegant Deep House Bass",
+      "category": "bass",
+      "sub_type": "bass_line",
+      "playback_params": {
+        "notes": ["c2", "e2", "g2", "a2"],
+        "synth": ":bass_voxy",
+        "amp": 0.7,
+        "cutoff": 90,
+        "res": 0.25,
+        "release": 0.5,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.6,
+        "complexity": 0.5,
+        "suitable_sections": ["verse", "breakdown"],
+        "mood_tags": ["elegant", "smooth", "melodic"],
+        "bpm_range": [118, 124]
+      }
+    },
+    {
+      "id": "BASS_dnb_reese__2d7e9f3c",
+      "name": "DnB Reese Bass",
+      "category": "bass",
+      "sub_type": "bass_line",
+      "playback_params": {
+        "notes": ["c2", "c2", "as1", "as1"],
+        "synth": ":dark_ambience",
+        "amp": 0.85,
+        "cutoff": 75,
+        "res": 0.7,
+        "detune": 0.15,
+        "release": 0.6,
+        "duration_bars": 2
+      },
+      "metadata": {
+        "energy_level": 0.8,
+        "complexity": 0.6,
+        "suitable_sections": ["drop", "climax"],
+        "mood_tags": ["aggressive", "wobbly", "dnb"],
+        "bpm_range": [170, 180]
+      }
+    },
+    {
+      "id": "BASS_newjeans_pop__6a3f8d2e",
+      "name": "NewJeans Pop Bass",
+      "category": "bass",
+      "sub_type": "bass_line",
+      "playback_params": {
+        "notes": ["c2", "d2", "e2", "c2", "e2", "d2", "c2", "a1"],
+        "synth": ":fm",
+        "amp": 0.8,
+        "cutoff": 95,
+        "divisor": 0.5,
+        "depth": 2,
+        "release": 0.3,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.7,
+        "complexity": 0.7,
+        "suitable_sections": ["verse", "drop"],
+        "mood_tags": ["pop", "catchy", "modern"],
+        "bpm_range": [115, 125]
+      }
+    },
+    {
+      "id": "BASS_fashion_show__9e2d7a3f",
+      "name": "Fashion Show Bass",
+      "category": "bass",
+      "sub_type": "bass_line",
+      "playback_params": {
+        "notes": ["c2", "c2", "as1", "g1"],
+        "synth": ":bass_voxy",
+        "amp": 0.75,
+        "cutoff": 88,
+        "res": 0.2,
+        "release": 0.4,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.65,
+        "complexity": 0.4,
+        "suitable_sections": ["verse", "drop"],
+        "mood_tags": ["stylish", "minimal", "chic"],
+        "bpm_range": [118, 126]
+      }
+    },
+    {
+      "id": "BASS_house_evolved__4f8c9d1e",
+      "name": "Deep House Evolved 2025",
+      "category": "bass",
+      "sub_type": "bass_line",
+      "playback_params": {
+        "notes": ["c2", "e2", "g2", "c3", "g2", "e2"],
+        "synth": ":bass_highend",
+        "amp": 0.8,
+        "cutoff": 92,
+        "res": 0.35,
+        "attack": 0.05,
+        "release": 0.4,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.7,
+        "complexity": 0.65,
+        "suitable_sections": ["drop", "verse"],
+        "mood_tags": ["modern", "evolving", "dynamic"],
+        "bpm_range": [120, 128]
+      }
+    },
+    {
+      "id": "BASS_sub_foundation__7a9e3d2f",
+      "name": "Sub Bass Deep Foundation Alt",
+      "category": "bass",
+      "sub_type": "sub_bass",
+      "playback_params": {
+        "notes": ["c2", "c2", "c2", "c2"],
+        "synth": ":bass_foundation",
+        "amp": 1.1,
+        "cutoff": 60,
+        "res": 0.5,
+        "release": 1.2,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.45,
+        "complexity": 0.1,
+        "suitable_sections": ["intro", "breakdown", "outro"],
+        "mood_tags": ["minimal", "sustained", "foundation"],
+        "bpm_range": [115, 125]
+      }
+    },
+    {
+      "id": "BASS_wobble_house__5d8a9f2c",
+      "name": "Deep House Bass Wobble",
+      "category": "bass",
+      "sub_type": "bass_line",
+      "playback_params": {
+        "notes": ["c2", "c2", "as1", "as1"],
+        "synth": ":bass_foundation",
+        "amp": 0.85,
+        "cutoff": 80,
+        "res": 0.6,
+        "release": 0.5,
+        "mod_range": [60, 100],
+        "mod_phase": 0.25,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.75,
+        "complexity": 0.7,
+        "suitable_sections": ["drop", "climax"],
+        "mood_tags": ["wobble", "dynamic", "filter_automation"],
+        "bpm_range": [120, 128]
+      }
+    },
+    {
+      "id": "BASS_808_sub__3c7e9d2a",
+      "name": "808 Sub Bass Foundation",
+      "category": "bass",
+      "sub_type": "sub_bass",
+      "playback_params": {
+        "notes": ["c2", "c2", "g1", "as1"],
+        "synth": ":bass_foundation",
+        "amp": 1.0,
+        "cutoff": 68,
+        "res": 0.3,
+        "release": 0.9,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.55,
+        "complexity": 0.3,
+        "suitable_sections": ["verse", "drop"],
+        "mood_tags": ["808", "deep", "powerful"],
+        "bpm_range": [120, 140]
+      }
+    },
+    {
+      "id": "BASS_tech_rolling__8d2f9e1c",
+      "name": "Tech House Rolling Bass",
+      "category": "bass",
+      "sub_type": "bass_line",
+      "playback_params": {
+        "notes": ["c2", "d2", "c2", "as1", "c2", "d2", "f2", "d2"],
+        "synth": ":bass_highend",
+        "amp": 0.75,
+        "cutoff": 95,
+        "res": 0.25,
+        "attack": 0.01,
+        "release": 0.25,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.7,
+        "complexity": 0.75,
+        "suitable_sections": ["drop", "verse"],
+        "mood_tags": ["rolling", "tech", "driving"],
+        "bpm_range": [125, 130]
+      }
+    }
+  ]
+}

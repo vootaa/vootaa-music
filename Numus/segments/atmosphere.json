@@ -1,0 +1,204 @@
+{
+  "library_info": {
+    "name": "Numus Atmosphere Library",
+    "version": "3.0",
+    "category": "atmosphere",
+    "total_segments": 8
+  },
+  "segments": [
+    {
+      "id": "ATM_dawn_texture__5a8d3f2c",
+      "name": "Ambient Dawn Texture",
+      "category": "atmosphere",
+      "sub_type": "ambient_layer",
+      "playback_params": {
+        "synth": ":hollow",
+        "notes": ["c3", "e3", "g3"],
+        "amp": 0.3,
+        "cutoff": 90,
+        "attack": 2.0,
+        "sustain": 4.0,
+        "release": 3.0,
+        "reverb": 0.9,
+        "duration_bars": 16
+      },
+      "metadata": {
+        "energy_level": 0.2,
+        "complexity": 0.3,
+        "suitable_sections": ["intro", "outro"],
+        "mood_tags": ["peaceful", "awakening", "spacious"],
+        "bpm_range": [115, 125]
+      }
+    },
+    {
+      "id": "ATM_night_drive__9d3f7a2e",
+      "name": "Night Drive Atmosphere",
+      "category": "atmosphere",
+      "sub_type": "ambient_layer",
+      "playback_params": {
+        "synth": ":dark_ambience",
+        "notes": ["c3", "ds3", "g3"],
+        "amp": 0.35,
+        "cutoff": 85,
+        "attack": 2.5,
+        "sustain": 5.0,
+        "release": 3.5,
+        "reverb": 0.85,
+        "duration_bars": 16
+      },
+      "metadata": {
+        "energy_level": 0.3,
+        "complexity": 0.4,
+        "suitable_sections": ["intro", "breakdown"],
+        "mood_tags": ["mysterious", "urban", "nocturnal"],
+        "bpm_range": [118, 128]
+      }
+    },
+    {
+      "id": "ATM_jungle__6a8e2d1f",
+      "name": "Amazonia Jungle Atmosphere",
+      "category": "atmosphere",
+      "sub_type": "ambient_layer",
+      "playback_params": {
+        "synth": ":hollow",
+        "notes": ["c3", "g3", "c4"],
+        "amp": 0.25,
+        "cutoff": 95,
+        "attack": 3.0,
+        "sustain": 6.0,
+        "release": 4.0,
+        "reverb": 0.95,
+        "duration_bars": 16
+      },
+      "metadata": {
+        "energy_level": 0.25,
+        "complexity": 0.5,
+        "suitable_sections": ["intro", "breakdown", "outro"],
+        "mood_tags": ["organic", "natural", "immersive"],
+        "bpm_range": [110, 120]
+      }
+    },
+    {
+      "id": "ATM_cloud__4c1e8d9a",
+      "name": "Cloud Beat Texture",
+      "category": "atmosphere",
+      "sub_type": "ambient_layer",
+      "playback_params": {
+        "synth": ":blade",
+        "notes": ["c3", "e3", "g3", "b3"],
+        "amp": 0.28,
+        "cutoff": 100,
+        "detune": 0.15,
+        "attack": 2.0,
+        "sustain": 3.5,
+        "release": 2.5,
+        "reverb": 0.8,
+        "duration_bars": 12
+      },
+      "metadata": {
+        "energy_level": 0.35,
+        "complexity": 0.4,
+        "suitable_sections": ["intro", "verse", "breakdown"],
+        "mood_tags": ["floating", "dreamy", "soft"],
+        "bpm_range": [115, 128]
+      }
+    },
+    {
+      "id": "ATM_darkness__7e2c9a3f",
+      "name": "Darkness Ambient Pad",
+      "category": "atmosphere",
+      "sub_type": "ambient_layer",
+      "playback_params": {
+        "synth": ":dark_ambience",
+        "notes": ["c2", "ds2", "g2"],
+        "amp": 0.4,
+        "cutoff": 75,
+        "attack": 3.0,
+        "sustain": 8.0,
+        "release": 4.0,
+        "reverb": 0.9,
+        "duration_bars": 16
+      },
+      "metadata": {
+        "energy_level": 0.2,
+        "complexity": 0.3,
+        "suitable_sections": ["intro", "breakdown", "outro"],
+        "mood_tags": ["dark", "ominous", "deep"],
+        "bpm_range": [110, 125]
+      }
+    },
+    {
+      "id": "ATM_summer__3a9d7e2f",
+      "name": "Summer Ambient Pad",
+      "category": "atmosphere",
+      "sub_type": "ambient_layer",
+      "playback_params": {
+        "synth": ":hollow",
+        "notes": ["c4", "e4", "g4", "b4"],
+        "amp": 0.32,
+        "cutoff": 105,
+        "attack": 1.5,
+        "sustain": 4.0,
+        "release": 2.0,
+        "reverb": 0.75,
+        "duration_bars": 12
+      },
+      "metadata": {
+        "energy_level": 0.4,
+        "complexity": 0.3,
+        "suitable_sections": ["intro", "verse", "outro"],
+        "mood_tags": ["bright", "warm", "uplifting"],
+        "bpm_range": [118, 130]
+      }
+    },
+    {
+      "id": "ATM_drone_slow__8d2f9e1c",
+      "name": "Slow Tempo Ambient Drone",
+      "category": "atmosphere",
+      "sub_type": "ambient_layer",
+      "playback_params": {
+        "synth": ":dark_ambience",
+        "notes": ["c2"],
+        "amp": 0.45,
+        "cutoff": 70,
+        "attack": 4.0,
+        "sustain": 12.0,
+        "release": 6.0,
+        "reverb": 0.95,
+        "duration_bars": 16
+      },
+      "metadata": {
+        "energy_level": 0.15,
+        "complexity": 0.2,
+        "suitable_sections": ["intro", "breakdown", "outro"],
+        "mood_tags": ["minimal", "sustained", "meditative"],
+        "bpm_range": [80, 110]
+      }
+    },
+    {
+      "id": "ATM_vocal_layer__2e9f7d1c",
+      "name": "Deep House Vocal Atmosphere",
+      "category": "atmosphere",
+      "sub_type": "ambient_layer",
+      "playback_params": {
+        "synth": ":hollow",
+        "notes": ["c4", "e4", "g4"],
+        "amp": 0.35,
+        "cutoff": 95,
+        "attack": 1.0,
+        "sustain": 2.5,
+        "release": 1.5,
+        "reverb": 0.85,
+        "duration_bars": 8
+      },
+      "metadata": {
+        "energy_level": 0.35,
+        "complexity": 0.4,
+        "suitable_sections": ["verse", "breakdown"],
+        "mood_tags": ["vocal_like", "human", "emotional"],
+        "bpm_range": [118, 125],
+        "note": "Vocal texture simulation without external samples"
+      }
+    }
+  ]
+}

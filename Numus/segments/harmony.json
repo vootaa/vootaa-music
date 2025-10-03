@@ -1,0 +1,296 @@
+{
+  "library_info": {
+    "name": "Numus Harmony Library",
+    "version": "3.0",
+    "category": "harmony",
+    "total_segments": 11
+  },
+  "segments": [
+    {
+      "id": "HARM_pad_chill__5c2f8e90",
+      "name": "Chill Deep House Pad",
+      "category": "harmony",
+      "sub_type": "pad",
+      "playback_params": {
+        "notes": ["c3", "e3", "g3", "b3"],
+        "synth": ":hollow",
+        "amp": 0.4,
+        "cutoff": 95,
+        "attack": 1.5,
+        "sustain": 2.0,
+        "release": 2.0,
+        "reverb": 0.7,
+        "duration_bars": 8
+      },
+      "metadata": {
+        "energy_level": 0.3,
+        "complexity": 0.3,
+        "suitable_sections": ["intro", "breakdown", "outro"],
+        "mood_tags": ["chill", "atmospheric", "warm"],
+        "bpm_range": [115, 125]
+      }
+    },
+    {
+      "id": "HARM_pad_cosmic__8f4c9a1e",
+      "name": "Cosmic Music Pad",
+      "category": "harmony",
+      "sub_type": "pad",
+      "playback_params": {
+        "notes": ["c3", "g3", "d4", "a4"],
+        "synth": ":blade",
+        "amp": 0.45,
+        "cutoff": 105,
+        "detune": 0.2,
+        "attack": 2.0,
+        "sustain": 3.0,
+        "release": 2.5,
+        "reverb": 0.8,
+        "duration_bars": 8
+      },
+      "metadata": {
+        "energy_level": 0.4,
+        "complexity": 0.4,
+        "suitable_sections": ["intro", "breakdown"],
+        "mood_tags": ["cosmic", "expansive", "ethereal"],
+        "bpm_range": [120, 130]
+      }
+    },
+    {
+      "id": "HARM_pad_midnight__2d7e9f3c",
+      "name": "Midnight Horizon Pad",
+      "category": "harmony",
+      "sub_type": "pad",
+      "playback_params": {
+        "notes": ["c3", "ds3", "g3", "as3"],
+        "synth": ":dark_ambience",
+        "amp": 0.35,
+        "cutoff": 90,
+        "attack": 1.8,
+        "sustain": 2.5,
+        "release": 3.0,
+        "reverb": 0.85,
+        "duration_bars": 8
+      },
+      "metadata": {
+        "energy_level": 0.25,
+        "complexity": 0.3,
+        "suitable_sections": ["intro", "breakdown", "outro"],
+        "mood_tags": ["nocturnal", "mysterious", "deep"],
+        "bpm_range": [115, 125]
+      }
+    },
+    {
+      "id": "HARM_chord_stabs__6a3f8d2e",
+      "name": "Deep House Chord Stabs",
+      "category": "harmony",
+      "sub_type": "chord_progression",
+      "playback_params": {
+        "chords": [
+          ["c4", "e4", "g4"],
+          ["a3", "c4", "e4"],
+          ["f3", "a3", "c4"],
+          ["g3", "b3", "d4"]
+        ],
+        "synth": ":blade",
+        "amp": 0.6,
+        "cutoff": 100,
+        "attack": 0.05,
+        "release": 0.8,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.65,
+        "complexity": 0.5,
+        "suitable_sections": ["drop", "verse"],
+        "mood_tags": ["stabby", "punchy", "rhythmic"],
+        "bpm_range": [120, 128]
+      }
+    },
+    {
+      "id": "HARM_piano_stabs__9e2d7a3f",
+      "name": "Deep House Piano Stabs",
+      "category": "harmony",
+      "sub_type": "chord_progression",
+      "playback_params": {
+        "chords": [
+          ["c4", "e4", "g4"],
+          ["d4", "f4", "a4"],
+          ["e4", "g4", "b4"],
+          ["c4", "e4", "g4"]
+        ],
+        "synth": ":piano",
+        "amp": 0.55,
+        "attack": 0.01,
+        "release": 0.6,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.6,
+        "complexity": 0.5,
+        "suitable_sections": ["verse", "breakdown"],
+        "mood_tags": ["organic", "warm", "melodic"],
+        "bpm_range": [118, 125]
+      }
+    },
+    {
+      "id": "HARM_chord_melodic__4f8c9d1e",
+      "name": "Melodic Chord Progression",
+      "category": "harmony",
+      "sub_type": "chord_progression",
+      "playback_params": {
+        "chords": [
+          ["c4", "e4", "g4", "b4"],
+          ["a3", "c4", "e4", "g4"],
+          ["f3", "a3", "c4", "e4"],
+          ["g3", "b3", "d4", "f4"]
+        ],
+        "synth": ":blade",
+        "amp": 0.5,
+        "cutoff": 105,
+        "attack": 0.1,
+        "sustain": 1.0,
+        "release": 1.2,
+        "duration_bars": 8
+      },
+      "metadata": {
+        "energy_level": 0.55,
+        "complexity": 0.6,
+        "suitable_sections": ["verse", "breakdown", "build_up"],
+        "mood_tags": ["melodic", "lush", "progressive"],
+        "bpm_range": [120, 130]
+      }
+    },
+    {
+      "id": "HARM_pad_progression__7a9e3d2f",
+      "name": "Pad Chord Progression",
+      "category": "harmony",
+      "sub_type": "pad",
+      "playback_params": {
+        "chords": [
+          ["c3", "e3", "g3"],
+          ["a2", "c3", "e3"],
+          ["f2", "a2", "c3"],
+          ["g2", "b2", "d3"]
+        ],
+        "synth": ":hollow",
+        "amp": 0.45,
+        "cutoff": 100,
+        "attack": 1.2,
+        "sustain": 2.0,
+        "release": 1.5,
+        "reverb": 0.75,
+        "duration_bars": 8
+      },
+      "metadata": {
+        "energy_level": 0.4,
+        "complexity": 0.5,
+        "suitable_sections": ["intro", "verse", "outro"],
+        "mood_tags": ["flowing", "harmonic", "sustained"],
+        "bpm_range": [118, 128]
+      }
+    },
+    {
+      "id": "HARM_weekend_chord__5d8a9f2c",
+      "name": "Weekend Deep House Chord",
+      "category": "harmony",
+      "sub_type": "chord_progression",
+      "playback_params": {
+        "chords": [
+          ["c4", "e4", "g4"],
+          ["g3", "b3", "d4"],
+          ["a3", "c4", "e4"],
+          ["f3", "a3", "c4"]
+        ],
+        "synth": ":blade",
+        "amp": 0.58,
+        "cutoff": 102,
+        "attack": 0.08,
+        "release": 1.0,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.62,
+        "complexity": 0.5,
+        "suitable_sections": ["verse", "drop"],
+        "mood_tags": ["uplifting", "weekend", "feel_good"],
+        "bpm_range": [120, 126]
+      }
+    },
+    {
+      "id": "HARM_trance_supersaw__3c7e9d2a",
+      "name": "Trance Super Saw Pad",
+      "category": "harmony",
+      "sub_type": "pad",
+      "playback_params": {
+        "notes": ["c3", "e3", "g3", "c4"],
+        "synth": ":blade",
+        "amp": 0.5,
+        "cutoff": 110,
+        "detune": 0.25,
+        "attack": 0.5,
+        "sustain": 3.0,
+        "release": 2.0,
+        "reverb": 0.6,
+        "duration_bars": 8
+      },
+      "metadata": {
+        "energy_level": 0.7,
+        "complexity": 0.5,
+        "suitable_sections": ["build_up", "breakdown"],
+        "mood_tags": ["trance", "powerful", "layered"],
+        "bpm_range": [130, 140]
+      }
+    },
+    {
+      "id": "HARM_vocal_layer__8d2f9e1c",
+      "name": "Deep House Vocal Layer",
+      "category": "harmony",
+      "sub_type": "pad",
+      "playback_params": {
+        "notes": ["c4", "e4", "g4"],
+        "synth": ":hollow",
+        "amp": 0.35,
+        "cutoff": 95,
+        "attack": 0.5,
+        "sustain": 1.5,
+        "release": 1.0,
+        "reverb": 0.8,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.45,
+        "complexity": 0.4,
+        "suitable_sections": ["verse", "breakdown"],
+        "mood_tags": ["vocal_like", "human", "emotional"],
+        "bpm_range": [118, 125],
+        "note": "Vocal texture simulation with synth"
+      }
+    },
+    {
+      "id": "HARM_jazz_piano__6f3e8a2d",
+      "name": "Jazz House Piano Chords",
+      "category": "harmony",
+      "sub_type": "chord_progression",
+      "playback_params": {
+        "chords": [
+          ["c4", "e4", "g4", "b4"],
+          ["d4", "fs4", "a4", "c5"],
+          ["e4", "gs4", "b4", "d5"],
+          ["a3", "cs4", "e4", "g4"]
+        ],
+        "synth": ":piano",
+        "amp": 0.5,
+        "attack": 0.01,
+        "release": 0.8,
+        "duration_bars": 8
+      },
+      "metadata": {
+        "energy_level": 0.5,
+        "complexity": 0.7,
+        "suitable_sections": ["verse", "breakdown"],
+        "mood_tags": ["jazzy", "sophisticated", "organic"],
+        "bpm_range": [115, 125]
+      }
+    }
+  ]
+}

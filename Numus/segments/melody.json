@@ -1,0 +1,387 @@
+{
+  "library_info": {
+    "name": "Numus Melody Library",
+    "version": "3.0",
+    "category": "melody",
+    "total_segments": 17
+  },
+  "segments": [
+    {
+      "id": "MELO_lead_prog__5c2f8e90",
+      "name": "Lead Progressive Melody",
+      "category": "melody",
+      "sub_type": "lead_melody",
+      "playback_params": {
+        "notes": ["c4", "d4", "e4", "g4", "a4", "g4", "e4", "d4"],
+        "synth": ":blade",
+        "amp": 0.6,
+        "cutoff": 110,
+        "attack": 0.01,
+        "release": 0.3,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.75,
+        "complexity": 0.6,
+        "suitable_sections": ["drop", "climax"],
+        "mood_tags": ["uplifting", "progressive", "memorable"],
+        "bpm_range": [125, 132]
+      }
+    },
+    {
+      "id": "MELO_lead_blade__8f4c9a1e",
+      "name": "EDM Synth Lead Blade",
+      "category": "melody",
+      "sub_type": "lead_melody",
+      "playback_params": {
+        "notes": ["e4", "g4", "a4", "c5", "a4", "g4", "e4", "d4"],
+        "synth": ":blade",
+        "amp": 0.65,
+        "cutoff": 115,
+        "attack": 0.01,
+        "release": 0.25,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.8,
+        "complexity": 0.6,
+        "suitable_sections": ["drop", "climax"],
+        "mood_tags": ["powerful", "edm", "energetic"],
+        "bpm_range": [128, 135]
+      }
+    },
+    {
+      "id": "MELO_dawn_theme__2d7e9f3c",
+      "name": "Dawn Ignition Main Theme",
+      "category": "melody",
+      "sub_type": "lead_melody",
+      "playback_params": {
+        "notes": ["c4", "e4", "g4", "e4", "a4", "g4", "e4", "c4", "d4", "f4", "a4", "c5"],
+        "synth": ":blade",
+        "amp": 0.7,
+        "cutoff": 112,
+        "attack": 0.02,
+        "release": 0.35,
+        "duration_bars": 8
+      },
+      "metadata": {
+        "energy_level": 0.7,
+        "complexity": 0.7,
+        "suitable_sections": ["drop", "verse"],
+        "mood_tags": ["awakening", "hopeful", "thematic"],
+        "bpm_range": [120, 128]
+      }
+    },
+    {
+      "id": "MELO_arp_rising__6a3f8d2e",
+      "name": "Arpeggio Rising Pattern",
+      "category": "melody",
+      "sub_type": "arpeggio",
+      "playback_params": {
+        "notes": ["c4", "e4", "g4", "c5", "e5", "g5"],
+        "synth": ":pluck",
+        "amp": 0.5,
+        "speed": 0.125,
+        "attack": 0.01,
+        "release": 0.2,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.65,
+        "complexity": 0.5,
+        "suitable_sections": ["build_up", "verse"],
+        "mood_tags": ["ascending", "building", "rhythmic"],
+        "bpm_range": [120, 130]
+      }
+    },
+    {
+      "id": "MELO_arp_penta__9e2d7a3f",
+      "name": "Rising Arpeggio Pentatonic",
+      "category": "melody",
+      "sub_type": "arpeggio",
+      "playback_params": {
+        "notes": ["c4", "d4", "e4", "g4", "a4", "c5"],
+        "synth": ":pluck",
+        "amp": 0.52,
+        "speed": 0.125,
+        "attack": 0.01,
+        "release": 0.18,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.6,
+        "complexity": 0.5,
+        "suitable_sections": ["verse", "build_up"],
+        "mood_tags": ["pentatonic", "asian", "melodic"],
+        "bpm_range": [118, 128]
+      }
+    },
+    {
+      "id": "MELO_arp_cosmic__4f8c9d1e",
+      "name": "Cosmic Arpeggio Blade",
+      "category": "melody",
+      "sub_type": "arpeggio",
+      "playback_params": {
+        "notes": ["c4", "g4", "e4", "c5", "g4", "e4"],
+        "synth": ":blade",
+        "amp": 0.55,
+        "speed": 0.125,
+        "attack": 0.01,
+        "release": 0.15,
+        "cutoff": 105,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.7,
+        "complexity": 0.6,
+        "suitable_sections": ["drop", "build_up"],
+        "mood_tags": ["cosmic", "spacey", "energetic"],
+        "bpm_range": [125, 132]
+      }
+    },
+    {
+      "id": "MELO_arp_cyber__7a9e3d2f",
+      "name": "Cyberpunk Arpeggio Pulse",
+      "category": "melody",
+      "sub_type": "arpeggio",
+      "playback_params": {
+        "notes": ["c4", "ds4", "g4", "as4", "ds5", "as4", "g4", "ds4"],
+        "synth": ":prophet",
+        "amp": 0.58,
+        "speed": 0.0625,
+        "attack": 0.01,
+        "release": 0.12,
+        "cutoff": 100,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.75,
+        "complexity": 0.7,
+        "suitable_sections": ["drop", "verse"],
+        "mood_tags": ["cyberpunk", "futuristic", "fast"],
+        "bpm_range": [128, 140]
+      }
+    },
+    {
+      "id": "MELO_lead_cyber__5d8a9f2c",
+      "name": "Cyberpunk Synth Lead",
+      "category": "melody",
+      "sub_type": "lead_melody",
+      "playback_params": {
+        "notes": ["c4", "ds4", "g4", "gs4", "g4", "ds4", "c4", "as3"],
+        "synth": ":prophet",
+        "amp": 0.62,
+        "cutoff": 108,
+        "attack": 0.02,
+        "release": 0.28,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.78,
+        "complexity": 0.65,
+        "suitable_sections": ["drop", "climax"],
+        "mood_tags": ["cyberpunk", "dystopian", "aggressive"],
+        "bpm_range": [130, 145]
+      }
+    },
+    {
+      "id": "MELO_lead_slicer__3c7e9d2a",
+      "name": "Futuristic Lead Slicer",
+      "category": "melody",
+      "sub_type": "lead_melody",
+      "playback_params": {
+        "notes": ["e4", "g4", "a4", "c5", "e5", "c5", "a4", "g4"],
+        "synth": ":prophet",
+        "amp": 0.6,
+        "cutoff": 110,
+        "attack": 0.005,
+        "release": 0.15,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.8,
+        "complexity": 0.7,
+        "suitable_sections": ["drop", "climax"],
+        "mood_tags": ["futuristic", "sliced", "aggressive"],
+        "bpm_range": [128, 138]
+      }
+    },
+    {
+      "id": "MELO_hook_kpop__8d2f9e1c",
+      "name": "K-Pop Synth Hook",
+      "category": "melody",
+      "sub_type": "hook",
+      "playback_params": {
+        "notes": ["c5", "b4", "a4", "g4", "e4", "g4", "a4", "c5"],
+        "synth": ":fm",
+        "amp": 0.65,
+        "divisor": 0.5,
+        "depth": 2,
+        "attack": 0.01,
+        "release": 0.2,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.75,
+        "complexity": 0.6,
+        "suitable_sections": ["drop", "verse"],
+        "mood_tags": ["catchy", "kpop", "bright"],
+        "bpm_range": [115, 130]
+      }
+    },
+    {
+      "id": "MELO_lead_perfume__6f3e8a2d",
+      "name": "Perfume Plasma Lead",
+      "category": "melody",
+      "sub_type": "lead_melody",
+      "playback_params": {
+        "notes": ["c4", "e4", "g4", "c5", "g4", "e4", "d4", "c4"],
+        "synth": ":prophet",
+        "amp": 0.58,
+        "cutoff": 115,
+        "attack": 0.01,
+        "release": 0.25,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.72,
+        "complexity": 0.6,
+        "suitable_sections": ["drop", "verse"],
+        "mood_tags": ["jpop", "perfume", "synthetic"],
+        "bpm_range": [125, 135]
+      }
+    },
+    {
+      "id": "MELO_lead_8bit__4a7d9e2f",
+      "name": "Retro 8-Bit Lead",
+      "category": "melody",
+      "sub_type": "lead_melody",
+      "playback_params": {
+        "notes": ["c4", "e4", "g4", "a4", "g4", "e4", "d4", "c4"],
+        "synth": ":square",
+        "amp": 0.5,
+        "attack": 0.01,
+        "release": 0.15,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.65,
+        "complexity": 0.5,
+        "suitable_sections": ["verse", "drop"],
+        "mood_tags": ["retro", "8bit", "nostalgic"],
+        "bpm_range": [120, 140]
+      }
+    },
+    {
+      "id": "MELO_piano_jazz__9c2f8d1e",
+      "name": "Jazz House Piano Melody",
+      "category": "melody",
+      "sub_type": "lead_melody",
+      "playback_params": {
+        "notes": ["c4", "e4", "d4", "f4", "e4", "g4", "a4", "c5"],
+        "synth": ":piano",
+        "amp": 0.55,
+        "attack": 0.01,
+        "release": 0.4,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.5,
+        "complexity": 0.6,
+        "suitable_sections": ["verse", "breakdown"],
+        "mood_tags": ["jazzy", "organic", "smooth"],
+        "bpm_range": [115, 125]
+      }
+    },
+    {
+      "id": "MELO_lead_tech__7e9d2a3f",
+      "name": "Tech House Synth Prophet",
+      "category": "melody",
+      "sub_type": "lead_melody",
+      "playback_params": {
+        "notes": ["c4", "d4", "e4", "c4", "e4", "d4", "c4", "a3"],
+        "synth": ":prophet",
+        "amp": 0.6,
+        "cutoff": 105,
+        "attack": 0.01,
+        "release": 0.3,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.7,
+        "complexity": 0.6,
+        "suitable_sections": ["drop", "verse"],
+        "mood_tags": ["tech", "minimal", "driving"],
+        "bpm_range": [125, 130]
+      }
+    },
+    {
+      "id": "MELO_math_fibo__5a8d3f2c",
+      "name": "Math Symphony Fibonacci",
+      "category": "melody",
+      "sub_type": "lead_melody",
+      "playback_params": {
+        "notes": ["c4", "c4", "d4", "e4", "g4", "c5"],
+        "synth": ":blade",
+        "amp": 0.55,
+        "cutoff": 108,
+        "attack": 0.02,
+        "release": 0.35,
+        "duration_bars": 6
+      },
+      "metadata": {
+        "energy_level": 0.6,
+        "complexity": 0.8,
+        "suitable_sections": ["verse", "breakdown"],
+        "mood_tags": ["mathematical", "progressive", "intelligent"],
+        "bpm_range": [120, 130],
+        "note": "Based on Fibonacci sequence"
+      }
+    },
+    {
+      "id": "MELO_echo_math__3d9e7f2a",
+      "name": "Cosmic Echo Mathematical",
+      "category": "melody",
+      "sub_type": "lead_melody",
+      "playback_params": {
+        "notes": ["c4", "e4", "g4", "b4", "d5", "b4", "g4", "e4"],
+        "synth": ":blade",
+        "amp": 0.5,
+        "cutoff": 110,
+        "attack": 0.01,
+        "release": 0.4,
+        "echo": 0.5,
+        "duration_bars": 8
+      },
+      "metadata": {
+        "energy_level": 0.65,
+        "complexity": 0.75,
+        "suitable_sections": ["breakdown", "build_up"],
+        "mood_tags": ["mathematical", "spacey", "echo"],
+        "bpm_range": [120, 130]
+      }
+    },
+    {
+      "id": "MELO_flying_city__8c3f9d2e",
+      "name": "Flying City Plan",
+      "category": "melody",
+      "sub_type": "lead_melody",
+      "playback_params": {
+        "notes": ["c4", "d4", "e4", "g4", "a4", "c5", "d5", "e5"],
+        "synth": ":prophet",
+        "amp": 0.58,
+        "cutoff": 112,
+        "attack": 0.02,
+        "release": 0.3,
+        "duration_bars": 8
+      },
+      "metadata": {
+        "energy_level": 0.7,
+        "complexity": 0.7,
+        "suitable_sections": ["drop", "climax"],
+        "mood_tags": ["soaring", "optimistic", "futuristic"],
+        "bpm_range": [125, 135]
+      }
+    }
+  ]
+}
