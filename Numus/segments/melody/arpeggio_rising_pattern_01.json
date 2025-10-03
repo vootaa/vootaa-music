@@ -1,0 +1,57 @@
+{
+  "id": "arpeggio_rising_pattern_01",
+  "name": "Rising Arpeggio Pattern",
+  "category": "melody",
+  "sub_type": "arpeggio",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "live_loop :arp_rising do\n  use_synth :pluck\n  notes = scale(:c3, :minor_pentatonic, num_octaves: 2)\n  notes.each do |n|\n    play n, amp: 0.6, release: 0.2, cutoff: 90\n    sleep 0.125\n  end\nend",
+    "live_loop_name": "arp_rising",
+    "dependencies": [],
+    "setup_code": "use_bpm 128"
+  },
+  "musical_params": {
+    "duration_bars": 4,
+    "scale": "minor_pentatonic",
+    "pattern": "ascending",
+    "synth": ":pluck",
+    "bpm": 128,
+    "subdivisions": 16,
+    "effects": {
+      "cutoff": 90,
+      "delay": 0.25
+    }
+  },
+  "metadata": {
+    "source_file": "generated_core_segments.py",
+    "extraction_date": "2025-10-03T19:36:31.764241",
+    "author": "Numus Core Library",
+    "genre_tags": [
+      "trance",
+      "progressive_house",
+      "psytrance"
+    ],
+    "mood_tags": [
+      "energetic",
+      "hypnotic",
+      "building"
+    ],
+    "element_tags": [
+      "arpeggio",
+      "sequence",
+      "rising"
+    ],
+    "suitable_sections": [
+      "build_up",
+      "drop",
+      "verse"
+    ],
+    "energy_level": 0.7,
+    "complexity": 0.6,
+    "car_audio_optimization": {
+      "mid_boost": 1.15,
+      "clarity": 1.25
+    }
+  },
+  "math_adaptable": true
+}

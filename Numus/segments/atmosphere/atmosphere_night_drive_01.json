@@ -1,0 +1,63 @@
+{
+  "id": "atmosphere_night_drive_01",
+  "name": "Night Drive Atmosphere",
+  "category": "atmosphere",
+  "sub_type": "ambient_layer",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "live_loop :night_atmos do\n  use_synth :dark_ambience\n  with_fx :reverb, room: 0.8 do\n    with_fx :echo, phase: 0.75, decay: 4 do\n      play :c2, amp: 0.4, release: 12, cutoff: 60, attack: 3\n      sleep 12\n    end\n  end\nend",
+    "live_loop_name": "night_atmos",
+    "dependencies": [],
+    "setup_code": "use_bpm 128"
+  },
+  "musical_params": {
+    "duration_bars": 12,
+    "notes": [
+      "C2"
+    ],
+    "synth": ":dark_ambience",
+    "bpm": 128,
+    "effects": {
+      "reverb": 0.8,
+      "echo": {
+        "phase": 0.75,
+        "decay": 4
+      },
+      "attack": 3,
+      "release": 12
+    }
+  },
+  "metadata": {
+    "source_file": "generated_core_segments.py",
+    "extraction_date": "2025-10-03T19:36:31.764255",
+    "author": "Numus Core Library",
+    "genre_tags": [
+      "ambient",
+      "dark",
+      "atmospheric"
+    ],
+    "mood_tags": [
+      "mysterious",
+      "urban",
+      "nocturnal",
+      "deep"
+    ],
+    "element_tags": [
+      "ambient",
+      "dark",
+      "spacious"
+    ],
+    "suitable_sections": [
+      "intro",
+      "breakdown",
+      "bridge"
+    ],
+    "energy_level": 0.3,
+    "complexity": 0.3,
+    "car_audio_optimization": {
+      "width": 1.4,
+      "bass_boost": 1.1
+    }
+  },
+  "math_adaptable": true
+}

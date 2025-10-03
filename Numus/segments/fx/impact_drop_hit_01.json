@@ -1,0 +1,54 @@
+{
+  "id": "impact_drop_hit_01",
+  "name": "Impact Drop Hit",
+  "category": "fx",
+  "sub_type": "impact",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "live_loop :drop_impact, sync: :kick_foundation do\n  sample :bd_boom, amp: 2.0, cutoff: 110\n  sample :drum_cymbal_open, amp: 1.5, rate: 0.5, cutoff: 120\n  sleep 16\nend",
+    "live_loop_name": "drop_impact",
+    "dependencies": [],
+    "setup_code": "use_bpm 128"
+  },
+  "musical_params": {
+    "duration_bars": 0.25,
+    "synth": ":bd_boom",
+    "bpm": 128,
+    "amp_range": [
+      1.8,
+      2.2
+    ]
+  },
+  "metadata": {
+    "source_file": "generated_core_segments.py",
+    "extraction_date": "2025-10-03T19:36:31.764246",
+    "author": "Numus Core Library",
+    "genre_tags": [
+      "edm",
+      "big_room",
+      "festival"
+    ],
+    "mood_tags": [
+      "powerful",
+      "explosive",
+      "peak"
+    ],
+    "element_tags": [
+      "impact",
+      "drop",
+      "hit"
+    ],
+    "suitable_sections": [
+      "drop",
+      "transition"
+    ],
+    "energy_level": 1.0,
+    "complexity": 0.2,
+    "car_audio_optimization": {
+      "bass_boost": 1.4,
+      "punch": 1.5,
+      "limiter": true
+    }
+  },
+  "math_adaptable": false
+}

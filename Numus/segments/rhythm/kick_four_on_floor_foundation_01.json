@@ -1,0 +1,78 @@
+{
+  "id": "kick_four_on_floor_foundation_01",
+  "name": "Four-on-Floor Kick Foundation",
+  "category": "rhythm",
+  "sub_type": "kick_pattern",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "live_loop :kick_foundation do\n  sample :bd_haus, amp: 1.5, cutoff: 90\n  sleep 1\nend",
+    "live_loop_name": "kick_foundation",
+    "dependencies": [],
+    "setup_code": "use_bpm 128"
+  },
+  "musical_params": {
+    "duration_bars": 4,
+    "pattern": [
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    "synth": ":bd_haus",
+    "bpm": 128,
+    "amp_range": [
+      1.3,
+      1.7
+    ],
+    "effects": {
+      "compression": true,
+      "sidechain": true
+    }
+  },
+  "metadata": {
+    "source_file": "generated_core_segments.py",
+    "extraction_date": "2025-10-03T19:36:31.764203",
+    "author": "Numus Core Library",
+    "genre_tags": [
+      "house",
+      "techno",
+      "progressive"
+    ],
+    "mood_tags": [
+      "driving",
+      "foundation",
+      "solid"
+    ],
+    "element_tags": [
+      "kick",
+      "four_on_floor",
+      "essential"
+    ],
+    "suitable_sections": [
+      "intro",
+      "verse",
+      "drop",
+      "build_up"
+    ],
+    "energy_level": 0.6,
+    "complexity": 0.2,
+    "car_audio_optimization": {
+      "bass_boost": 1.3,
+      "punch": 1.2
+    }
+  },
+  "math_adaptable": false,
+  "variations": null
+}

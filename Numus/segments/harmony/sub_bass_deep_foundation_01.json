@@ -1,0 +1,59 @@
+{
+  "id": "sub_bass_deep_foundation_01",
+  "name": "Deep Sub Bass Foundation",
+  "category": "harmony",
+  "sub_type": "sub_bass",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "live_loop :sub_bass do\n  use_synth :sine\n  play :c2, amp: 1.5, release: 4, cutoff: 60\n  sleep 4\nend",
+    "live_loop_name": "sub_bass",
+    "dependencies": [],
+    "setup_code": "use_bpm 128"
+  },
+  "musical_params": {
+    "duration_bars": 4,
+    "notes": [
+      "C2"
+    ],
+    "synth": ":sine",
+    "root_note": "C2",
+    "bpm": 128,
+    "effects": {
+      "low_pass": 60,
+      "sub_enhancement": true
+    }
+  },
+  "metadata": {
+    "source_file": "generated_core_segments.py",
+    "extraction_date": "2025-10-03T19:36:31.764227",
+    "author": "Numus Core Library",
+    "genre_tags": [
+      "deep_house",
+      "techno",
+      "minimal"
+    ],
+    "mood_tags": [
+      "deep",
+      "foundation",
+      "powerful"
+    ],
+    "element_tags": [
+      "sub_bass",
+      "foundation",
+      "low_end"
+    ],
+    "suitable_sections": [
+      "intro",
+      "verse",
+      "drop",
+      "outro"
+    ],
+    "energy_level": 0.4,
+    "complexity": 0.1,
+    "car_audio_optimization": {
+      "bass_boost": 1.5,
+      "low_cut": 30
+    }
+  },
+  "math_adaptable": true
+}

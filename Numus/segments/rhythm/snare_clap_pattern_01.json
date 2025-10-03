@@ -1,0 +1,72 @@
+{
+  "id": "snare_clap_pattern_01",
+  "name": "Clap and Snare Pattern",
+  "category": "rhythm",
+  "sub_type": "snare_pattern",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "live_loop :snare_clap do\n  sleep 1\n  sample :drum_snare_hard, amp: 1.0\n  sample :perc_snap, amp: 0.7\n  sleep 1\nend",
+    "live_loop_name": "snare_clap",
+    "dependencies": [],
+    "setup_code": "use_bpm 128"
+  },
+  "musical_params": {
+    "duration_bars": 4,
+    "pattern": [
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    "synth": ":drum_snare_hard",
+    "bpm": 128,
+    "amp_range": [
+      0.9,
+      1.1
+    ]
+  },
+  "metadata": {
+    "source_file": "generated_core_segments.py",
+    "extraction_date": "2025-10-03T19:36:31.764222",
+    "author": "Numus Core Library",
+    "genre_tags": [
+      "house",
+      "techno",
+      "edm"
+    ],
+    "mood_tags": [
+      "punchy",
+      "rhythmic",
+      "classic"
+    ],
+    "element_tags": [
+      "snare",
+      "clap",
+      "backbeat"
+    ],
+    "suitable_sections": [
+      "drop",
+      "verse",
+      "chorus"
+    ],
+    "energy_level": 0.7,
+    "complexity": 0.3,
+    "car_audio_optimization": {
+      "mid_boost": 1.15,
+      "punch": 1.3
+    }
+  },
+  "math_adaptable": false
+}

@@ -1,0 +1,54 @@
+{
+  "id": "riser_white_noise_8bar_01",
+  "name": "White Noise Riser (8 bars)",
+  "category": "fx",
+  "sub_type": "riser",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "live_loop :noise_riser, sync: :kick_foundation do\n  with_fx :hpf, cutoff: 60, cutoff_slide: 8 do |fx|\n    with_fx :lpf, cutoff: 130, cutoff_slide: 8 do |fx2|\n      control fx, cutoff: 130\n      control fx2, cutoff: 130\n      sample :vinyl_hiss, amp: 0.3, rate: 1, sustain: 8\n      sleep 8\n    end\n  end\nend",
+    "live_loop_name": "noise_riser",
+    "dependencies": [],
+    "setup_code": "use_bpm 128"
+  },
+  "musical_params": {
+    "duration_bars": 8,
+    "synth": ":noise",
+    "bpm": 128,
+    "effects": {
+      "cutoff_start": 60,
+      "cutoff_end": 130,
+      "filter_type": "hpf + lpf sweep"
+    }
+  },
+  "metadata": {
+    "source_file": "generated_core_segments.py",
+    "extraction_date": "2025-10-03T19:36:31.764243",
+    "author": "Numus Core Library",
+    "genre_tags": [
+      "edm",
+      "house",
+      "trance",
+      "universal"
+    ],
+    "mood_tags": [
+      "building",
+      "tension",
+      "anticipation"
+    ],
+    "element_tags": [
+      "riser",
+      "fx",
+      "build_up"
+    ],
+    "suitable_sections": [
+      "build_up"
+    ],
+    "energy_level": 0.5,
+    "complexity": 0.3,
+    "car_audio_optimization": {
+      "high_boost": 1.2,
+      "width": 1.4
+    }
+  },
+  "math_adaptable": false
+}
