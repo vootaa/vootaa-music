@@ -1,293 +1,185 @@
 # Sonic Pi Universal Player for Numus V03
 # 通用播放框架，接收OSC命令执行播放
 
-# ==================== 全局状态管理 ====================
-set :active_tracks, {}
-set :global_bpm, 128
-set :master_volume, 1.0
+set :tk, {}
+set :bpm, 128
+set :mv, 1.0
 
-puts "Numus Universal Player V03 启动"
-puts "等待OSC命令..."
+puts "Numus V03 Ready"
 
-# ==================== OSC命令监听器 ====================
-live_loop :numus_osc_listener do
+live_loop :osc do
   use_real_time
-  
-  command = sync "/osc*/numus/cmd"
-  cmd_type = command[0]
-  
-  puts "收到命令: #{cmd_type}"
-  
-  case cmd_type
-  when "play_segment"
-    handle_play_segment(command)
-  when "stop_segment"
-    handle_stop_segment(command)
-  when "crossfade"
-    handle_crossfade(command)
-  when "set_param"
-    handle_set_param(command)
-  when "stop_all"
-    handle_stop_all()
-  else
-    puts "未知命令: #{cmd_type}"
+  c = sync "/osc*/numus/cmd"
+  case c[0]
+  when "play_segment"; play_seg(c)
+  when "stop_segment"; stop_seg(c[1])
+  when "set_param"; set_p(c[1], c[2], c[3])
+  when "stop_all"; get(:tk).clear
   end
 end
 
-# ==================== Segment播放处理 ====================
-define :handle_play_segment do |cmd|
-  track_name = cmd[1]
-  segment_type = cmd[2]
-  params_json = cmd[3]
+define :play_seg do |c|
+  tn = c[1]
+  st = c[2]
+  pm = JSON.parse(c[3], symbolize_names: true)
   
-  # 解析JSON参数
-  params = JSON.parse(params_json, symbolize_names: true)
+  get(:tk)[tn] = {t: st, p: pm, v: pm[:volume] || 1.0, c: pm[:cutoff] || 130}
   
-  # 创建track状态
-  get(:active_tracks)[track_name] = {
-    type: segment_type,
-    params: params,
-    volume: params[:volume] || 1.0,
-    cutoff: params[:cutoff] || 130,
-    pan: params[:pan] || 0
-  }
-  
-  puts "启动Segment: #{track_name} (类型: #{segment_type})"
-  
-  # 启动对应的live_loop
-  live_loop track_name.to_sym do
-    stop if get(:active_tracks)[track_name].nil?
-    
-    track_state = get(:active_tracks)[track_name]
-    
-    # 根据segment类型调用对应的播放函数
-    case track_state[:type]
-    when "kick_pattern"
-      play_kick_pattern(track_state[:params], track_state)
-    when "snare_pattern"
-      play_snare_pattern(track_state[:params], track_state)
-    when "hihat_pattern"
-      play_hihat_pattern(track_state[:params], track_state)
-    when "bass_line"
-      play_bass_line(track_state[:params], track_state)
-    when "chord_progression"
-      play_chord_progression(track_state[:params], track_state)
-    when "lead_melody"
-      play_lead_melody(track_state[:params], track_state)
-    when "arpeggio"
-      play_arpeggio(track_state[:params], track_state)
-    when "pad"
-      play_pad(track_state[:params], track_state)
-    when "riser"
-      play_riser(track_state[:params], track_state)
-    when "ambient_layer"
-      play_ambient_layer(track_state[:params], track_state)
-    else
-      puts "未知Segment类型: #{track_state[:type]}"
-      sleep 1
+  live_loop tn.to_sym do
+    stop if get(:tk)[tn].nil?
+    s = get(:tk)[tn]
+    case s[:t]
+    when "kick_pattern"; pk(s[:p], s)
+    when "snare_pattern"; ps(s[:p], s)
+    when "hihat_pattern"; ph(s[:p], s)
+    when "bass_line"; pb(s[:p], s)
+    when "chord_progression"; pch(s[:p], s)
+    when "lead_melody"; pl(s[:p], s)
+    when "arpeggio"; par(s[:p], s)
+    when "pad"; ppad(s[:p], s)
+    when "riser"; pr(s[:p], s)
+    when "ambient_layer"; pam(s[:p], s)
     end
-    
-    sleep track_state[:params][:duration_bars] || 4
+    sleep s[:p][:duration_bars] || 4
   end
 end
 
-# ==================== 节奏类播放函数 ====================
-define :play_kick_pattern do |params, state|
-  use_bpm params[:bpm] || get(:global_bpm)
-  
-  pattern = params[:pattern] || [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0]
-  synth_name = (params[:synth] || ":bd_haus").to_sym
-  
-  pattern.each do |hit|
-    if hit == 1
-      sample synth_name,
-        amp: (params[:amp] || 1.0) * state[:volume] * get(:master_volume),
-        cutoff: state[:cutoff],
-        pan: state[:pan],
-        release: params[:release] || 0.3
-    end
+define :pk do |p, s|
+  use_bpm p[:bpm] || get(:bpm)
+  pt = p[:pattern] || [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0]
+  sy = (p[:synth] || ":bd_haus").to_sym
+  pt.each do |h|
+    sample sy, amp: (p[:amp] || 1.0) * s[:v] * get(:mv), cutoff: s[:c] if h == 1
     sleep 0.25
   end
 end
 
-define :play_snare_pattern do |params, state|
-  use_bpm params[:bpm] || get(:global_bpm)
-  
-  pattern = params[:pattern] || [0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0]
-  synth_name = (params[:synth] || ":drum_snare_hard").to_sym
-  
-  pattern.each do |hit|
-    if hit == 1
-      sample synth_name,
-        amp: (params[:amp] || 0.8) * state[:volume] * get(:master_volume),
-        cutoff: state[:cutoff],
-        pan: state[:pan]
-    end
+define :ps do |p, s|
+  use_bpm p[:bpm] || get(:bpm)
+  pt = p[:pattern] || [0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0]
+  sy = (p[:synth] || ":drum_snare_hard").to_sym
+  pt.each do |h|
+    sample sy, amp: (p[:amp] || 0.8) * s[:v] * get(:mv), cutoff: s[:c] if h == 1
     sleep 0.25
   end
 end
 
-define :play_hihat_pattern do |params, state|
-  use_bpm params[:bpm] || get(:global_bpm)
-  
-  pattern = params[:pattern] || [1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0]
-  synth_name = (params[:synth] || ":drum_cymbal_closed").to_sym
-  
-  pattern.each do |hit|
-    if hit == 1
-      sample synth_name,
-        amp: (params[:amp] || 0.5) * state[:volume] * get(:master_volume),
-        cutoff: state[:cutoff],
-        pan: state[:pan]
-    end
+define :ph do |p, s|
+  use_bpm p[:bpm] || get(:bpm)
+  pt = p[:pattern] || [1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0]
+  sy = (p[:synth] || ":drum_cymbal_closed").to_sym
+  pt.each do |h|
+    sample sy, amp: (p[:amp] || 0.5) * s[:v] * get(:mv), cutoff: s[:c] if h == 1
     sleep 0.25
   end
 end
 
-# ==================== 和声类播放函数 ====================
-define :play_bass_line do |params, state|
-  use_bpm params[:bpm] || get(:global_bpm)
-  use_synth (params[:synth] || ":bass_foundation").to_sym
-  
-  notes = params[:notes] || [:c2, :c2, :as1, :as1]
-  
-  notes.each do |note|
-    play note.to_sym,
-      amp: (params[:amp] || 0.8) * state[:volume] * get(:master_volume),
-      cutoff: state[:cutoff],
-      res: params[:res] || 0.3,
-      release: params[:release] || 0.5,
-      pan: state[:pan]
+define :pb do |p, s|
+  use_bpm p[:bpm] || get(:bpm)
+  use_synth (p[:synth] || ":bass_foundation").to_sym
+  ns = p[:notes] || [:c2, :c2, :as1, :as1]
+  ns.each do |n|
+    play n.to_sym, amp: (p[:amp] || 0.8) * s[:v] * get(:mv), cutoff: s[:c], 
+         res: p[:res] || 0.3, release: p[:release] || 0.5
     sleep 1
   end
 end
 
-define :play_chord_progression do |params, state|
-  use_bpm params[:bpm] || get(:global_bpm)
-  use_synth (params[:synth] || ":blade").to_sym
-  
-  chords = params[:chords] || [[:c4, :e4, :g4], [:a3, :c4, :e4]]
-  
-  chords.each do |chord|
-    play chord.map(&:to_sym),
-      amp: (params[:amp] || 0.6) * state[:volume] * get(:master_volume),
-      cutoff: state[:cutoff],
-      attack: params[:attack] || 0.1,
-      release: params[:release] || 1.0,
-      pan: state[:pan]
+define :pch do |p, s|
+  use_bpm p[:bpm] || get(:bpm)
+  use_synth (p[:synth] || ":blade").to_sym
+  chs = p[:chords] || [[:c4, :e4, :g4], [:a3, :c4, :e4]]
+  chs.each do |ch|
+    play ch.map(&:to_sym), amp: (p[:amp] || 0.6) * s[:v] * get(:mv), cutoff: s[:c],
+         attack: p[:attack] || 0.1, release: p[:release] || 1.0
     sleep 2
   end
 end
 
-define :play_pad do |params, state|
-  use_bpm params[:bpm] || get(:global_bpm)
-  use_synth (params[:synth] || ":hollow").to_sym
-  
-  notes = params[:notes] || [:c3, :e3, :g3]
-  
-  play notes.map(&:to_sym),
-    amp: (params[:amp] || 0.4) * state[:volume] * get(:master_volume),
-    cutoff: state[:cutoff],
-    attack: params[:attack] || 1.0,
-    sustain: params[:sustain] || 2.0,
-    release: params[:release] || 2.0,
-    pan: state[:pan]
-  
-  with_fx :reverb, room: params[:reverb] || 0.7 do
-    sleep params[:duration_bars] || 4
+define :pl do |p, s|
+  use_bpm p[:bpm] || get(:bpm)
+  use_synth (p[:synth] || ":blade").to_sym
+  ns = p[:notes] || [:c4, :e4, :g4, :a4]
+  ns.each do |n|
+    play n.to_sym, amp: (p[:amp] || 0.6) * s[:v] * get(:mv), cutoff: s[:c],
+         attack: p[:attack] || 0.01, release: p[:release] || 0.3
+    sleep p[:note_duration] || 0.5
   end
 end
 
-# ==================== 旋律类播放函数 ====================
-define :play_lead_melody do |params, state|
-  use_bpm params[:bpm] || get(:global_bpm)
-  use_synth (params[:synth] || ":blade").to_sym
-  
-  melody = params[:notes] || [:c4, :e4, :g4, :a4]
-  
-  melody.each do |note|
-    play note.to_sym,
-      amp: (params[:amp] || 0.6) * state[:volume] * get(:master_volume),
-      cutoff: state[:cutoff],
-      attack: params[:attack] || 0.01,
-      release: params[:release] || 0.3,
-      pan: state[:pan]
-    sleep params[:note_duration] || 0.5
+define :par do |p, s|
+  use_bpm p[:bpm] || get(:bpm)
+  use_synth (p[:synth] || ":pluck").to_sym
+  ns = p[:notes] || [:c4, :e4, :g4, :c5]
+  sp = p[:speed] || 0.25
+  ns.each do |n|
+    play n.to_sym, amp: (p[:amp] || 0.5) * s[:v] * get(:mv), cutoff: s[:c],
+         release: p[:release] || 0.2
+    sleep sp
   end
 end
 
-define :play_arpeggio do |params, state|
-  use_bpm params[:bpm] || get(:global_bpm)
-  use_synth (params[:synth] || ":pluck").to_sym
-  
-  notes = params[:notes] || [:c4, :e4, :g4, :c5]
-  speed = params[:speed] || 0.25
-  
-  notes.each do |note|
-    play note.to_sym,
-      amp: (params[:amp] || 0.5) * state[:volume] * get(:master_volume),
-      cutoff: state[:cutoff],
-      release: params[:release] || 0.2,
-      pan: state[:pan]
-    sleep speed
+define :ppad do |p, s|
+  use_bpm p[:bpm] || get(:bpm)
+  use_synth (p[:synth] || ":hollow").to_sym
+  ns = p[:notes] || [:c3, :e3, :g3]
+  with_fx :reverb, room: p[:reverb] || 0.7 do
+    play ns.map(&:to_sym), amp: (p[:amp] || 0.4) * s[:v] * get(:mv), cutoff: s[:c],
+         attack: p[:attack] || 1.0, sustain: p[:sustain] || 2.0, release: p[:release] || 2.0
+    sleep p[:duration_bars] || 4
   end
 end
 
-# ==================== 氛围类播放函数 ====================
-define :play_ambient_layer do |params, state|
-  use_bpm params[:bpm] || get(:global_bpm)
-  use_synth (params[:synth] || ":dark_ambience").to_sym
-  
-  with_fx :reverb, room: params[:reverb] || 0.9 do
-    play params[:root_note] || :c2,
-      amp: (params[:amp] || 0.3) * state[:volume] * get(:master_volume),
-      cutoff: state[:cutoff],
-      attack: 2,
-      sustain: params[:duration_bars] || 4,
-      release: 2,
-      pan: state[:pan]
-  end
-  
-  sleep params[:duration_bars] || 4
-end
-
-# ==================== 特效类播放函数 ====================
-define :play_riser do |params, state|
-  use_bpm params[:bpm] || get(:global_bpm)
+define :pr do |p, s|
+  use_bpm p[:bpm] || get(:bpm)
   use_synth :noise
-  
-  duration = params[:duration_bars] || 8
-  steps = duration * 16
-  
-  steps.times do |i|
-    progress = i.to_f / steps
-    cutoff = 60 + (70 * progress)
-    
-    play 60,
-      amp: (params[:amp] || 0.5) * progress * state[:volume] * get(:master_volume),
-      cutoff: cutoff,
-      pan: state[:pan]
-    sleep duration.to_f / steps
+  db = p[:duration_bars] || 8
+  st = db * 16
+  st.times do |i|
+    pg = i.to_f / st
+    ct = 60 + (70 * pg)
+    play 60, amp: (p[:amp] || 0.5) * pg * s[:v] * get(:mv), cutoff: ct
+    sleep db.to_f / st
   end
 end
 
-# ==================== Crossfade处理 ====================
-define :handle_crossfade do |cmd|
-  from_track = cmd[1]
-  to_track = cmd[2]
-  duration_bars = cmd[3]
-  
-  puts "执行Crossfade: #{from_track} -> #{to_track} (#{duration_bars} bars)"
-  
-  # 注意：实际的crossfade由Python端通过set_param控制
-  # 这里只是记录
+define :pam do |p, s|
+  use_bpm p[:bpm] || get(:bpm)
+  use_synth (p[:synth] || ":dark_ambience").to_sym
+  with_fx :reverb, room: p[:reverb] || 0.9 do
+    play (p[:root_note] || :c2).to_sym, amp: (p[:amp] || 0.3) * s[:v] * get(:mv),
+         cutoff: s[:c], attack: 2, sustain: p[:duration_bars] || 4, release: 2
+    sleep p[:duration_bars] || 4
+  end
 end
 
-# ==================== 参数动态调整 ====================
-define :handle_set_param do |cmd|
-  track_name = cmd[1]
-  param_name = cmd[2]
-  param_value = cmd[3]
-  
-  if get(:active_tracks)[track_name]
-    get(:active_tracks)[track_name][param_name.to_sym] = param_value
+define :stop_seg do |tn|
+  get(:tk).delete(tn)
+end
+
+define :set_p do |tn, pn, pv|
+  get(:tk)[tn][pn.to_sym] = pv if get(:tk)[tn]
+end
+
+
+# 极简变量名：
+# tk = tracks
+# bpm = BPM
+# mv = master_volume
+# tn = track_name
+# st = segment_type
+# pm = params
+# s = state
+# p = params
+
+# 函数命名压缩：
+# pk = play_kick
+# ps = play_snare
+# ph = play_hihat
+# pb = play_bass
+# pch = play_chord
+# pl = play_lead
+# par = play_arpeggio
+# ppad = play_pad
+# pr = play_riser
+# pam = play_ambient
