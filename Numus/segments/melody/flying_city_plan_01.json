@@ -1,0 +1,93 @@
+{
+  "id": "flying_city_plan_01",
+  "name": "Flying City Plan (空飛ぶ都市計画)",
+  "category": "melody",
+  "sub_type": "arpeggio",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 128\nuse_synth :prophet\n\nlive_loop :flying_city do\n  with_fx :reverb, room: 0.85, mix: 0.7 do\n    with_fx :echo, phase: 0.5, decay: 6 do\n      # 飞行城市主题：上升的音阶\n      scale_notes = (scale :c4, :major_pentatonic, num_octaves: 3)\n      \n      8.times do |i|\n        play scale_notes[i * 2], \n             amp: 0.5, \n             release: 0.5,\n             cutoff: 80 + (i * 5)\n        sleep 0.25\n      end\n    end\n  end\nend",
+    "live_loop_name": "flying_city",
+    "dependencies": [],
+    "setup_code": "use_bpm 128\nuse_synth :prophet"
+  },
+  "musical_params": {
+    "scale": "C_major_pentatonic",
+    "root_note": "C4",
+    "pattern": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "subdivisions": 8,
+    "synth": ":prophet",
+    "amp_range": [
+      0.45,
+      0.55
+    ],
+    "effects": {
+      "reverb": {
+        "room": 0.85,
+        "mix": 0.7
+      },
+      "echo": {
+        "phase": 0.5,
+        "decay": 6
+      },
+      "cutoff_progression": [
+        80,
+        120
+      ]
+    },
+    "duration_bars": 2,
+    "bpm": 128
+  },
+  "metadata": {
+    "source_file": "WIP/空飛ぶ都市計画.rb",
+    "extraction_date": "2025-10-03T17:55:39.126414",
+    "author": null,
+    "genre_tags": [
+      "cinematic",
+      "jpop",
+      "atmospheric",
+      "sci-fi"
+    ],
+    "mood_tags": [
+      "soaring",
+      "futuristic",
+      "hopeful",
+      "expansive"
+    ],
+    "element_tags": [
+      "arpeggio",
+      "ascending",
+      "cinematic",
+      "japanese"
+    ],
+    "suitable_sections": [
+      "build_up",
+      "chorus",
+      "cinematic"
+    ],
+    "energy_level": 0.7,
+    "complexity": 0.6,
+    "car_audio_optimization": {
+      "bass_boost": 0.9,
+      "mid": 1.2,
+      "high": 1.3
+    }
+  },
+  "variations": [
+    {
+      "scale_direction": "ascending/descending"
+    },
+    {
+      "interval_pattern": "adjustable"
+    }
+  ],
+  "math_adaptable": true
+}

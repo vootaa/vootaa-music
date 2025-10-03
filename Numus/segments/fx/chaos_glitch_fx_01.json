@@ -1,0 +1,81 @@
+{
+  "id": "chaos_glitch_fx_01",
+  "name": "Chaos Glitch FX",
+  "category": "fx",
+  "sub_type": "transition",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 160\n\nlive_loop :chaos_glitch do\n  with_fx :bitcrusher, bits: rrand_i(4, 8), mix: 0.6 do\n    sample :glitch_perc, amp: 0.5, rate: rrand(0.5, 2.0)\n    sleep [0.125, 0.25, 0.5].choose\n  end\nend",
+    "live_loop_name": "chaos_glitch",
+    "dependencies": [],
+    "setup_code": "use_bpm 160"
+  },
+  "musical_params": {
+    "sample": ":glitch_perc",
+    "amp_range": [
+      0.4,
+      0.6
+    ],
+    "effects": {
+      "bitcrusher": {
+        "bits_range": [
+          4,
+          8
+        ],
+        "mix": 0.6
+      },
+      "rate_range": [
+        0.5,
+        2.0
+      ]
+    },
+    "duration_bars": 2,
+    "bpm": 160
+  },
+  "metadata": {
+    "source_file": "2022-03-29_chaos.rb",
+    "extraction_date": "2025-10-03T17:40:45.164239",
+    "author": null,
+    "genre_tags": [
+      "glitch",
+      "experimental",
+      "idm"
+    ],
+    "mood_tags": [
+      "chaotic",
+      "intense",
+      "unpredictable"
+    ],
+    "element_tags": [
+      "glitch",
+      "fx",
+      "texture",
+      "lo-fi"
+    ],
+    "suitable_sections": [
+      "transition",
+      "breakdown",
+      "drop"
+    ],
+    "energy_level": 0.7,
+    "complexity": 0.8,
+    "car_audio_optimization": {
+      "bass_boost": 0.9,
+      "mid": 1.2,
+      "high": 1.3
+    }
+  },
+  "variations": [
+    {
+      "bits_fixed": [
+        4,
+        6,
+        8
+      ]
+    },
+    {
+      "timing_pattern": "mathematical"
+    }
+  ],
+  "math_adaptable": true
+}

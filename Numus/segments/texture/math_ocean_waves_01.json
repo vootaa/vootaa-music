@@ -1,0 +1,82 @@
+{
+  "id": "math_ocean_waves_01",
+  "name": "Mathematical Ocean Waves",
+  "category": "texture",
+  "sub_type": "synth_texture",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 100\n\nlive_loop :math_waves do\n  use_synth :sine\n  with_fx :reverb, room: 0.9, mix: 0.7 do\n    with_fx :echo, phase: 1.5, decay: 8 do\n      # 使用数学函数生成波浪般的音高\n      wave_height = Math.sin(tick * 0.1) * 12\n      note = :c3 + wave_height.round\n      \n      play note, amp: 0.3 + (Math.cos(tick * 0.05) * 0.15), \n           release: 2, attack: 0.5\n      \n      sleep_time = 0.5 + (Math.sin(tick * 0.15) * 0.3)\n      sleep sleep_time\n    end\n  end\nend",
+    "live_loop_name": "math_waves",
+    "dependencies": [],
+    "setup_code": "use_bpm 100"
+  },
+  "musical_params": {
+    "scale": "C_chromatic",
+    "root_note": "C3",
+    "synth": ":sine",
+    "amp_range": [
+      0.15,
+      0.45
+    ],
+    "effects": {
+      "reverb": {
+        "room": 0.9,
+        "mix": 0.7
+      },
+      "echo": {
+        "phase": 1.5,
+        "decay": 8
+      },
+      "math_function": "sine_wave_modulation"
+    },
+    "duration_bars": 8,
+    "bpm": 100
+  },
+  "metadata": {
+    "source_file": "SonicPI-Examples-1/Math_Ocean_Waves.rb",
+    "extraction_date": "2025-10-03T17:55:39.126367",
+    "author": null,
+    "genre_tags": [
+      "algorithmic",
+      "generative",
+      "ambient",
+      "mathematical"
+    ],
+    "mood_tags": [
+      "flowing",
+      "natural",
+      "evolving",
+      "hypnotic"
+    ],
+    "element_tags": [
+      "algorithm",
+      "sine_wave",
+      "generative",
+      "ocean"
+    ],
+    "suitable_sections": [
+      "ambient_section",
+      "intro",
+      "experimental"
+    ],
+    "energy_level": 0.3,
+    "complexity": 0.9,
+    "car_audio_optimization": {
+      "bass_boost": 0.8,
+      "mid": 1.0,
+      "high": 1.1
+    }
+  },
+  "variations": [
+    {
+      "wave_function": "cosine"
+    },
+    {
+      "wave_frequency": "adjustable"
+    },
+    {
+      "amplitude_modulation": "dynamic"
+    }
+  ],
+  "math_adaptable": true
+}

@@ -1,0 +1,102 @@
+{
+  "id": "deep_house_kick_bass_combo_01",
+  "name": "Deep House Kick+Bass Combo",
+  "category": "rhythm",
+  "sub_type": "full_drum_kit",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 124\n\nlive_loop :deep_kick do\n  sample :bd_haus, amp: 1.5, cutoff: 90\n  sleep 1\nend\n\nlive_loop :deep_bass do\n  sync :deep_kick\n  use_synth :fm\n  play :c2, amp: 0.8, release: 0.8, divisor: 1, depth: 2\n  sleep 1\n  play :c2, amp: 0.6, release: 0.4, divisor: 1, depth: 2\n  sleep 0.5\n  play :g1, amp: 0.7, release: 0.4, divisor: 1, depth: 2\n  sleep 0.5\nend",
+    "live_loop_name": "deep_kick",
+    "dependencies": [
+      "deep_bass"
+    ],
+    "setup_code": "use_bpm 124"
+  },
+  "musical_params": {
+    "notes": [
+      "C2",
+      "G1"
+    ],
+    "root_note": "C2",
+    "pattern": [
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    "subdivisions": 16,
+    "synth": ":fm",
+    "sample": ":bd_haus",
+    "amp_range": [
+      0.6,
+      1.5
+    ],
+    "effects": {
+      "cutoff": 90,
+      "divisor": 1,
+      "depth": 2
+    },
+    "duration_bars": 2,
+    "bpm": 124
+  },
+  "metadata": {
+    "source_file": "2021-10-31_deephouse_1.rb",
+    "extraction_date": "2025-10-03T17:29:23.329189",
+    "author": null,
+    "genre_tags": [
+      "deep_house",
+      "house",
+      "minimal"
+    ],
+    "mood_tags": [
+      "groovy",
+      "deep",
+      "foundation"
+    ],
+    "element_tags": [
+      "kick",
+      "bass",
+      "foundation",
+      "synced"
+    ],
+    "suitable_sections": [
+      "verse",
+      "drop",
+      "peak"
+    ],
+    "energy_level": 0.7,
+    "complexity": 0.5,
+    "car_audio_optimization": {
+      "bass_boost": 1.4,
+      "mid": 1.0,
+      "high": 0.8
+    }
+  },
+  "variations": [
+    {
+      "bass_divisor_range": [
+        0.5,
+        2.0
+      ]
+    },
+    {
+      "bass_depth_range": [
+        1,
+        4
+      ]
+    }
+  ],
+  "math_adaptable": true
+}

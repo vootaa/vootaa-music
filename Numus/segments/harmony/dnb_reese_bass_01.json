@@ -1,0 +1,87 @@
+{
+  "id": "dnb_reese_bass_01",
+  "name": "DnB Reese Bass",
+  "category": "harmony",
+  "sub_type": "bass_line",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 174\nuse_synth :tb303\n\nlive_loop :reese_bass do\n  with_fx :lpf, cutoff: 70 do\n    with_fx :distortion, distort: 0.3 do\n      play :c2, amp: 0.8, release: 0.5, cutoff: rrand(50, 80), res: 0.9\n      sleep 0.5\n      play :c2, amp: 0.6, release: 0.3, cutoff: rrand(50, 80), res: 0.9\n      sleep 0.25\n      play :f1, amp: 0.7, release: 0.3, cutoff: rrand(50, 80), res: 0.9\n      sleep 0.25\n    end\n  end\nend",
+    "live_loop_name": "reese_bass",
+    "dependencies": [],
+    "setup_code": "use_bpm 174\nuse_synth :tb303"
+  },
+  "musical_params": {
+    "notes": [
+      "C2",
+      "F1"
+    ],
+    "root_note": "C2",
+    "synth": ":tb303",
+    "amp_range": [
+      0.6,
+      0.8
+    ],
+    "effects": {
+      "lpf": {
+        "cutoff": 70
+      },
+      "distortion": {
+        "distort": 0.3
+      },
+      "cutoff_range": [
+        50,
+        80
+      ],
+      "res": 0.9
+    },
+    "duration_bars": 1,
+    "bpm": 174
+  },
+  "metadata": {
+    "source_file": "2024-06-06_dnb.rb",
+    "extraction_date": "2025-10-03T17:48:56.043409",
+    "author": null,
+    "genre_tags": [
+      "dnb",
+      "drum_and_bass",
+      "neurofunk",
+      "jungle"
+    ],
+    "mood_tags": [
+      "aggressive",
+      "intense",
+      "dark",
+      "powerful"
+    ],
+    "element_tags": [
+      "reese_bass",
+      "bass",
+      "distorted",
+      "modulated"
+    ],
+    "suitable_sections": [
+      "drop",
+      "peak",
+      "high_energy"
+    ],
+    "energy_level": 0.9,
+    "complexity": 0.8,
+    "car_audio_optimization": {
+      "bass_boost": 1.4,
+      "mid": 1.0,
+      "high": 0.9
+    }
+  },
+  "variations": [
+    {
+      "cutoff_modulation": "lfo"
+    },
+    {
+      "distortion_range": [
+        0.2,
+        0.5
+      ]
+    }
+  ],
+  "math_adaptable": true
+}

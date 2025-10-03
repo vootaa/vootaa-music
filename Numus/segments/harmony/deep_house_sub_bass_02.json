@@ -1,0 +1,85 @@
+{
+  "id": "deep_house_sub_bass_02",
+  "name": "Deep House Sub Bass v2",
+  "category": "harmony",
+  "sub_type": "sub_bass",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 122\nuse_synth :sine\n\nlive_loop :sub_bass do\n  with_fx :compressor, threshold: 0.4 do\n    play :c1, amp: 1.6, release: 1.5, attack: 0.01\n    sleep 2\n    play :c1, amp: 1.3, release: 0.8, attack: 0.01\n    sleep 1\n    play :f1, amp: 1.4, release: 0.8, attack: 0.01\n    sleep 1\n  end\nend",
+    "live_loop_name": "sub_bass",
+    "dependencies": [],
+    "setup_code": "use_bpm 122\nuse_synth :sine"
+  },
+  "musical_params": {
+    "notes": [
+      "C1",
+      "F1"
+    ],
+    "root_note": "C1",
+    "pattern": [
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      1,
+      0
+    ],
+    "synth": ":sine",
+    "amp_range": [
+      1.3,
+      1.6
+    ],
+    "effects": {
+      "compressor": {
+        "threshold": 0.4
+      }
+    },
+    "duration_bars": 4,
+    "bpm": 122
+  },
+  "metadata": {
+    "source_file": "2024-02-22_DeepHouse.rb",
+    "extraction_date": "2025-10-03T17:48:56.043436",
+    "author": null,
+    "genre_tags": [
+      "deep_house",
+      "house",
+      "minimal"
+    ],
+    "mood_tags": [
+      "deep",
+      "powerful",
+      "foundation",
+      "solid"
+    ],
+    "element_tags": [
+      "sub_bass",
+      "foundation",
+      "low_end",
+      "compressed"
+    ],
+    "suitable_sections": [
+      "drop",
+      "peak",
+      "verse"
+    ],
+    "energy_level": 0.7,
+    "complexity": 0.3,
+    "car_audio_optimization": {
+      "bass_boost": 1.6,
+      "mid": 0.8,
+      "high": 0.7
+    }
+  },
+  "variations": [
+    {
+      "amp_envelope": "dynamic"
+    },
+    {
+      "pattern_variations": true
+    }
+  ],
+  "math_adaptable": true
+}

@@ -1,0 +1,75 @@
+{
+  "id": "cosmic_noise_sweep_01",
+  "name": "Cosmic Noise Sweep",
+  "category": "fx",
+  "sub_type": "riser",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 132\n\nlive_loop :cosmic_sweep do\n  with_fx :hpf, cutoff_slide: 8 do |fx|\n    sample :ambi_lunar_land, amp: 0.4, rate: 0.5\n    control fx, cutoff: 130\n    sleep 8\n  end\nend",
+    "live_loop_name": "cosmic_sweep",
+    "dependencies": [],
+    "setup_code": "use_bpm 132"
+  },
+  "musical_params": {
+    "sample": ":ambi_lunar_land",
+    "amp_range": [
+      0.3,
+      0.5
+    ],
+    "effects": {
+      "hpf": {
+        "cutoff_slide": 8,
+        "cutoff_target": 130
+      }
+    },
+    "duration_bars": 8,
+    "bpm": 132
+  },
+  "metadata": {
+    "source_file": "2021-08-15_CosmicExplorer.rb",
+    "extraction_date": "2025-10-03T17:29:23.329263",
+    "author": null,
+    "genre_tags": [
+      "space",
+      "ambient",
+      "cinematic"
+    ],
+    "mood_tags": [
+      "atmospheric",
+      "rising",
+      "tension"
+    ],
+    "element_tags": [
+      "riser",
+      "fx",
+      "transition",
+      "sweep"
+    ],
+    "suitable_sections": [
+      "build_up",
+      "transition"
+    ],
+    "energy_level": 0.5,
+    "complexity": 0.3,
+    "car_audio_optimization": {
+      "bass_boost": 0.7,
+      "mid": 1.0,
+      "high": 1.4
+    }
+  },
+  "variations": [
+    {
+      "cutoff_end_range": [
+        100,
+        150
+      ]
+    },
+    {
+      "slide_duration_range": [
+        4,
+        16
+      ]
+    }
+  ],
+  "math_adaptable": true
+}

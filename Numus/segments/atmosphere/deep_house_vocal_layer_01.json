@@ -1,0 +1,84 @@
+{
+  "id": "deep_house_vocal_layer_01",
+  "name": "Deep House Vocal Layer",
+  "category": "atmosphere",
+  "sub_type": "ambient_layer",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 124\nuse_synth :tb303\n\nlive_loop :vocal_layer do\n  with_fx :reverb, room: 0.8, mix: 0.7 do\n    with_fx :echo, phase: 0.75, decay: 6 do\n      with_fx :pitch_shift, pitch: 12 do\n        sample :ambi_choir, amp: 0.3, rate: 0.5, cutoff: 90\n        sleep 16\n      end\n    end\n  end\nend",
+    "live_loop_name": "vocal_layer",
+    "dependencies": [],
+    "setup_code": "use_bpm 124"
+  },
+  "musical_params": {
+    "sample": ":ambi_choir",
+    "amp_range": [
+      0.2,
+      0.4
+    ],
+    "effects": {
+      "reverb": {
+        "room": 0.8,
+        "mix": 0.7
+      },
+      "echo": {
+        "phase": 0.75,
+        "decay": 6
+      },
+      "pitch_shift": {
+        "pitch": 12
+      },
+      "cutoff": 90
+    },
+    "duration_bars": 16,
+    "bpm": 124
+  },
+  "metadata": {
+    "source_file": "2022-11-20_vox_deephouse.rb",
+    "extraction_date": "2025-10-03T17:40:45.164159",
+    "author": null,
+    "genre_tags": [
+      "deep_house",
+      "vocal_house",
+      "soulful"
+    ],
+    "mood_tags": [
+      "ethereal",
+      "emotional",
+      "atmospheric"
+    ],
+    "element_tags": [
+      "vocal",
+      "choir",
+      "atmospheric",
+      "background"
+    ],
+    "suitable_sections": [
+      "breakdown",
+      "intro",
+      "ambient_section"
+    ],
+    "energy_level": 0.4,
+    "complexity": 0.5,
+    "car_audio_optimization": {
+      "bass_boost": 0.8,
+      "mid": 1.2,
+      "high": 1.1
+    }
+  },
+  "variations": [
+    {
+      "pitch_shift_range": [
+        7,
+        19
+      ]
+    },
+    {
+      "rate_range": [
+        0.4,
+        0.7
+      ]
+    }
+  ],
+  "math_adaptable": true
+}

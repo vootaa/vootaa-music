@@ -1,0 +1,82 @@
+{
+  "id": "deep_house_chord_stabs_01",
+  "name": "Deep House Chord Stabs",
+  "category": "harmony",
+  "sub_type": "chord_progression",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 124\nuse_synth :piano\n\nlive_loop :chord_stabs do\n  with_fx :reverb, room: 0.6, mix: 0.5 do\n    with_fx :lpf, cutoff: 95 do\n      play_chord [:c4, :e4, :g4], amp: 0.7, release: 0.5\n      sleep 2\n      play_chord [:a3, :c4, :e4], amp: 0.6, release: 0.5\n      sleep 2\n    end\n  end\nend",
+    "live_loop_name": "chord_stabs",
+    "dependencies": [],
+    "setup_code": "use_bpm 124\nuse_synth :piano"
+  },
+  "musical_params": {
+    "notes": [
+      "C4",
+      "E4",
+      "G4",
+      "A3",
+      "C4",
+      "E4"
+    ],
+    "scale": "C_major",
+    "root_note": "C4",
+    "synth": ":piano",
+    "amp_range": [
+      0.6,
+      0.7
+    ],
+    "effects": {
+      "reverb": {
+        "room": 0.6,
+        "mix": 0.5
+      },
+      "lpf": {
+        "cutoff": 95
+      }
+    },
+    "duration_bars": 4,
+    "bpm": 124
+  },
+  "metadata": {
+    "source_file": "2021-10-31_deephouse_2.rb",
+    "extraction_date": "2025-10-03T17:29:23.329249",
+    "author": null,
+    "genre_tags": [
+      "deep_house",
+      "house",
+      "soulful"
+    ],
+    "mood_tags": [
+      "warm",
+      "groovy",
+      "emotional"
+    ],
+    "element_tags": [
+      "chords",
+      "stabs",
+      "harmonic"
+    ],
+    "suitable_sections": [
+      "verse",
+      "breakdown",
+      "build_up"
+    ],
+    "energy_level": 0.6,
+    "complexity": 0.4,
+    "car_audio_optimization": {
+      "bass_boost": 1.0,
+      "mid": 1.2,
+      "high": 1.0
+    }
+  },
+  "variations": [
+    {
+      "voicing": "open"
+    },
+    {
+      "synth": ":prophet"
+    }
+  ],
+  "math_adaptable": true
+}

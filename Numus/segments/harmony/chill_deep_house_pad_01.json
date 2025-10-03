@@ -1,0 +1,92 @@
+{
+  "id": "chill_deep_house_pad_01",
+  "name": "Chill Deep House Pad",
+  "category": "harmony",
+  "sub_type": "pad",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 120\nuse_synth :blade\n\nlive_loop :chill_pad do\n  with_fx :reverb, room: 0.8, mix: 0.7 do\n    with_fx :lpf, cutoff: 80 do\n      play_chord [:c3, :e3, :g3, :b3], amp: 0.3, attack: 3, sustain: 6, release: 3\n      sleep 12\n      play_chord [:f3, :a3, :c4, :e4], amp: 0.28, attack: 3, sustain: 6, release: 3\n      sleep 12\n    end\n  end\nend",
+    "live_loop_name": "chill_pad",
+    "dependencies": [],
+    "setup_code": "use_bpm 120\nuse_synth :blade"
+  },
+  "musical_params": {
+    "notes": [
+      "C3",
+      "E3",
+      "G3",
+      "B3",
+      "F3",
+      "A3",
+      "C4",
+      "E4"
+    ],
+    "scale": "C_major",
+    "root_note": "C3",
+    "synth": ":blade",
+    "amp_range": [
+      0.28,
+      0.3
+    ],
+    "effects": {
+      "reverb": {
+        "room": 0.8,
+        "mix": 0.7
+      },
+      "lpf": {
+        "cutoff": 80
+      }
+    },
+    "duration_bars": 24,
+    "bpm": 120
+  },
+  "metadata": {
+    "source_file": "2023-08-05_chill_deep_house.rb",
+    "extraction_date": "2025-10-03T17:44:30.829681",
+    "author": null,
+    "genre_tags": [
+      "deep_house",
+      "chill",
+      "ambient_house"
+    ],
+    "mood_tags": [
+      "relaxed",
+      "soothing",
+      "mellow",
+      "peaceful"
+    ],
+    "element_tags": [
+      "pad",
+      "chords",
+      "sustained",
+      "smooth"
+    ],
+    "suitable_sections": [
+      "intro",
+      "breakdown",
+      "verse"
+    ],
+    "energy_level": 0.35,
+    "complexity": 0.3,
+    "car_audio_optimization": {
+      "bass_boost": 0.9,
+      "mid": 1.1,
+      "high": 1.0
+    }
+  },
+  "variations": [
+    {
+      "attack_range": [
+        2,
+        4
+      ]
+    },
+    {
+      "cutoff_range": [
+        70,
+        90
+      ]
+    }
+  ],
+  "math_adaptable": true
+}

@@ -1,0 +1,80 @@
+{
+  "id": "amazonia_jungle_atmosphere_01",
+  "name": "Amazonia Jungle Atmosphere",
+  "category": "atmosphere",
+  "sub_type": "field_recording",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 120\n\nlive_loop :jungle_atmos do\n  with_fx :reverb, room: 1.0, mix: 0.8 do\n    with_fx :echo, phase: 1.5, decay: 8 do\n      sample :ambi_haunted_hum, amp: 0.3, rate: 0.7\n      sleep 16\n      sample :ambi_dark_woosh, amp: 0.25, rate: 0.5\n      sleep 16\n    end\n  end\nend",
+    "live_loop_name": "jungle_atmos",
+    "dependencies": [],
+    "setup_code": "use_bpm 120"
+  },
+  "musical_params": {
+    "sample": ":ambi_haunted_hum, :ambi_dark_woosh",
+    "amp_range": [
+      0.25,
+      0.3
+    ],
+    "effects": {
+      "reverb": {
+        "room": 1.0,
+        "mix": 0.8
+      },
+      "echo": {
+        "phase": 1.5,
+        "decay": 8
+      },
+      "rate_range": [
+        0.5,
+        0.7
+      ]
+    },
+    "duration_bars": 32,
+    "bpm": 120
+  },
+  "metadata": {
+    "source_file": "2023-09-19_amazonia_house.rb",
+    "extraction_date": "2025-10-03T17:44:30.829673",
+    "author": null,
+    "genre_tags": [
+      "ambient",
+      "world",
+      "tribal",
+      "organic"
+    ],
+    "mood_tags": [
+      "mysterious",
+      "natural",
+      "immersive",
+      "exotic"
+    ],
+    "element_tags": [
+      "atmosphere",
+      "field_recording",
+      "jungle",
+      "organic"
+    ],
+    "suitable_sections": [
+      "intro",
+      "breakdown",
+      "ambient_section"
+    ],
+    "energy_level": 0.2,
+    "complexity": 0.3,
+    "car_audio_optimization": {
+      "bass_boost": 0.8,
+      "mid": 1.0,
+      "high": 1.1
+    }
+  },
+  "variations": [
+    {
+      "rate_variations": true
+    },
+    {
+      "layering": "multiple_samples"
+    }
+  ],
+  "math_adaptable": true
+}

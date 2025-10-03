@@ -1,0 +1,85 @@
+{
+  "id": "fashion_show_bass_01",
+  "name": "Fashion Show FM Bass",
+  "category": "harmony",
+  "sub_type": "bass_line",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 128\nuse_synth :fm\n\nlive_loop :fashion_bass do\n  play :c2, amp: 1.0, release: 0.8, divisor: 2, depth: 3\n  sleep 1\n  play :c2, amp: 0.7, release: 0.4, divisor: 2, depth: 3\n  sleep 0.5\n  play :f1, amp: 0.8, release: 0.4, divisor: 2, depth: 3\n  sleep 0.5\nend",
+    "live_loop_name": "fashion_bass",
+    "dependencies": [],
+    "setup_code": "use_bpm 128\nuse_synth :fm"
+  },
+  "musical_params": {
+    "notes": [
+      "C2",
+      "F1"
+    ],
+    "root_note": "C2",
+    "pattern": [
+      1,
+      0,
+      1,
+      1
+    ],
+    "synth": ":fm",
+    "amp_range": [
+      0.7,
+      1.0
+    ],
+    "effects": {
+      "divisor": 2,
+      "depth": 3
+    },
+    "duration_bars": 2,
+    "bpm": 128
+  },
+  "metadata": {
+    "source_file": "2022-06-07_fashion_show.rb",
+    "extraction_date": "2025-10-03T17:40:45.164213",
+    "author": null,
+    "genre_tags": [
+      "fashion",
+      "tech_house",
+      "minimal"
+    ],
+    "mood_tags": [
+      "stylish",
+      "modern",
+      "sophisticated"
+    ],
+    "element_tags": [
+      "bass",
+      "fm",
+      "groovy",
+      "foundation"
+    ],
+    "suitable_sections": [
+      "verse",
+      "drop",
+      "groove"
+    ],
+    "energy_level": 0.7,
+    "complexity": 0.5,
+    "car_audio_optimization": {
+      "bass_boost": 1.3,
+      "mid": 1.0,
+      "high": 0.9
+    }
+  },
+  "variations": [
+    {
+      "divisor_range": [
+        1,
+        4
+      ]
+    },
+    {
+      "depth_range": [
+        2,
+        5
+      ]
+    }
+  ],
+  "math_adaptable": true
+}

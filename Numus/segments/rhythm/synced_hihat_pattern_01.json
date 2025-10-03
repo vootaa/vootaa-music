@@ -1,0 +1,90 @@
+{
+  "id": "synced_hihat_pattern_01",
+  "name": "Synced Hi-hat Pattern",
+  "category": "rhythm",
+  "sub_type": "hihat_pattern",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 128\n\nlive_loop :synced_hats do\n  16.times do |i|\n    sample :drum_cymbal_closed, amp: (i % 4 == 2) ? 0.6 : 0.3, rate: 1.2\n    sleep 0.125\n  end\nend",
+    "live_loop_name": "synced_hats",
+    "dependencies": [],
+    "setup_code": "use_bpm 128"
+  },
+  "musical_params": {
+    "pattern": [
+      1,
+      0,
+      1,
+      0,
+      1,
+      1,
+      1,
+      0,
+      1,
+      0,
+      1,
+      0,
+      1,
+      1,
+      1,
+      0
+    ],
+    "subdivisions": 16,
+    "sample": ":drum_cymbal_closed",
+    "amp_range": [
+      0.3,
+      0.6
+    ],
+    "duration_bars": 2,
+    "bpm": 128
+  },
+  "metadata": {
+    "source_file": "2021-12-18_2.rb",
+    "extraction_date": "2025-10-03T17:29:23.329233",
+    "author": null,
+    "genre_tags": [
+      "house",
+      "techno",
+      "minimal"
+    ],
+    "mood_tags": [
+      "driving",
+      "steady",
+      "rhythmic"
+    ],
+    "element_tags": [
+      "hihat",
+      "percussion",
+      "groove"
+    ],
+    "suitable_sections": [
+      "verse",
+      "drop",
+      "groove_section"
+    ],
+    "energy_level": 0.5,
+    "complexity": 0.4,
+    "car_audio_optimization": {
+      "bass_boost": 0.7,
+      "mid": 1.0,
+      "high": 1.4
+    }
+  },
+  "variations": [
+    {
+      "accent_positions": [
+        2,
+        6,
+        10,
+        14
+      ]
+    },
+    {
+      "rate_range": [
+        1.0,
+        1.5
+      ]
+    }
+  ],
+  "math_adaptable": true
+}

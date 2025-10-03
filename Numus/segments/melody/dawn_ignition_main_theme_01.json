@@ -1,0 +1,99 @@
+{
+  "id": "dawn_ignition_main_theme_01",
+  "name": "Dawn Ignition Main Theme",
+  "category": "melody",
+  "sub_type": "lead_melody",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 118\n\n# Dawn Ignition - 黎明启动主题\nlive_loop :dawn_theme do\n  use_synth :blade\n  with_fx :reverb, room: 0.7, mix: 0.6 do\n    with_fx :echo, phase: 0.75, decay: 4 do\n      notes = (scale :c4, :major_pentatonic, num_octaves: 2)\n      \n      # 上升的旋律线 - 象征太阳升起\n      8.times do |i|\n        play notes[i], \n             amp: 0.3 + (i * 0.05), \n             release: 0.5,\n             cutoff: 80 + (i * 5)\n        sleep 0.5\n      end\n    end\n  end\nend\n\nlive_loop :dawn_bass do\n  use_synth :fm\n  with_fx :lpf, cutoff: 85 do\n    play :c2, amp: 0.8, release: 0.8, divisor: 2, depth: 3\n    sleep 1\n  end\nend",
+    "live_loop_name": "dawn_theme",
+    "dependencies": [
+      "dawn_bass"
+    ],
+    "setup_code": "use_bpm 118"
+  },
+  "musical_params": {
+    "scale": "C_major_pentatonic",
+    "root_note": "C4",
+    "pattern": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "subdivisions": 8,
+    "synth": ":blade",
+    "amp_range": [
+      0.3,
+      0.7
+    ],
+    "effects": {
+      "reverb": {
+        "room": 0.7,
+        "mix": 0.6
+      },
+      "echo": {
+        "phase": 0.75,
+        "decay": 4
+      },
+      "cutoff_progression": [
+        80,
+        120
+      ]
+    },
+    "duration_bars": 4,
+    "bpm": 118
+  },
+  "metadata": {
+    "source_file": "Draft_/cardj_edm/Dawn_Ignition.rb",
+    "extraction_date": "2025-10-03T18:08:12.417955",
+    "author": null,
+    "genre_tags": [
+      "edm",
+      "progressive",
+      "car_audio",
+      "sunrise"
+    ],
+    "mood_tags": [
+      "hopeful",
+      "awakening",
+      "ascending",
+      "energizing"
+    ],
+    "element_tags": [
+      "lead",
+      "melodic",
+      "sunrise_theme",
+      "progressive",
+      "dawn_ignition"
+    ],
+    "suitable_sections": [
+      "intro",
+      "build_up",
+      "dawn_section"
+    ],
+    "energy_level": 0.6,
+    "complexity": 0.6,
+    "car_audio_optimization": {
+      "bass_boost": 1.0,
+      "mid": 1.2,
+      "high": 1.3
+    }
+  },
+  "variations": [
+    {
+      "scale_progression": "ascending"
+    },
+    {
+      "amplitude_crescendo": true
+    },
+    {
+      "cutoff_automation": "linear"
+    }
+  ],
+  "math_adaptable": true
+}

@@ -1,0 +1,101 @@
+{
+  "id": "cosmic_echo_mathematical_01",
+  "name": "Cosmic Echo Mathematical",
+  "category": "melody",
+  "sub_type": "arpeggio",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 128\n\n# Cosmic Echo - Mathematical Evolution\ndefine :fibonacci do |n|\n  return n if n <= 1\n  fibonacci(n-1) + fibonacci(n-2)\nend\n\nlive_loop :cosmic_math do\n  use_synth :prophet\n  with_fx :reverb, room: 0.85, mix: 0.7 do\n    with_fx :echo, phase: 0.75, decay: 8 do\n      \n      # 使用斐波那契数列生成音高\n      8.times do |i|\n        fib_num = fibonacci(i % 8)\n        base_note = :c4\n        note = base_note + (fib_num % 24)\n        \n        play note, \n             amp: 0.4 + (Math.sin(i * 0.5) * 0.2),\n             release: 0.5,\n             cutoff: 80 + (fib_num % 50)\n        \n        sleep 0.5\n      end\n    end\n  end\nend",
+    "live_loop_name": "cosmic_math",
+    "dependencies": [],
+    "setup_code": "use_bpm 128"
+  },
+  "musical_params": {
+    "scale": "C_chromatic",
+    "root_note": "C4",
+    "pattern": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "subdivisions": 8,
+    "synth": ":prophet",
+    "amp_range": [
+      0.2,
+      0.6
+    ],
+    "effects": {
+      "reverb": {
+        "room": 0.85,
+        "mix": 0.7
+      },
+      "echo": {
+        "phase": 0.75,
+        "decay": 8
+      },
+      "cutoff_range": [
+        80,
+        130
+      ],
+      "algorithm": "fibonacci"
+    },
+    "duration_bars": 4,
+    "bpm": 128
+  },
+  "metadata": {
+    "source_file": "Draft_/demos/cosmic_echo_demo/cosmic_echo_o5.rb",
+    "extraction_date": "2025-10-03T18:08:12.418002",
+    "author": null,
+    "genre_tags": [
+      "algorithmic",
+      "cosmic",
+      "mathematical",
+      "experimental"
+    ],
+    "mood_tags": [
+      "otherworldly",
+      "mathematical",
+      "evolving",
+      "spacey"
+    ],
+    "element_tags": [
+      "fibonacci",
+      "algorithm",
+      "melodic",
+      "cosmic",
+      "highway_dreams"
+    ],
+    "suitable_sections": [
+      "experimental",
+      "build_up",
+      "mathematical"
+    ],
+    "energy_level": 0.6,
+    "complexity": 0.95,
+    "car_audio_optimization": {
+      "bass_boost": 0.8,
+      "mid": 1.2,
+      "high": 1.3
+    }
+  },
+  "variations": [
+    {
+      "sequence_type": "lucas_numbers"
+    },
+    {
+      "amplitude_modulation": "sine_wave"
+    },
+    {
+      "modulo_range": [
+        12,
+        36
+      ]
+    }
+  ],
+  "math_adaptable": true
+}

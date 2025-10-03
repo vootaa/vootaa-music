@@ -1,0 +1,98 @@
+{
+  "id": "summer_ambient_pad_01",
+  "name": "Summer Ambient Pad",
+  "category": "atmosphere",
+  "sub_type": "pad",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 120\nuse_synth :hollow\n\nlive_loop :summer_pad do\n  with_fx :reverb, room: 0.8, mix: 0.6 do\n    with_fx :lpf, cutoff: 90 do\n      play_chord [:c4, :e4, :g4, :b4], amp: 0.4, attack: 2, sustain: 4, release: 3\n      sleep 8\n      play_chord [:d4, :f4, :a4, :c5], amp: 0.35, attack: 2, sustain: 4, release: 3\n      sleep 8\n    end\n  end\nend",
+    "live_loop_name": "summer_pad",
+    "dependencies": [],
+    "setup_code": "use_bpm 120\nuse_synth :hollow"
+  },
+  "musical_params": {
+    "notes": [
+      "C4",
+      "E4",
+      "G4",
+      "B4",
+      "D4",
+      "F4",
+      "A4",
+      "C5"
+    ],
+    "scale": "C_major",
+    "root_note": "C4",
+    "synth": ":hollow",
+    "amp_range": [
+      0.35,
+      0.4
+    ],
+    "effects": {
+      "reverb": {
+        "room": 0.8,
+        "mix": 0.6
+      },
+      "lpf": {
+        "cutoff": 90
+      }
+    },
+    "duration_bars": 16,
+    "bpm": 120
+  },
+  "metadata": {
+    "source_file": "ElectronicSummer.rb",
+    "extraction_date": "2025-10-03T17:24:02.244695",
+    "author": null,
+    "genre_tags": [
+      "ambient",
+      "chillout",
+      "atmospheric"
+    ],
+    "mood_tags": [
+      "peaceful",
+      "bright",
+      "warm"
+    ],
+    "element_tags": [
+      "pad",
+      "harmonic",
+      "sustained"
+    ],
+    "suitable_sections": [
+      "intro",
+      "breakdown",
+      "outro"
+    ],
+    "energy_level": 0.3,
+    "complexity": 0.3,
+    "car_audio_optimization": {
+      "bass_boost": 0.9,
+      "mid": 1.1,
+      "high": 1.0
+    }
+  },
+  "variations": [
+    {
+      "cutoff_range": [
+        70,
+        110
+      ],
+      "room_range": [
+        0.6,
+        1.0
+      ]
+    },
+    {
+      "attack_range": [
+        1.5,
+        3.0
+      ],
+      "sustain_range": [
+        3,
+        6
+      ]
+    }
+  ],
+  "math_adaptable": true
+}

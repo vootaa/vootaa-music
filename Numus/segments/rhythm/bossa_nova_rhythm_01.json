@@ -1,0 +1,70 @@
+{
+  "id": "bossa_nova_rhythm_01",
+  "name": "Bossa Nova Rhythm",
+  "category": "rhythm",
+  "sub_type": "percussion_layer",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 120\n\nlive_loop :bossa_rhythm do\n  sample :drum_snare_soft, amp: 0.4\n  sleep 0.5\n  sample :drum_cymbal_closed, amp: 0.2\n  sleep 0.25\n  sample :drum_cymbal_closed, amp: 0.15\n  sleep 0.25\n  sample :drum_snare_soft, amp: 0.3\n  sleep 0.5\n  sample :drum_cymbal_closed, amp: 0.2\n  sleep 0.5\nend",
+    "live_loop_name": "bossa_rhythm",
+    "dependencies": [],
+    "setup_code": "use_bpm 120"
+  },
+  "musical_params": {
+    "pattern": [
+      1,
+      0,
+      1,
+      1,
+      1,
+      0,
+      1,
+      0
+    ],
+    "subdivisions": 8,
+    "sample": ":drum_snare_soft, :drum_cymbal_closed",
+    "amp_range": [
+      0.15,
+      0.4
+    ],
+    "duration_bars": 2,
+    "bpm": 120
+  },
+  "metadata": {
+    "source_file": "2022-09-11_bossa_nova.rb",
+    "extraction_date": "2025-10-03T17:40:45.164219",
+    "author": null,
+    "genre_tags": [
+      "bossa_nova",
+      "jazz",
+      "latin",
+      "brazilian"
+    ],
+    "mood_tags": [
+      "relaxed",
+      "smooth",
+      "elegant",
+      "warm"
+    ],
+    "element_tags": [
+      "rhythm",
+      "jazz",
+      "gentle",
+      "sophisticated"
+    ],
+    "suitable_sections": [
+      "verse",
+      "breakdown",
+      "chill_section"
+    ],
+    "energy_level": 0.4,
+    "complexity": 0.5,
+    "car_audio_optimization": {
+      "bass_boost": 0.8,
+      "mid": 1.1,
+      "high": 1.2
+    }
+  },
+  "variations": null,
+  "math_adaptable": true
+}

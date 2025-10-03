@@ -1,0 +1,95 @@
+{
+  "id": "math_symphony_fibonacci_01",
+  "name": "Mathematical Symphony (Fibonacci)",
+  "category": "melody",
+  "sub_type": "arpeggio",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 120\n\n# 使用斐波那契数列生成音符\ndefine :fibonacci do |n|\n  return n if n <= 1\n  fibonacci(n-1) + fibonacci(n-2)\nend\n\nlive_loop :fib_melody do\n  use_synth :prophet\n  with_fx :reverb, room: 0.7 do\n    8.times do |i|\n      fib_num = fibonacci(i % 8)\n      note = :c4 + (fib_num % 12)\n      \n      play note, amp: 0.4, release: 0.5, cutoff: 90 + (fib_num % 40)\n      sleep 0.5\n    end\n  end\nend",
+    "live_loop_name": "fib_melody",
+    "dependencies": [],
+    "setup_code": "use_bpm 120"
+  },
+  "musical_params": {
+    "scale": "C_chromatic",
+    "root_note": "C4",
+    "pattern": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "subdivisions": 8,
+    "synth": ":prophet",
+    "amp_range": [
+      0.35,
+      0.45
+    ],
+    "effects": {
+      "reverb": {
+        "room": 0.7
+      },
+      "cutoff_range": [
+        90,
+        130
+      ],
+      "algorithm": "fibonacci"
+    },
+    "duration_bars": 4,
+    "bpm": 120
+  },
+  "metadata": {
+    "source_file": "SonicPI-Examples-1/math_symphony.rb",
+    "extraction_date": "2025-10-03T17:55:39.126375",
+    "author": null,
+    "genre_tags": [
+      "algorithmic",
+      "mathematical",
+      "generative",
+      "experimental"
+    ],
+    "mood_tags": [
+      "intellectual",
+      "evolving",
+      "mathematical",
+      "complex"
+    ],
+    "element_tags": [
+      "fibonacci",
+      "algorithm",
+      "melodic",
+      "pattern"
+    ],
+    "suitable_sections": [
+      "experimental",
+      "interlude",
+      "build_up"
+    ],
+    "energy_level": 0.5,
+    "complexity": 0.95,
+    "car_audio_optimization": {
+      "bass_boost": 0.8,
+      "mid": 1.2,
+      "high": 1.2
+    }
+  },
+  "variations": [
+    {
+      "sequence_type": "lucas_numbers"
+    },
+    {
+      "sequence_type": "prime_numbers"
+    },
+    {
+      "modulo_range": [
+        8,
+        16
+      ]
+    }
+  ],
+  "math_adaptable": true
+}

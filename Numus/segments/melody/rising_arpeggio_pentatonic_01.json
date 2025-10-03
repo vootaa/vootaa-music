@@ -1,0 +1,97 @@
+{
+  "id": "rising_arpeggio_pentatonic_01",
+  "name": "Rising Pentatonic Arpeggio",
+  "category": "melody",
+  "sub_type": "arpeggio",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 128\nuse_synth :pluck\n\nlive_loop :rising_arp do\n  with_fx :echo, phase: 0.75, decay: 4 do\n    notes = (scale :c4, :major_pentatonic, num_octaves: 2)\n    notes.each do |n|\n      play n, amp: 0.6, release: 0.3, cutoff: rrand(80, 110)\n      sleep 0.125\n    end\n  end\nend",
+    "live_loop_name": "rising_arp",
+    "dependencies": [],
+    "setup_code": "use_bpm 128\nuse_synth :pluck"
+  },
+  "musical_params": {
+    "scale": "C_major_pentatonic",
+    "root_note": "C4",
+    "pattern": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "subdivisions": 16,
+    "synth": ":pluck",
+    "amp_range": [
+      0.5,
+      0.7
+    ],
+    "effects": {
+      "echo": {
+        "phase": 0.75,
+        "decay": 4
+      },
+      "cutoff_range": [
+        80,
+        110
+      ]
+    },
+    "duration_bars": 4,
+    "bpm": 128
+  },
+  "metadata": {
+    "source_file": "昇っていく系.rb",
+    "extraction_date": "2025-10-03T17:24:02.244721",
+    "author": null,
+    "genre_tags": [
+      "melodic",
+      "progressive",
+      "uplifting"
+    ],
+    "mood_tags": [
+      "ascending",
+      "hopeful",
+      "energetic"
+    ],
+    "element_tags": [
+      "arpeggio",
+      "melodic",
+      "driving"
+    ],
+    "suitable_sections": [
+      "build_up",
+      "drop"
+    ],
+    "energy_level": 0.7,
+    "complexity": 0.6,
+    "car_audio_optimization": {
+      "bass_boost": 0.8,
+      "mid": 1.2,
+      "high": 1.1
+    }
+  },
+  "variations": [
+    {
+      "scale": "minor_pentatonic"
+    },
+    {
+      "scale": "major"
+    },
+    {
+      "subdivisions": 8,
+      "note_length": 0.25
+    }
+  ],
+  "math_adaptable": true
+}

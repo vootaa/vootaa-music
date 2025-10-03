@@ -1,0 +1,95 @@
+{
+  "id": "lofi_house_texture_01",
+  "name": "Lo-fi House Texture",
+  "category": "texture",
+  "sub_type": "synth_texture",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 118\nuse_synth :piano\n\nlive_loop :lofi_texture do\n  with_fx :bitcrusher, bits: 8, mix: 0.4 do\n    with_fx :lpf, cutoff: 75 do\n      with_fx :reverb, room: 0.7, mix: 0.6 do\n        play_chord [:c4, :e4, :g4], amp: 0.35, release: 2\n        sleep 4\n        play_chord [:a3, :c4, :e4], amp: 0.3, release: 2\n        sleep 4\n      end\n    end\n  end\nend",
+    "live_loop_name": "lofi_texture",
+    "dependencies": [],
+    "setup_code": "use_bpm 118\nuse_synth :piano"
+  },
+  "musical_params": {
+    "notes": [
+      "C4",
+      "E4",
+      "G4",
+      "A3",
+      "C4",
+      "E4"
+    ],
+    "scale": "C_major",
+    "root_note": "C4",
+    "synth": ":piano",
+    "amp_range": [
+      0.3,
+      0.35
+    ],
+    "effects": {
+      "bitcrusher": {
+        "bits": 8,
+        "mix": 0.4
+      },
+      "lpf": {
+        "cutoff": 75
+      },
+      "reverb": {
+        "room": 0.7,
+        "mix": 0.6
+      }
+    },
+    "duration_bars": 8,
+    "bpm": 118
+  },
+  "metadata": {
+    "source_file": "2023-06-14_lofi_house.rb",
+    "extraction_date": "2025-10-03T17:44:30.829655",
+    "author": null,
+    "genre_tags": [
+      "lofi_house",
+      "house",
+      "lofi",
+      "chill"
+    ],
+    "mood_tags": [
+      "nostalgic",
+      "warm",
+      "relaxed",
+      "dreamy"
+    ],
+    "element_tags": [
+      "texture",
+      "chords",
+      "lo-fi",
+      "vintage"
+    ],
+    "suitable_sections": [
+      "verse",
+      "breakdown",
+      "ambient_section"
+    ],
+    "energy_level": 0.4,
+    "complexity": 0.4,
+    "car_audio_optimization": {
+      "bass_boost": 0.9,
+      "mid": 1.2,
+      "high": 1.0
+    }
+  },
+  "variations": [
+    {
+      "bits_range": [
+        6,
+        10
+      ]
+    },
+    {
+      "cutoff_range": [
+        60,
+        90
+      ]
+    }
+  ],
+  "math_adaptable": true
+}

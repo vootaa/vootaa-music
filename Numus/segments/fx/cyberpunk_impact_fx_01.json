@@ -1,0 +1,77 @@
+{
+  "id": "cyberpunk_impact_fx_01",
+  "name": "Cyberpunk Impact FX",
+  "category": "fx",
+  "sub_type": "impact",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 140\n\nlive_loop :cyber_impact do\n  with_fx :reverb, room: 0.8 do\n    with_fx :distortion, distort: 0.5 do\n      sample :bd_boom, amp: 1.5, rate: 0.7\n      sample :elec_blip2, amp: 0.8, rate: 0.5\n      sleep 8\n    end\n  end\nend",
+    "live_loop_name": "cyber_impact",
+    "dependencies": [],
+    "setup_code": "use_bpm 140"
+  },
+  "musical_params": {
+    "sample": ":bd_boom, :elec_blip2",
+    "amp_range": [
+      0.8,
+      1.5
+    ],
+    "effects": {
+      "reverb": {
+        "room": 0.8
+      },
+      "distortion": {
+        "distort": 0.5
+      },
+      "rate_range": [
+        0.5,
+        0.7
+      ]
+    },
+    "duration_bars": 8,
+    "bpm": 140
+  },
+  "metadata": {
+    "source_file": "2024-03-08_CyberPunk.rb",
+    "extraction_date": "2025-10-03T17:48:56.043443",
+    "author": null,
+    "genre_tags": [
+      "cyberpunk",
+      "industrial",
+      "electronic"
+    ],
+    "mood_tags": [
+      "powerful",
+      "dramatic",
+      "cinematic",
+      "intense"
+    ],
+    "element_tags": [
+      "impact",
+      "fx",
+      "transition",
+      "boom"
+    ],
+    "suitable_sections": [
+      "transition",
+      "drop",
+      "impact_point"
+    ],
+    "energy_level": 0.9,
+    "complexity": 0.4,
+    "car_audio_optimization": {
+      "bass_boost": 1.5,
+      "mid": 1.1,
+      "high": 1.0
+    }
+  },
+  "variations": [
+    {
+      "layering": "multiple_samples"
+    },
+    {
+      "timing_variations": true
+    }
+  ],
+  "math_adaptable": true
+}

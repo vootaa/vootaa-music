@@ -1,0 +1,102 @@
+{
+  "id": "cyberpunk_synth_lead_01",
+  "name": "Cyberpunk Blade Lead",
+  "category": "melody",
+  "sub_type": "lead_melody",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 140\nuse_synth :blade\n\nlive_loop :cyber_lead do\n  with_fx :bitcrusher, bits: 10, mix: 0.3 do\n    with_fx :reverb, room: 0.6, mix: 0.5 do\n      with_fx :slicer, phase: 0.125, wave: 3 do\n        play_pattern_timed [:e5, :g5, :a5, :b5, :a5, :g5, :e5, :d5], \n                           [0.25]*8,\n                           amp: 0.7, release: 0.2, cutoff: 120\n      end\n    end\n  end\nend",
+    "live_loop_name": "cyber_lead",
+    "dependencies": [],
+    "setup_code": "use_bpm 140\nuse_synth :blade"
+  },
+  "musical_params": {
+    "notes": [
+      "E5",
+      "G5",
+      "A5",
+      "B5",
+      "D5"
+    ],
+    "scale": "E_minor",
+    "root_note": "E5",
+    "synth": ":blade",
+    "amp_range": [
+      0.6,
+      0.8
+    ],
+    "effects": {
+      "bitcrusher": {
+        "bits": 10,
+        "mix": 0.3
+      },
+      "reverb": {
+        "room": 0.6,
+        "mix": 0.5
+      },
+      "slicer": {
+        "phase": 0.125,
+        "wave": 3
+      },
+      "cutoff": 120
+    },
+    "duration_bars": 2,
+    "bpm": 140
+  },
+  "metadata": {
+    "source_file": "2024-03-08_CyberPunk.rb",
+    "extraction_date": "2025-10-03T17:48:56.043361",
+    "author": null,
+    "genre_tags": [
+      "cyberpunk",
+      "synthwave",
+      "futuristic",
+      "electronic"
+    ],
+    "mood_tags": [
+      "dystopian",
+      "energetic",
+      "neon",
+      "intense"
+    ],
+    "element_tags": [
+      "lead",
+      "synth",
+      "sliced",
+      "digital"
+    ],
+    "suitable_sections": [
+      "drop",
+      "chorus",
+      "peak"
+    ],
+    "energy_level": 0.85,
+    "complexity": 0.7,
+    "car_audio_optimization": {
+      "bass_boost": 0.9,
+      "mid": 1.3,
+      "high": 1.4
+    }
+  },
+  "variations": [
+    {
+      "bits_range": [
+        8,
+        12
+      ]
+    },
+    {
+      "slicer_wave_range": [
+        0,
+        3
+      ]
+    },
+    {
+      "cutoff_range": [
+        100,
+        130
+      ]
+    }
+  ],
+  "math_adaptable": true
+}

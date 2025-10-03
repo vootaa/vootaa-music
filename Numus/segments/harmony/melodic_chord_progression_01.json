@@ -1,0 +1,87 @@
+{
+  "id": "melodic_chord_progression_01",
+  "name": "Melodic Chord Progression",
+  "category": "harmony",
+  "sub_type": "chord_progression",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 124\nuse_synth :prophet\n\nlive_loop :chord_prog do\n  with_fx :reverb, room: 0.6 do\n    play_chord [:c4, :e4, :g4], amp: 0.5, release: 4\n    sleep 4\n    play_chord [:a3, :c4, :e4], amp: 0.5, release: 4\n    sleep 4\n    play_chord [:f3, :a3, :c4], amp: 0.5, release: 4\n    sleep 4\n    play_chord [:g3, :b3, :d4], amp: 0.5, release: 4\n    sleep 4\n  end\nend",
+    "live_loop_name": "chord_prog",
+    "dependencies": [],
+    "setup_code": "use_bpm 124\nuse_synth :prophet"
+  },
+  "musical_params": {
+    "notes": [
+      "C4",
+      "E4",
+      "G4",
+      "A3",
+      "C4",
+      "E4",
+      "F3",
+      "A3",
+      "C4",
+      "G3",
+      "B3",
+      "D4"
+    ],
+    "scale": "C_major",
+    "root_note": "C4",
+    "synth": ":prophet",
+    "amp_range": [
+      0.4,
+      0.6
+    ],
+    "effects": {
+      "reverb": {
+        "room": 0.6
+      }
+    },
+    "duration_bars": 16,
+    "bpm": 124
+  },
+  "metadata": {
+    "source_file": "MySonic.rb (enhanced)",
+    "extraction_date": "2025-10-03T17:24:02.244760",
+    "author": null,
+    "genre_tags": [
+      "progressive",
+      "melodic",
+      "house"
+    ],
+    "mood_tags": [
+      "emotional",
+      "uplifting",
+      "harmonic"
+    ],
+    "element_tags": [
+      "chords",
+      "harmonic",
+      "progression"
+    ],
+    "suitable_sections": [
+      "verse",
+      "chorus",
+      "breakdown"
+    ],
+    "energy_level": 0.6,
+    "complexity": 0.5,
+    "car_audio_optimization": {
+      "bass_boost": 1.0,
+      "mid": 1.2,
+      "high": 1.0
+    }
+  },
+  "variations": [
+    {
+      "chord_voicing": "open"
+    },
+    {
+      "chord_voicing": "close"
+    },
+    {
+      "progression": "I-vi-IV-V"
+    }
+  ],
+  "math_adaptable": true
+}

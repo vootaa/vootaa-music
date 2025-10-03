@@ -1,0 +1,87 @@
+{
+  "id": "slow_tempo_ambient_drone_01",
+  "name": "Slow Tempo Ambient Drone",
+  "category": "atmosphere",
+  "sub_type": "ambient_layer",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 50\nuse_synth :dark_ambience\n\nlive_loop :slow_ambient do\n  with_fx :reverb, room: 1.0, mix: 0.9 do\n    with_fx :echo, phase: 2, decay: 12 do\n      play :c2, amp: 0.4, attack: 8, sustain: 16, release: 8\n      sleep 32\n      play :f2, amp: 0.35, attack: 8, sustain: 16, release: 8\n      sleep 32\n    end\n  end\nend",
+    "live_loop_name": "slow_ambient",
+    "dependencies": [],
+    "setup_code": "use_bpm 50\nuse_synth :dark_ambience"
+  },
+  "musical_params": {
+    "notes": [
+      "C2",
+      "F2"
+    ],
+    "root_note": "C2",
+    "synth": ":dark_ambience",
+    "amp_range": [
+      0.35,
+      0.4
+    ],
+    "effects": {
+      "reverb": {
+        "room": 1.0,
+        "mix": 0.9
+      },
+      "echo": {
+        "phase": 2,
+        "decay": 12
+      }
+    },
+    "duration_bars": 64,
+    "bpm": 50
+  },
+  "metadata": {
+    "source_file": "2024-01-19_bpm50_slow_tempo.rb",
+    "extraction_date": "2025-10-03T17:48:56.043384",
+    "author": null,
+    "genre_tags": [
+      "ambient",
+      "drone",
+      "experimental",
+      "atmospheric"
+    ],
+    "mood_tags": [
+      "meditative",
+      "deep",
+      "slow",
+      "immersive"
+    ],
+    "element_tags": [
+      "drone",
+      "atmospheric",
+      "sustained",
+      "minimal"
+    ],
+    "suitable_sections": [
+      "intro",
+      "ambient_section",
+      "meditation"
+    ],
+    "energy_level": 0.15,
+    "complexity": 0.2,
+    "car_audio_optimization": {
+      "bass_boost": 1.0,
+      "mid": 0.9,
+      "high": 0.8
+    }
+  },
+  "variations": [
+    {
+      "bpm_range": [
+        40,
+        60
+      ]
+    },
+    {
+      "attack_range": [
+        6,
+        10
+      ]
+    }
+  ],
+  "math_adaptable": true
+}

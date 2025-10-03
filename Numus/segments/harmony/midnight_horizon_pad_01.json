@@ -1,0 +1,92 @@
+{
+  "id": "midnight_horizon_pad_01",
+  "name": "Midnight Horizon Pad",
+  "category": "harmony",
+  "sub_type": "pad",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 115\n\n# Midnight Horizon - 午夜地平线氛围\nlive_loop :midnight_pad do\n  use_synth :hollow\n  with_fx :reverb, room: 0.9, mix: 0.8 do\n    with_fx :echo, phase: 1.5, decay: 8 do\n      play_chord [:c3, :e3, :g3, :b3], \n                 amp: 0.35, \n                 attack: 4, \n                 sustain: 8, \n                 release: 4\n      sleep 16\n      \n      play_chord [:a2, :c3, :e3, :g3], \n                 amp: 0.32, \n                 attack: 4, \n                 sustain: 8, \n                 release: 4\n      sleep 16\n    end\n  end\nend",
+    "live_loop_name": "midnight_pad",
+    "dependencies": [],
+    "setup_code": "use_bpm 115\nuse_synth :hollow"
+  },
+  "musical_params": {
+    "notes": [
+      "C3",
+      "E3",
+      "G3",
+      "B3",
+      "A2",
+      "C3",
+      "E3",
+      "G3"
+    ],
+    "scale": "C_major",
+    "root_note": "C3",
+    "synth": ":hollow",
+    "amp_range": [
+      0.32,
+      0.35
+    ],
+    "effects": {
+      "reverb": {
+        "room": 0.9,
+        "mix": 0.8
+      },
+      "echo": {
+        "phase": 1.5,
+        "decay": 8
+      }
+    },
+    "duration_bars": 32,
+    "bpm": 115
+  },
+  "metadata": {
+    "source_file": "Draft_/cardj_edm/Midnight_Horizon.rb",
+    "extraction_date": "2025-10-03T18:08:12.417992",
+    "author": null,
+    "genre_tags": [
+      "ambient",
+      "night_drive",
+      "atmospheric",
+      "car_audio"
+    ],
+    "mood_tags": [
+      "peaceful",
+      "nocturnal",
+      "expansive",
+      "contemplative"
+    ],
+    "element_tags": [
+      "pad",
+      "chords",
+      "sustained",
+      "atmospheric",
+      "night_drive"
+    ],
+    "suitable_sections": [
+      "intro",
+      "breakdown",
+      "night_section"
+    ],
+    "energy_level": 0.3,
+    "complexity": 0.4,
+    "car_audio_optimization": {
+      "bass_boost": 0.9,
+      "mid": 1.1,
+      "high": 1.0
+    }
+  },
+  "variations": [
+    {
+      "chord_voicing": "open"
+    },
+    {
+      "reverb_room_range": [
+        0.8,
+        1.0
+      ]
+    }
+  ],
+  "math_adaptable": true
+}

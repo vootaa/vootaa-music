@@ -1,0 +1,93 @@
+{
+  "id": "cosmic_music_pad_01",
+  "name": "Cosmic Music Pad",
+  "category": "harmony",
+  "sub_type": "pad",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 128\nuse_synth :hollow\n\nlive_loop :cosmic_pad do\n  with_fx :reverb, room: 1.0, mix: 0.8 do\n    with_fx :echo, phase: 1.5, decay: 8 do\n      play_chord [:c3, :e3, :g3, :b3], amp: 0.4, attack: 4, sustain: 8, release: 4\n      sleep 16\n      play_chord [:f3, :a3, :c4, :e4], amp: 0.35, attack: 4, sustain: 8, release: 4\n      sleep 16\n    end\n  end\nend",
+    "live_loop_name": "cosmic_pad",
+    "dependencies": [],
+    "setup_code": "use_bpm 128\nuse_synth :hollow"
+  },
+  "musical_params": {
+    "notes": [
+      "C3",
+      "E3",
+      "G3",
+      "B3",
+      "F3",
+      "A3",
+      "C4",
+      "E4"
+    ],
+    "scale": "C_major",
+    "root_note": "C3",
+    "synth": ":hollow",
+    "amp_range": [
+      0.35,
+      0.4
+    ],
+    "effects": {
+      "reverb": {
+        "room": 1.0,
+        "mix": 0.8
+      },
+      "echo": {
+        "phase": 1.5,
+        "decay": 8
+      }
+    },
+    "duration_bars": 32,
+    "bpm": 128
+  },
+  "metadata": {
+    "source_file": "2022-11-24_Cosmic Music.rb",
+    "extraction_date": "2025-10-03T17:40:45.164206",
+    "author": null,
+    "genre_tags": [
+      "ambient",
+      "space",
+      "cosmic",
+      "atmospheric"
+    ],
+    "mood_tags": [
+      "spacious",
+      "ethereal",
+      "contemplative"
+    ],
+    "element_tags": [
+      "pad",
+      "harmonic",
+      "sustained",
+      "spacey"
+    ],
+    "suitable_sections": [
+      "intro",
+      "breakdown",
+      "ambient_section"
+    ],
+    "energy_level": 0.3,
+    "complexity": 0.3,
+    "car_audio_optimization": {
+      "bass_boost": 0.9,
+      "mid": 1.1,
+      "high": 1.0
+    }
+  },
+  "variations": [
+    {
+      "echo_phase_range": [
+        1.0,
+        2.0
+      ]
+    },
+    {
+      "reverb_room_range": [
+        0.8,
+        1.0
+      ]
+    }
+  ],
+  "math_adaptable": true
+}

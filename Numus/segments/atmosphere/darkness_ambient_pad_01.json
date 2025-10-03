@@ -1,0 +1,88 @@
+{
+  "id": "darkness_ambient_pad_01",
+  "name": "Darkness Ambient Pad",
+  "category": "atmosphere",
+  "sub_type": "ambient_layer",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 90\nuse_synth :dark_ambience\n\nlive_loop :darkness_pad do\n  with_fx :reverb, room: 0.9, mix: 0.8 do\n    with_fx :hpf, cutoff: 50 do\n      with_fx :bitcrusher, bits: 6, mix: 0.3 do\n        play :c2, amp: 0.5, attack: 6, sustain: 12, release: 6\n        sleep 24\n      end\n    end\n  end\nend",
+    "live_loop_name": "darkness_pad",
+    "dependencies": [],
+    "setup_code": "use_bpm 90\nuse_synth :dark_ambience"
+  },
+  "musical_params": {
+    "notes": [
+      "C2"
+    ],
+    "root_note": "C2",
+    "synth": ":dark_ambience",
+    "amp_range": [
+      0.4,
+      0.6
+    ],
+    "effects": {
+      "reverb": {
+        "room": 0.9,
+        "mix": 0.8
+      },
+      "hpf": {
+        "cutoff": 50
+      },
+      "bitcrusher": {
+        "bits": 6,
+        "mix": 0.3
+      }
+    },
+    "duration_bars": 24,
+    "bpm": 90
+  },
+  "metadata": {
+    "source_file": "2021-10-27_darkness_bed.rb",
+    "extraction_date": "2025-10-03T17:29:23.329213",
+    "author": null,
+    "genre_tags": [
+      "dark_ambient",
+      "atmospheric",
+      "experimental"
+    ],
+    "mood_tags": [
+      "dark",
+      "mysterious",
+      "cinematic",
+      "deep"
+    ],
+    "element_tags": [
+      "pad",
+      "texture",
+      "atmospheric",
+      "lo-fi"
+    ],
+    "suitable_sections": [
+      "intro",
+      "breakdown",
+      "ambient_section"
+    ],
+    "energy_level": 0.2,
+    "complexity": 0.4,
+    "car_audio_optimization": {
+      "bass_boost": 1.1,
+      "mid": 0.9,
+      "high": 0.8
+    }
+  },
+  "variations": [
+    {
+      "bitcrusher_bits_range": [
+        4,
+        8
+      ]
+    },
+    {
+      "reverb_room_range": [
+        0.7,
+        1.0
+      ]
+    }
+  ],
+  "math_adaptable": true
+}

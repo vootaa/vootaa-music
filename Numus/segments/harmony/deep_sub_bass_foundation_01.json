@@ -1,0 +1,76 @@
+{
+  "id": "deep_sub_bass_foundation_01",
+  "name": "Deep Sub Bass Foundation",
+  "category": "harmony",
+  "sub_type": "sub_bass",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 128\nuse_synth :sine\n\nlive_loop :deep_sub do\n  with_fx :compressor, threshold: 0.5 do\n    play :c2, amp: 1.5, release: 1, attack: 0.01\n    sleep 1\n    play :c2, amp: 1.2, release: 0.5, attack: 0.01\n    sleep 0.5\n    play :g1, amp: 1.3, release: 0.5, attack: 0.01\n    sleep 0.5\n  end\nend",
+    "live_loop_name": "deep_sub",
+    "dependencies": [],
+    "setup_code": "use_bpm 128\nuse_synth :sine"
+  },
+  "musical_params": {
+    "notes": [
+      "C2",
+      "G1"
+    ],
+    "root_note": "C2",
+    "pattern": [
+      1,
+      0,
+      1,
+      1,
+      0,
+      0,
+      1,
+      0
+    ],
+    "synth": ":sine",
+    "amp_range": [
+      1.2,
+      1.5
+    ],
+    "effects": {
+      "compressor": {
+        "threshold": 0.5
+      }
+    },
+    "duration_bars": 2,
+    "bpm": 128
+  },
+  "metadata": {
+    "source_file": "MySonic.rb (optimized)",
+    "extraction_date": "2025-10-03T17:24:02.244739",
+    "author": null,
+    "genre_tags": [
+      "deep_house",
+      "techno",
+      "minimal"
+    ],
+    "mood_tags": [
+      "deep",
+      "powerful",
+      "foundation"
+    ],
+    "element_tags": [
+      "sub_bass",
+      "foundation",
+      "low_end"
+    ],
+    "suitable_sections": [
+      "drop",
+      "peak",
+      "build_up"
+    ],
+    "energy_level": 0.7,
+    "complexity": 0.3,
+    "car_audio_optimization": {
+      "bass_boost": 1.5,
+      "mid": 0.8,
+      "high": 0.6
+    }
+  },
+  "variations": null,
+  "math_adaptable": true
+}

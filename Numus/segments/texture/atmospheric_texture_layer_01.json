@@ -1,0 +1,69 @@
+{
+  "id": "atmospheric_texture_layer_01",
+  "name": "Atmospheric Texture Layer",
+  "category": "texture",
+  "sub_type": "synth_texture",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 120\nuse_synth :dark_ambience\n\nlive_loop :atmosphere do\n  with_fx :reverb, room: 1.0, mix: 0.7 do\n    with_fx :hpf, cutoff: 60 do\n      play :c3, amp: 0.3, attack: 4, sustain: 8, release: 4\n      sleep 16\n    end\n  end\nend",
+    "live_loop_name": "atmosphere",
+    "dependencies": [],
+    "setup_code": "use_bpm 120\nuse_synth :dark_ambience"
+  },
+  "musical_params": {
+    "notes": [
+      "C3"
+    ],
+    "root_note": "C3",
+    "synth": ":dark_ambience",
+    "amp_range": [
+      0.2,
+      0.4
+    ],
+    "effects": {
+      "reverb": {
+        "room": 1.0,
+        "mix": 0.7
+      },
+      "hpf": {
+        "cutoff": 60
+      }
+    },
+    "duration_bars": 16,
+    "bpm": 120
+  },
+  "metadata": {
+    "source_file": "ElectronicSummer.rb (enhanced)",
+    "extraction_date": "2025-10-03T17:24:02.244746",
+    "author": null,
+    "genre_tags": [
+      "ambient",
+      "atmospheric",
+      "cinematic"
+    ],
+    "mood_tags": [
+      "spacious",
+      "mysterious",
+      "calm"
+    ],
+    "element_tags": [
+      "texture",
+      "background",
+      "atmospheric"
+    ],
+    "suitable_sections": [
+      "intro",
+      "breakdown",
+      "transition"
+    ],
+    "energy_level": 0.2,
+    "complexity": 0.2,
+    "car_audio_optimization": {
+      "bass_boost": 0.8,
+      "mid": 1.0,
+      "high": 1.1
+    }
+  },
+  "variations": null,
+  "math_adaptable": true
+}

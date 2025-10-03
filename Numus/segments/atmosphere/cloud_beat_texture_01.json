@@ -1,0 +1,95 @@
+{
+  "id": "cloud_beat_texture_01",
+  "name": "Cloud Beat Texture",
+  "category": "atmosphere",
+  "sub_type": "ambient_layer",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 128\n\nlive_loop :cloud_texture do\n  use_synth :hollow\n  with_fx :reverb, room: 0.95, mix: 0.8 do\n    with_fx :echo, phase: 0.75, decay: 8 do\n      with_fx :lpf, cutoff: rrand(70, 100) do\n        play_chord (chord :c3, :minor7), \n                   amp: rrand(0.2, 0.4),\n                   attack: 2,\n                   sustain: 4,\n                   release: 2\n        sleep 8\n      end\n    end\n  end\nend\n\nlive_loop :cloud_kick do\n  sample :bd_fat, amp: 0.8, cutoff: 80\n  sleep 1\nend",
+    "live_loop_name": "cloud_texture",
+    "dependencies": [
+      "cloud_kick"
+    ],
+    "setup_code": "use_bpm 128"
+  },
+  "musical_params": {
+    "notes": [
+      "C3",
+      "E♭3",
+      "G3",
+      "B♭3"
+    ],
+    "scale": "C_minor",
+    "root_note": "C3",
+    "synth": ":hollow",
+    "amp_range": [
+      0.2,
+      0.4
+    ],
+    "effects": {
+      "reverb": {
+        "room": 0.95,
+        "mix": 0.8
+      },
+      "echo": {
+        "phase": 0.75,
+        "decay": 8
+      },
+      "lpf": {
+        "cutoff_range": [
+          70,
+          100
+        ]
+      }
+    },
+    "duration_bars": 8,
+    "bpm": 128
+  },
+  "metadata": {
+    "source_file": "SonicPI-Examples-2/Cloud_beat.rb",
+    "extraction_date": "2025-10-03T17:55:39.126392",
+    "author": null,
+    "genre_tags": [
+      "ambient",
+      "cloud",
+      "atmospheric",
+      "house"
+    ],
+    "mood_tags": [
+      "ethereal",
+      "floating",
+      "dreamy",
+      "spacious"
+    ],
+    "element_tags": [
+      "texture",
+      "atmospheric",
+      "chord",
+      "reverb"
+    ],
+    "suitable_sections": [
+      "intro",
+      "breakdown",
+      "ambient_section"
+    ],
+    "energy_level": 0.4,
+    "complexity": 0.5,
+    "car_audio_optimization": {
+      "bass_boost": 0.9,
+      "mid": 1.0,
+      "high": 1.1
+    }
+  },
+  "variations": [
+    {
+      "chord_type": "sus4"
+    },
+    {
+      "reverb_room_range": [
+        0.8,
+        1.0
+      ]
+    }
+  ],
+  "math_adaptable": true
+}

@@ -1,0 +1,95 @@
+{
+  "id": "newjeans_pop_bass_01",
+  "name": "NewJeans Pop Bass",
+  "category": "harmony",
+  "sub_type": "bass_line",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 128\nuse_synth :fm\n\nlive_loop :pop_bass do\n  with_fx :compressor, threshold: 0.4 do\n    play :c2, amp: 1.0, release: 0.8, divisor: 2, depth: 3\n    sleep 0.5\n    play :c2, amp: 0.7, release: 0.3, divisor: 2, depth: 3\n    sleep 0.25\n    play :d2, amp: 0.8, release: 0.3, divisor: 2, depth: 3\n    sleep 0.25\n    play :e2, amp: 0.75, release: 0.5, divisor: 2, depth: 3\n    sleep 0.5\n    play :c2, amp: 0.85, release: 0.4, divisor: 2, depth: 3\n    sleep 0.5\n  end\nend",
+    "live_loop_name": "pop_bass",
+    "dependencies": [],
+    "setup_code": "use_bpm 128\nuse_synth :fm"
+  },
+  "musical_params": {
+    "notes": [
+      "C2",
+      "D2",
+      "E2"
+    ],
+    "root_note": "C2",
+    "pattern": [
+      1,
+      0,
+      1,
+      1,
+      1,
+      0,
+      1,
+      0
+    ],
+    "synth": ":fm",
+    "amp_range": [
+      0.7,
+      1.0
+    ],
+    "effects": {
+      "compressor": {
+        "threshold": 0.4
+      },
+      "divisor": 2,
+      "depth": 3
+    },
+    "duration_bars": 2,
+    "bpm": 128
+  },
+  "metadata": {
+    "source_file": "2024-09-22_Supernatural-NewJeans.rb",
+    "extraction_date": "2025-10-03T17:48:56.043394",
+    "author": null,
+    "genre_tags": [
+      "kpop",
+      "pop",
+      "dance_pop",
+      "modern"
+    ],
+    "mood_tags": [
+      "catchy",
+      "bright",
+      "youthful",
+      "energetic"
+    ],
+    "element_tags": [
+      "bass",
+      "fm",
+      "groovy",
+      "pop"
+    ],
+    "suitable_sections": [
+      "verse",
+      "chorus",
+      "drop"
+    ],
+    "energy_level": 0.75,
+    "complexity": 0.6,
+    "car_audio_optimization": {
+      "bass_boost": 1.3,
+      "mid": 1.1,
+      "high": 1.0
+    }
+  },
+  "variations": [
+    {
+      "divisor_range": [
+        1.5,
+        3.0
+      ]
+    },
+    {
+      "depth_range": [
+        2,
+        4
+      ]
+    }
+  ],
+  "math_adaptable": true
+}

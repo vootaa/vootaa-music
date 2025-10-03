@@ -1,0 +1,88 @@
+{
+  "id": "edm_synth_lead_blade_01",
+  "name": "EDM Blade Lead",
+  "category": "melody",
+  "sub_type": "lead_melody",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 128\nuse_synth :blade\n\nlive_loop :edm_lead do\n  with_fx :slicer, phase: 0.125, wave: 1 do\n    with_fx :reverb, room: 0.5 do\n      play_pattern_timed [:c5, :e5, :g5, :a5, :g5, :e5], [0.25]*6,\n                         amp: 0.6, release: 0.2, cutoff: 110\n    end\n  end\nend",
+    "live_loop_name": "edm_lead",
+    "dependencies": [],
+    "setup_code": "use_bpm 128\nuse_synth :blade"
+  },
+  "musical_params": {
+    "notes": [
+      "C5",
+      "E5",
+      "G5",
+      "A5"
+    ],
+    "scale": "C_major",
+    "root_note": "C5",
+    "synth": ":blade",
+    "amp_range": [
+      0.5,
+      0.7
+    ],
+    "effects": {
+      "slicer": {
+        "phase": 0.125,
+        "wave": 1
+      },
+      "reverb": {
+        "room": 0.5
+      },
+      "cutoff": 110
+    },
+    "duration_bars": 2,
+    "bpm": 128
+  },
+  "metadata": {
+    "source_file": "2022-05-07_edm.rb",
+    "extraction_date": "2025-10-03T17:40:45.164226",
+    "author": null,
+    "genre_tags": [
+      "edm",
+      "electro",
+      "progressive"
+    ],
+    "mood_tags": [
+      "energetic",
+      "bright",
+      "powerful"
+    ],
+    "element_tags": [
+      "lead",
+      "synth",
+      "sliced",
+      "melodic"
+    ],
+    "suitable_sections": [
+      "drop",
+      "chorus",
+      "peak"
+    ],
+    "energy_level": 0.85,
+    "complexity": 0.6,
+    "car_audio_optimization": {
+      "bass_boost": 0.8,
+      "mid": 1.3,
+      "high": 1.2
+    }
+  },
+  "variations": [
+    {
+      "slicer_phase_range": [
+        0.0625,
+        0.25
+      ]
+    },
+    {
+      "cutoff_range": [
+        90,
+        130
+      ]
+    }
+  ],
+  "math_adaptable": true
+}

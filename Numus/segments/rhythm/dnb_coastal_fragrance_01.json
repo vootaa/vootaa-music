@@ -1,0 +1,86 @@
+{
+  "id": "dnb_coastal_fragrance_01",
+  "name": "DnB Coastal Fragrance",
+  "category": "rhythm",
+  "sub_type": "breakbeat",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 174\n\nlive_loop :coastal_break do\n  sample :loop_amen, amp: 0.75, beat_stretch: 2, rate: 1.02\n  sleep 2\nend\n\nlive_loop :coastal_bass do\n  sync :coastal_break\n  use_synth :tb303\n  with_fx :lpf, cutoff: 75 do\n    play :c2, amp: 0.75, release: 0.3, cutoff: rrand(60, 90), res: 0.85\n    sleep 0.25\n    play :c2, amp: 0.55, release: 0.15, cutoff: rrand(60, 90), res: 0.85\n    sleep 0.25\n    play :d2, amp: 0.65, release: 0.2, cutoff: rrand(60, 90), res: 0.85\n    sleep 0.25\n    play :c2, amp: 0.6, release: 0.15, cutoff: rrand(60, 90), res: 0.85\n    sleep 0.25\n  end\nend",
+    "live_loop_name": "coastal_break",
+    "dependencies": [
+      "coastal_bass"
+    ],
+    "setup_code": "use_bpm 174"
+  },
+  "musical_params": {
+    "notes": [
+      "C2",
+      "D2"
+    ],
+    "root_note": "C2",
+    "synth": ":tb303",
+    "sample": ":loop_amen",
+    "amp_range": [
+      0.55,
+      0.75
+    ],
+    "effects": {
+      "beat_stretch": 2,
+      "rate": 1.02,
+      "lpf": {
+        "cutoff": 75
+      },
+      "cutoff_range": [
+        60,
+        90
+      ],
+      "res": 0.85
+    },
+    "duration_bars": 2,
+    "bpm": 174
+  },
+  "metadata": {
+    "source_file": "2025-01-13_dnb-Coastal-Fragrance.rb",
+    "extraction_date": "2025-10-03T17:55:39.126358",
+    "author": null,
+    "genre_tags": [
+      "dnb",
+      "drum_and_bass",
+      "liquid",
+      "atmospheric"
+    ],
+    "mood_tags": [
+      "flowing",
+      "atmospheric",
+      "coastal",
+      "fresh"
+    ],
+    "element_tags": [
+      "breakbeat",
+      "amen",
+      "bass",
+      "liquid_dnb"
+    ],
+    "suitable_sections": [
+      "drop",
+      "peak",
+      "groove"
+    ],
+    "energy_level": 0.85,
+    "complexity": 0.85,
+    "car_audio_optimization": {
+      "bass_boost": 1.4,
+      "mid": 1.1,
+      "high": 1.2
+    }
+  },
+  "variations": [
+    {
+      "rate_modulation": "subtle"
+    },
+    {
+      "cutoff_lfo": true
+    }
+  ],
+  "math_adaptable": true
+}

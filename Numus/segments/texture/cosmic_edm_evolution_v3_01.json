@@ -1,0 +1,102 @@
+{
+  "id": "cosmic_edm_evolution_v3_01",
+  "name": "Cosmic EDM Evolution V3",
+  "category": "texture",
+  "sub_type": "synth_texture",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 128\n\n# Cosmic EDM Evolution V3 - Final Version\nlive_loop :cosmic_kick do\n  sample :bd_haus, amp: 1.4, cutoff: 88\n  sleep 1\nend\n\nlive_loop :cosmic_bass do\n  sync :cosmic_kick\n  use_synth :fm\n  \n  with_fx :lpf, cutoff: 85 do\n    with_fx :compressor, threshold: 0.3 do\n      pattern = [:c2, :c2, :g1, :a1, :f1]\n      durations = [1, 0.5, 0.5, 0.5, 0.5]\n      \n      pattern.zip(durations).each do |note, dur|\n        play note, \n             amp: 0.9, \n             release: dur * 0.8, \n             divisor: 1.8, \n             depth: 3\n        sleep dur\n      end\n    end\n  end\nend\n\nlive_loop :cosmic_lead do\n  sync :cosmic_kick\n  use_synth :blade\n  \n  with_fx :reverb, room: 0.7, mix: 0.6 do\n    with_fx :slicer, phase: 0.125, wave: 3 do\n      notes = (scale :c5, :minor_pentatonic, num_octaves: 2)\n      \n      8.times do\n        play notes.choose, \n             amp: 0.6, \n             release: 0.2,\n             cutoff: rrand(100, 120)\n        sleep 0.25\n      end\n    end\n  end\nend",
+    "live_loop_name": "cosmic_kick",
+    "dependencies": [
+      "cosmic_bass",
+      "cosmic_lead"
+    ],
+    "setup_code": "use_bpm 128"
+  },
+  "musical_params": {
+    "notes": [
+      "C2",
+      "G1",
+      "A1",
+      "F1",
+      "C5"
+    ],
+    "scale": "C_minor_pentatonic",
+    "root_note": "C2",
+    "synth": ":fm, :blade",
+    "sample": ":bd_haus",
+    "amp_range": [
+      0.6,
+      1.4
+    ],
+    "effects": {
+      "lpf": {
+        "cutoff": 85
+      },
+      "compressor": {
+        "threshold": 0.3
+      },
+      "reverb": {
+        "room": 0.7,
+        "mix": 0.6
+      },
+      "slicer": {
+        "phase": 0.125,
+        "wave": 3
+      },
+      "divisor": 1.8,
+      "depth": 3
+    },
+    "duration_bars": 4,
+    "bpm": 128
+  },
+  "metadata": {
+    "source_file": "Draft_/edm_music/cosmic_edm_evolution_v3.rb",
+    "extraction_date": "2025-10-03T18:08:12.418020",
+    "author": null,
+    "genre_tags": [
+      "cosmic",
+      "edm",
+      "progressive",
+      "full_track"
+    ],
+    "mood_tags": [
+      "cosmic",
+      "energetic",
+      "evolving",
+      "complete"
+    ],
+    "element_tags": [
+      "full_arrangement",
+      "kick",
+      "bass",
+      "lead",
+      "synced",
+      "storm_chase"
+    ],
+    "suitable_sections": [
+      "drop",
+      "peak",
+      "full_section"
+    ],
+    "energy_level": 0.9,
+    "complexity": 0.85,
+    "car_audio_optimization": {
+      "bass_boost": 1.4,
+      "mid": 1.2,
+      "high": 1.3
+    }
+  },
+  "variations": [
+    {
+      "pattern_length": "extended"
+    },
+    {
+      "lead_algorithm": "generative"
+    },
+    {
+      "bass_progression": "mathematical"
+    }
+  ],
+  "math_adaptable": true
+}

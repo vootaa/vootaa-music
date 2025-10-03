@@ -1,0 +1,79 @@
+{
+  "id": "skydiving_riser_01",
+  "name": "Skydiving Riser FX",
+  "category": "fx",
+  "sub_type": "riser",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 140\n\nlive_loop :skydive_riser do\n  with_fx :reverb, room: 0.9 do\n    with_fx :hpf, cutoff_slide: 8 do |fx|\n      sample :ambi_drone, amp: 0.5, rate: 2\n      control fx, cutoff: 20, cutoff_slide: 8\n      control fx, cutoff: 130\n      sleep 8\n    end\n  end\nend",
+    "live_loop_name": "skydive_riser",
+    "dependencies": [],
+    "setup_code": "use_bpm 140"
+  },
+  "musical_params": {
+    "sample": ":ambi_drone",
+    "amp_range": [
+      0.4,
+      0.6
+    ],
+    "effects": {
+      "reverb": {
+        "room": 0.9
+      },
+      "hpf": {
+        "cutoff_start": 20,
+        "cutoff_end": 130,
+        "slide": 8
+      }
+    },
+    "duration_bars": 8,
+    "bpm": 140
+  },
+  "metadata": {
+    "source_file": "2022-09-29_SKYDIVING_1.rb",
+    "extraction_date": "2025-10-03T17:40:45.164199",
+    "author": null,
+    "genre_tags": [
+      "edm",
+      "progressive",
+      "big_room"
+    ],
+    "mood_tags": [
+      "intense",
+      "rising",
+      "dramatic",
+      "tension"
+    ],
+    "element_tags": [
+      "riser",
+      "fx",
+      "build",
+      "tension"
+    ],
+    "suitable_sections": [
+      "build_up"
+    ],
+    "energy_level": 0.9,
+    "complexity": 0.4,
+    "car_audio_optimization": {
+      "bass_boost": 0.8,
+      "mid": 1.1,
+      "high": 1.4
+    }
+  },
+  "variations": [
+    {
+      "rate_range": [
+        1.5,
+        3.0
+      ]
+    },
+    {
+      "slide_duration_range": [
+        4,
+        16
+      ]
+    }
+  ],
+  "math_adaptable": true
+}

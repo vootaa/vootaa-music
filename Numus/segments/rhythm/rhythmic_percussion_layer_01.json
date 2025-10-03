@@ -1,0 +1,63 @@
+{
+  "id": "rhythmic_percussion_layer_01",
+  "name": "Rhythmic Percussion Layer",
+  "category": "rhythm",
+  "sub_type": "percussion_layer",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 128\n\nlive_loop :perc_layer do\n  sample :perc_bell, amp: 0.4, rate: 1.2\n  sleep 0.5\n  sample :perc_snap, amp: 0.3\n  sleep 0.25\n  sample :perc_bell, amp: 0.35, rate: 0.8\n  sleep 0.25\nend",
+    "live_loop_name": "perc_layer",
+    "dependencies": [],
+    "setup_code": "use_bpm 128"
+  },
+  "musical_params": {
+    "pattern": [
+      1,
+      0,
+      1,
+      1
+    ],
+    "subdivisions": 4,
+    "sample": ":perc_bell, :perc_snap",
+    "amp_range": [
+      0.3,
+      0.4
+    ],
+    "duration_bars": 1,
+    "bpm": 128
+  },
+  "metadata": {
+    "source_file": "StanBicSonic.rb",
+    "extraction_date": "2025-10-03T17:24:02.244753",
+    "author": null,
+    "genre_tags": [
+      "house",
+      "techno",
+      "minimal"
+    ],
+    "mood_tags": [
+      "rhythmic",
+      "driving",
+      "textural"
+    ],
+    "element_tags": [
+      "percussion",
+      "texture",
+      "rhythm"
+    ],
+    "suitable_sections": [
+      "build_up",
+      "drop",
+      "verse"
+    ],
+    "energy_level": 0.5,
+    "complexity": 0.4,
+    "car_audio_optimization": {
+      "bass_boost": 0.9,
+      "mid": 1.2,
+      "high": 1.3
+    }
+  },
+  "variations": null,
+  "math_adaptable": true
+}

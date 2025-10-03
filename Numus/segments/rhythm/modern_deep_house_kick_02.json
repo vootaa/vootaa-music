@@ -1,0 +1,89 @@
+{
+  "id": "modern_deep_house_kick_02",
+  "name": "Modern Deep House Kick v2",
+  "category": "rhythm",
+  "sub_type": "kick_pattern",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 124\n\nlive_loop :modern_kick do\n  sample :bd_haus, amp: 1.4, cutoff: 90\n  sleep 1\n  sample :bd_haus, amp: 1.2, cutoff: 85, rate: 0.98\n  sleep 1\nend",
+    "live_loop_name": "modern_kick",
+    "dependencies": [],
+    "setup_code": "use_bpm 124"
+  },
+  "musical_params": {
+    "pattern": [
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    "subdivisions": 8,
+    "sample": ":bd_haus",
+    "amp_range": [
+      1.2,
+      1.4
+    ],
+    "effects": {
+      "cutoff_range": [
+        85,
+        90
+      ],
+      "rate_variation": 0.98
+    },
+    "duration_bars": 2,
+    "bpm": 124
+  },
+  "metadata": {
+    "source_file": "2024-09-20_DeepHouse.rb",
+    "extraction_date": "2025-10-03T17:48:56.043402",
+    "author": null,
+    "genre_tags": [
+      "deep_house",
+      "house",
+      "modern"
+    ],
+    "mood_tags": [
+      "driving",
+      "powerful",
+      "tight",
+      "punchy"
+    ],
+    "element_tags": [
+      "kick",
+      "four_on_floor",
+      "foundation",
+      "modern"
+    ],
+    "suitable_sections": [
+      "verse",
+      "drop",
+      "peak"
+    ],
+    "energy_level": 0.75,
+    "complexity": 0.3,
+    "car_audio_optimization": {
+      "bass_boost": 1.5,
+      "mid": 0.9,
+      "high": 0.8
+    }
+  },
+  "variations": [
+    {
+      "rate_range": [
+        0.95,
+        1.05
+      ]
+    },
+    {
+      "cutoff_range": [
+        80,
+        95
+      ]
+    }
+  ],
+  "math_adaptable": true
+}

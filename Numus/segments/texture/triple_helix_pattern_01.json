@@ -1,0 +1,80 @@
+{
+  "id": "triple_helix_pattern_01",
+  "name": "Triple Helix Pattern",
+  "category": "texture",
+  "sub_type": "synth_texture",
+  "version": "1.0",
+  "sonic_pi_code": {
+    "main_code": "use_bpm 130\n\nlive_loop :helix_1 do\n  use_synth :sine\n  play (scale :c4, :minor_pentatonic).choose, amp: 0.3, release: 0.2\n  sleep 0.333\nend\n\nlive_loop :helix_2 do\n  use_synth :sine\n  play (scale :c4, :minor_pentatonic, num_octaves: 2).choose, amp: 0.25, release: 0.2\n  sleep 0.5\nend\n\nlive_loop :helix_3 do\n  use_synth :sine\n  play (scale :c4, :minor_pentatonic, num_octaves: 3).choose, amp: 0.2, release: 0.2\n  sleep 0.25\nend",
+    "live_loop_name": "helix_1",
+    "dependencies": [
+      "helix_2",
+      "helix_3"
+    ],
+    "setup_code": "use_bpm 130"
+  },
+  "musical_params": {
+    "scale": "C_minor_pentatonic",
+    "root_note": "C4",
+    "synth": ":sine",
+    "amp_range": [
+      0.2,
+      0.3
+    ],
+    "duration_bars": 4,
+    "bpm": 130
+  },
+  "metadata": {
+    "source_file": "2023-01-04_triple_helix.rb",
+    "extraction_date": "2025-10-03T17:44:30.829708",
+    "author": null,
+    "genre_tags": [
+      "experimental",
+      "algorithmic",
+      "generative"
+    ],
+    "mood_tags": [
+      "complex",
+      "hypnotic",
+      "mathematical",
+      "evolving"
+    ],
+    "element_tags": [
+      "texture",
+      "polyrhythm",
+      "generative",
+      "layered"
+    ],
+    "suitable_sections": [
+      "ambient_section",
+      "experimental"
+    ],
+    "energy_level": 0.5,
+    "complexity": 0.9,
+    "car_audio_optimization": {
+      "bass_boost": 0.8,
+      "mid": 1.1,
+      "high": 1.2
+    }
+  },
+  "variations": [
+    {
+      "timing_ratios": [
+        [
+          0.333,
+          0.5,
+          0.25
+        ],
+        [
+          0.25,
+          0.333,
+          0.5
+        ]
+      ]
+    },
+    {
+      "octave_spreading": true
+    }
+  ],
+  "math_adaptable": true
+}
