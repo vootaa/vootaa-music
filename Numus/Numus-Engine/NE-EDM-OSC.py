@@ -1,226 +1,278 @@
 #!/usr/bin/env python3
 """
-EDM_OSC.py
-通用 DNA 编排 → OSC 播放控制器
+NE-EDM-OSC.py
+Advanced DNA timeline → OSC conductor.
 
-功能:
-- 读取 DNA JSON（格式类似 dawn_ignition_dna.json）
-- 按 Section 时间轴发送参数与特性
-- 自动识别数值字段与布尔字段（布尔发 /engine/toggle/<name>，数值发 /engine/param/<name>）
-- 标准核心字段：bpm, energy, density, chord_index, active_parts
-- 和弦序列只需在第一 Section 开始前发一次 (/engine/chord_prog)
-- 支持: --time-scale (加速缩短测试) --start-chapter / --start-section 断点
-- 若 DNA 中无 start_time，将按累积 duration 顺序调度
-
-用法:
-python EDM_OSC.py --dna path/to/track_dna.json --port 4560
+Design goals:
+- Ruby engine stays minimal (no internal transitions logic).
+- This script performs: section scheduling, param interpolation (filter sweeps), adaptive micro_energy modulation,
+  callback + anti_drop behaviors, pattern & toggle management, reduced redundant OSC.
+- Deterministic: all transformations derived from DNA numeric fields (no random).
 """
-import json
-import time
-import argparse
+
+import json, time, argparse, math
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 from pythonosc import udp_client
 
-CORE_FIELDS = {
-    "energy": "/engine/energy",
-    "density": "/engine/density",
-    "chord_index": "/engine/chord_index",
+CORE_PARAM_ADDR = {
+    "bpm": "/engine/bpm",
+    "energy": "/engine/param/energy",
+    "density": "/engine/param/density",
+    "chord_index": "/engine/param/chord_index",
     "active_parts": "/engine/parts"
-
 }
 
-RESERVED_FIELDS = set([
-    "start_time","duration","energy","density","active_parts","chord_index",
-    "track_id","bpm","key","scale","chord_progression","chapters"
-])
-
 PATTERN_KEY = "pattern_overrides"
+RESERVED = {
+    "start_time","duration","energy","density","active_parts","chord_index",
+    "track_id","bpm","key","scale","chord_progression","chapters",
+    "sweep_phase_start","sweep_phase_end","micro_energy"
+}
 
-def send_pattern_overrides(client, po: Dict[str,str]):
-    for part, pid in po.items():
-        send(client, f"/engine/pattern/{part}", pid)
+NUMERIC_WHITELIST = {
+    "pad_cutoff","sub_fade_level","hat_density","sidechain_depth","bass_drive",
+    "lead_detune","reverb_bus","delay_mix","chord_inversion"
+}
 
-def is_bool_like(v: Any) -> bool:
-    if isinstance(v, bool):
-        return True
-    if isinstance(v, (int, float)):
-        return v in (0,1)
-    if isinstance(v, str):
-        return v.lower() in ("0","1","true","false","on","off")
-    return False
+TOGGLE_WHITELIST = {
+    "sub_fade","texture_air","texture_grain","drop_gap",
+    "snare_roll","snare_fill"
+}
 
-def bool_value(v: Any) -> int:
-    if isinstance(v, bool): return 1 if v else 0
-    s = str(v).lower()
-    return 1 if s in ("1","true","on") else 0
+BASE_PAD_CUTOFF_MIN = 70
+BASE_PAD_CUTOFF_MAX = 132
 
-class DNATimeline:
+class Timeline:
     def __init__(self, dna: Dict[str,Any]):
         self.dna = dna
         self.sections: List[Tuple[str,str,Dict[str,Any]]] = []
-        for ch_key, ch_data in dna.get("chapters", {}).items():
-            secs = ch_data.get("sections", {})
-            for sec_key, sec_data in secs.items():
-                self.sections.append((ch_key, sec_key, sec_data))
-        # 按 start_time 排序（若缺失则稍后填充）
+        for ch_k, ch_v in dna.get("chapters",{}).items():
+            for sec_k, sec_v in ch_v.get("sections",{}).items():
+                self.sections.append((ch_k,sec_k,sec_v))
+        # ensure start times
         if any("start_time" not in s[2] for s in self.sections):
-            # 回退：按顺序累计
-            t = 0.0
-            for ch, sk, data in self.sections:
-                data.setdefault("duration", 60)
-                data["start_time"] = t
-                t += data["duration"]
+            t=0.0
+            for _,_,d in self.sections:
+                d.setdefault("duration",60)
+                d["start_time"]=t
+                t+=d["duration"]
         self.sections.sort(key=lambda x: x[2]["start_time"])
 
-    def filtered(self, start_ch: str=None, start_sec: str=None):
-        started = (start_ch is None and start_sec is None)
-        for ch, sk, data in self.sections:
-            if not started:
-                if start_ch and ch == start_ch:
-                    if (start_sec is None) or (sk == start_sec):
-                        started = True
-            if started:
-                yield ch, sk, data
+    def filtered(self, ch=None, sec=None):
+        start_flag = (ch is None and sec is None)
+        for c,s,d in self.sections:
+            if not start_flag:
+                if c==ch and (sec is None or s==sec):
+                    start_flag=True
+            if start_flag:
+                yield c,s,d
 
-def send(client, addr, value):
-    client.send_message(addr, value)
+def is_bool_like(v: Any)->bool:
+    if isinstance(v,bool): return True
+    if isinstance(v,(int,float)) and v in (0,1): return True
+    if isinstance(v,str) and v.lower() in ("0","1","true","false","on","off"): return True
+    return False
 
-def send_debug(client, text: str):
-    try:
-        client.send_message("/engine/debug", text)
-    except Exception as e:
-        print(f"[WARN] debug send failed: {e}")
+def to_bool_int(v: Any)->int:
+    if isinstance(v,bool): return 1 if v else 0
+    return 1 if str(v).lower() in ("1","true","on") else 0
+
+def send(client, addr, val): client.send_message(addr,val)
+def dbg(client,msg): 
+    try: client.send_message("/engine/debug",msg)
+    except: pass
+
+def derive_pad_cutoff(sec: Dict[str,Any], base_energy: float)->int:
+    # If sweep phases exist: linear map
+    if "sweep_phase_start" in sec and "sweep_phase_end" in sec:
+        # initial cutoff at section enter will be start; we'll linearly morph to end over its duration
+        # return start immediate; interpolation handled externally
+        start_ratio = max(0.0,min(1.0, sec["sweep_phase_start"]))
+        return int(BASE_PAD_CUTOFF_MIN + (BASE_PAD_CUTOFF_MAX-BASE_PAD_CUTOFF_MIN)*start_ratio)
+    # fallback energy shaping
+    return int(90 + (base_energy*40))
+
+def interpolate_sweep(sec: Dict[str,Any], elapsed: float, total: float)->int:
+    sp0 = max(0.0,min(1.0,sec.get("sweep_phase_start",0.0)))
+    sp1 = max(0.0,min(1.0,sec.get("sweep_phase_end",sp0)))
+    if total<=0: return int(BASE_PAD_CUTOFF_MIN + (BASE_PAD_CUTOFF_MAX-BASE_PAD_CUTOFF_MIN)*sp1)
+    t = max(0.0,min(1.0, elapsed/total))
+    cur = sp0 + (sp1-sp0)*t
+    return int(BASE_PAD_CUTOFF_MIN + (BASE_PAD_CUTOFF_MAX-BASE_PAD_CUTOFF_MIN)*cur)
+
+def anti_drop_adjust(sec: Dict[str,Any], params: Dict[str,float], toggles: Dict[str,int]):
+    # reduce sidechain, reduce density-driven hats if present
+    params["sidechain_depth"] = min(params.get("sidechain_depth",0.2),0.25)
+    params["bass_drive"] = min(params.get("bass_drive",0.2),0.25)
+    toggles["drop_gap"] = 1
+    toggles["sub_fade"] = 1
+    params["sub_fade_level"] = min(params.get("sub_fade_level",0.4),0.4)
+
+def callback_theme_adjust(sec: Dict[str,Any], params: Dict[str,float], toggles: Dict[str,int]):
+    # widen reverb + slight cutoff raise
+    params["reverb_bus"] = min(0.45, params.get("reverb_bus",0.30)+0.08)
+    params["pad_cutoff"] = max(params.get("pad_cutoff",100),105)
+    toggles["texture_air"] = 1
+
+def micro_energy_mod(sec: Dict[str,Any], params: Dict[str,float]):
+    me = sec.get("micro_energy")
+    if me is None: return
+    # map 0..3 to sidechain micro boost + subtle cutoff nudge
+    sx = params.get("sidechain_depth",0.2)
+    params["sidechain_depth"] = round(min(0.65, sx + me*0.04),4)
+    pc = params.get("pad_cutoff",110)
+    params["pad_cutoff"] = min(132, pc + me*2)
+
+def pattern_override(client, po: Dict[str,str]):
+    for part,pid in po.items():
+        send(client,f"/engine/pattern/{part}",pid)
+
+def apply_section(client, sec: Dict[str,Any], dna: Dict[str,Any], first=False):
+    # base parameters
+    energy = sec.get("energy",0.0)
+    density = sec.get("density",0.0)
+    chord_index = sec.get("chord_index",0)
+    parts = sec.get("active_parts",[])
+    send(client, CORE_PARAM_ADDR["energy"], energy)
+    send(client, CORE_PARAM_ADDR["density"], density)
+    send(client, CORE_PARAM_ADDR["chord_index"], chord_index)
+    send(client, CORE_PARAM_ADDR["active_parts"], ",".join(parts))
+
+def build_param_and_toggle_sets(sec: Dict[str,Any]) -> Tuple[Dict[str,float], Dict[str,int]]:
+    params={}
+    toggles={}
+    for k,v in sec.items():
+        if k in RESERVED: continue
+        if k in NUMERIC_WHITELIST and isinstance(v,(int,float)):
+            params[k]=float(v)
+        elif k in TOGGLE_WHITELIST and is_bool_like(v):
+            toggles[k]=to_bool_int(v)
+    return params,toggles
 
 def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--dna", required=True, help="DNA JSON path")
-    ap.add_argument("--host", default="127.0.0.1")
-    ap.add_argument("--port", type=int, default=4560)
-    ap.add_argument("--time-scale", type=float, default=1.0, help="时间缩放 (<1 加速)")
-    ap.add_argument("--start-chapter", help="从指定 chapter 开始")
-    ap.add_argument("--start-section", help="与 --start-chapter 配合，用该 section 开始")
-    ap.add_argument("--no-section-debug", action="store_true", help="不在每个 Section 发送 debug OSC")
-    ap.add_argument("--dry-run", action="store_true")
-    args = ap.parse_args()
+    ap=argparse.ArgumentParser()
+    ap.add_argument("--dna",required=True)
+    ap.add_argument("--host",default="127.0.0.1")
+    ap.add_argument("--port",type=int,default=4560)
+    ap.add_argument("--time-scale",type=float,default=1.0)
+    ap.add_argument("--start-chapter")
+    ap.add_argument("--start-section")
+    ap.add_argument("--dry-run",action="store_true")
+    ap.add_argument("--pad-sweep-interval",type=float,default=1.0,help="seconds between sweep cutoff updates")
+    ap.add_argument("--no-debug",action="store_true")
+    args=ap.parse_args()
 
-    path = Path(args.dna)
-    if not path.exists():
-        print(f"[ERR] DNA 文件不存在: {path}")
-        return
-
-    with path.open("r", encoding="utf-8") as f:
-        dna = json.load(f)
-
-    timeline = DNATimeline(dna)
-    sections = list(timeline.filtered(args.start_chapter, args.start_section))
+    dna_path=Path(args.dna)
+    if not dna_path.exists():
+        print("DNA file missing");return
+    dna=json.loads(dna_path.read_text(encoding="utf-8"))
+    tl=Timeline(dna)
+    sections=list(tl.filtered(args.start_chapter,args.start_section))
     if not sections:
-        print("[ERR] 没有匹配的 Section")
-        return
+        print("No sections after filter");return
 
-    host = args.host
-    port = args.port
-    client = udp_client.SimpleUDPClient(host, port)
-    print(f"[INFO] OSC -> {host}:{port}")
+    client=udp_client.SimpleUDPClient(args.host,args.port)
 
-    bpm = dna.get("bpm", 120)
-    chord_prog = dna.get("chord_progression", [])
-    track_id = dna.get("track_id","unknown_track")
-
-    if chord_prog:
-        print(f"[SEND] chord_prog={chord_prog}")
-        if not args.dry_run:
-            send(client, "/engine/chord_prog", ",".join(chord_prog))
-
+    bpm=dna.get("bpm",120)
+    chord_prog=dna.get("chord_progression",[])
     if not args.dry_run:
-        send(client, "/engine/bpm", bpm)
-        # 启动调试信息
-        total_secs = 0
-        if sections:
-            last = sections[-1][2]
-            total_secs = last.get("start_time",0)+last.get("duration",0)
-        send_debug(client, f"INIT track={track_id} bpm={bpm} sections={len(sections)} total_time={total_secs:.1f}s")
+        send(client,"/engine/bpm",bpm)
+        if chord_prog:
+            send(client,"/engine/chord_prog",",".join(chord_prog))
+        if not args.no_debug:
+            dbg(client,f"INIT track={dna.get('track_id')} bpm={bpm} sections={len(sections)}")
 
-    # 收集所有潜在布尔 & 数值字段（用于重置）
-    bool_keys = set()
-    num_keys = set()
-    for _ch, _sk, data in sections:
-        for k, v in data.items():
-            if k in RESERVED_FIELDS: continue
-            if is_bool_like(v):
-                bool_keys.add(k)
-            elif isinstance(v, (int,float)):
-                num_keys.add(k)
+    # Pre-calc global sets
+    # We'll drive pad_cutoff dynamically even if not specified
+    start_wall=time.time()
+    last_sent: Dict[str,float]={}
+    bool_state: Dict[str,int]={}
 
-    start_wall = time.time()
-    print(f"[INFO] 开始调度，共 {len(sections)} sections, time_scale={args.time_scale}")
-    for ch, sk, data in sections:
-        st = data["start_time"] / args.time_scale
-        now = time.time() - start_wall
+    def send_param(name,val):
+        addr=f"/engine/param/{name}"
+        if last_sent.get(name)!=val and not args.dry_run:
+            send(client,addr,val)
+            last_sent[name]=val
+
+    def send_toggle(name,val):
+        addr=f"/engine/toggle/{name}"
+        if bool_state.get(name)!=val and not args.dry_run:
+            send(client,addr,val)
+            bool_state[name]=val
+
+    for idx,(ch,sk,sec) in enumerate(sections):
+        st = sec["start_time"]/args.time_scale
+        now = time.time()-start_wall
         wait = st - now
-        if wait > 0:
-            print(f"[WAIT] {ch}/{sk} 等待 {wait:.2f}s (scaled)")
+        if wait>0:
             time.sleep(wait)
 
-        print(f"[SECTION] {ch}/{sk} t={st:.2f}s")
-        # 核心字段
-        chord_index = data.get("chord_index", 0)
-        energy = data.get("energy", 0.0)
-        density = data.get("density", 0.0)
-        parts = data.get("active_parts", [])
-
+        energy=sec.get("energy",0.0)
+        density=sec.get("density",0.0)
+        chord_index=sec.get("chord_index",0)
+        parts=sec.get("active_parts",[])
         if not args.dry_run:
-            send(client, CORE_FIELDS["chord_index"], chord_index)
-            send(client, CORE_FIELDS["energy"], energy)
-            send(client, CORE_FIELDS["density"], density)
-            send(client, CORE_FIELDS["active_parts"], ",".join(parts))
-        
-        # pattern overrides
-        po = data.get(PATTERN_KEY)
-        if po and isinstance(po, dict) and not args.dry_run:
-            send_pattern_overrides(client, po)
+            send(client,"/engine/param/chord_index",chord_index)
+            send(client,"/engine/param/energy",energy)
+            send(client,"/engine/param/density",density)
+            send(client,"/engine/parts",",".join(parts))
 
-        # 字段分类发送
-        # 先构建该 section 实际使用的 bool/num
-        sec_bool = {}
-        sec_num = {}
-        for k, v in data.items():
-            if k in RESERVED_FIELDS: continue
-            if is_bool_like(v):
-                sec_bool[k] = bool_value(v)
-            elif isinstance(v, (int,float)):
-                sec_num[k] = v
+        po=sec.get(PATTERN_KEY)
+        if po and not args.dry_run:
+            pattern_override(client,po)
 
-        # 重置未出现的布尔为 0
-        for bk in bool_keys:
-            val = sec_bool.get(bk, 0)
-            if not args.dry_run:
-                send(client, f"/engine/toggle/{bk}", val)
+        params,toggles=build_param_and_toggle_sets(sec)
+        # Derive pad_cutoff baseline and sweeps
+        if "pad_cutoff" not in params:
+            params["pad_cutoff"]=derive_pad_cutoff(sec,energy)
 
-        #发送数值参数
-        for nk in num_keys:
-            if nk in sec_num:
-                if not args.dry_run:
-                    send(client, f"/engine/param/{nk}", sec_num[nk])
-            else:
-                # 可选择不重置缺省，以避免突兀；如需清零可启用：
-                # send(client, f"/engine/param/{nk}", 0)
-                pass
+        # micro_energy modulation influences sidechain/pad_cutoff
+        micro_energy_mod(sec,params)
 
-        # 单独列出激活 toggles
-        active_toggles = [k for k,v in sec_bool.items() if v == 1]
-        if active_toggles:
-            print(f"  toggles_on={active_toggles}")
-        
-        if not args.no_section_debug and not args.dry_run:
-            dbg_parts = "/".join(parts) if parts else "-"
-            send_debug(client, f"SECTION {ch}.{sk} ci={chord_index} E={energy} D={density} parts={dbg_parts}")
+        # callback theme
+        if sec.get("callback_theme"):
+            callback_theme_adjust(sec,params,toggles)
+
+        # anti-drop composite
+        if sec.get("anti_drop"):
+            anti_drop_adjust(sec,params,toggles)
+
+        # ensure toggles sinks for implied logic
+        if sec.get("sub_fade") and "sub_fade_level" not in params:
+            params["sub_fade_level"]=0.5
+
+        # Dispatch toggles first
+        for tk,val in toggles.items():
+            send_toggle(tk,val)
+        # Reset missing toggles to 0 (only those we manage)
+        for tk in TOGGLE_WHITELIST:
+            if tk not in toggles:
+                send_toggle(tk,0)
+
+        # Send numeric params
+        for nk,val in params.items():
+            send_param(nk, float(val))
+
+        # Live sweep interpolation
+        dur = sec.get("duration",0)
+        if "sweep_phase_start" in sec and "sweep_phase_end" in sec:
+            sweep_total = dur/args.time_scale
+            steps = max(1,int(sweep_total/args.pad_sweep_interval))
+            base_start=time.time()
+            for sidx in range(1,steps+1):
+                frac = sidx/steps
+                target = interpolate_sweep(sec, frac*sweep_total, sweep_total)
+                send_param("pad_cutoff",target)
+                remain = base_start + frac*sweep_total - time.time()
+                if remain>0: time.sleep(remain)
+
+        if not args.no_debug and not args.dry_run:
+            dbg(client,f"SEC {ch}.{sk} E={energy:.2f} D={density:.2f} parts={len(parts)}")
 
     if not args.dry_run:
-        send_debug(client, "DONE all_sections_sent")
-        client.send_message("/engine/stop", 1)
-        print("[INFO] Sent /engine/stop")
-    print("[DONE] 全部 Section 已发送。")
+        dbg(client,"DONE timeline")
+        send(client,"/engine/stop",1)
 
-if __name__ == "__main__":
+if __name__=="__main__":
     main()
