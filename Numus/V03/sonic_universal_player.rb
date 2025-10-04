@@ -1,9 +1,10 @@
 # Sonic Pi Universal Player for Numus V03
 # 通用播放框架，接收OSC命令执行播放
 
-set :tk, {}
+set :tk, []
 set :bpm, 128
 set :mv, 1.0
+set :lc, 0
 
 puts "Numus V03 Ready"
 
@@ -11,53 +12,73 @@ live_loop :osc do
   use_real_time
   c = sync "/osc*/numus/cmd"
   case c[0]
-  when "play_segment"; play_seg(c)
-  when "stop_segment"; stop_seg(c[1])
-  when "set_param"; set_p(c[1], c[2], c[3])
-  when "stop_all"; get(:tk).clear
+  when "play"; psg(c)
+  when "stop"; stg(c[1])
+  when "set"; stp(c[1], c[2], c[3])
+  when "stop_all"; set :tk, []
   end
 end
 
-define :play_seg do |c|
+define :psg do |c|
   tn = c[1]
   st = c[2]
   pm = JSON.parse(c[3], symbolize_names: true)
   
-  get(:tk)[tn] = {t: st, p: pm, v: pm[:volume] || 1.0, c: pm[:cutoff] || 130}
+  stg(tn)
+  sleep 0.05
   
-  live_loop tn.to_sym do
-    stop if get(:tk)[tn].nil?
-    s = get(:tk)[tn]
-    case s[:t]
-    when "kick_pattern"; pk(s[:p], s)
-    when "snare_pattern"; ps(s[:p], s)
-    when "hihat_pattern"; ph(s[:p], s)
-    when "bass_line"; pb(s[:p], s)
-    when "chord_progression"; pch(s[:p], s)
-    when "lead_melody"; pl(s[:p], s)
-    when "arpeggio"; par(s[:p], s)
-    when "pad"; ppad(s[:p], s)
-    when "riser"; pr(s[:p], s)
-    when "ambient_layer"; pam(s[:p], s)
+  tks = get(:tk)
+  tks = tks.reject { |t| t[:n] == tn }
+  tks << {n: tn, t: st, p: pm, v: pm[:vol] || 1.0, c: pm[:cut] || 130, a: true}
+  set :tk, tks
+  
+  set :lc, get(:lc) + 1
+  ln = "l#{get(:lc)}".to_sym
+  
+  in_thread name: ln do
+    loop do
+      tks = get(:tk)
+      trk = tks.find { |t| t[:n] == tn && t[:a] }
+      break unless trk
+      
+      case trk[:t]
+      when "kick"; pk(trk[:p], trk)
+      when "snare"; ps(trk[:p], trk)
+      when "hat"; ph(trk[:p], trk)
+      when "bass"; pb(trk[:p], trk)
+      when "chord"; pch(trk[:p], trk)
+      when "lead"; pl(trk[:p], trk)
+      when "arp"; par(trk[:p], trk)
+      when "pad"; ppad(trk[:p], trk)
+      when "rise"; pr(trk[:p], trk)
+      when "amb"; pam(trk[:p], trk)
+      when "tex"; ptx(trk[:p], trk)
+      end
+      
+      sleep trk[:p][:db] || 4
     end
-    sleep s[:p][:duration_bars] || 4
   end
+end
+
+define :s2sym do |v|
+  return v unless v.is_a?(String)
+  v.start_with?(":") ? v[1..-1].to_sym : v.to_sym
 end
 
 define :pk do |p, s|
   use_bpm p[:bpm] || get(:bpm)
-  pt = p[:pattern] || [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0]
-  sy = (p[:synth] || ":bd_haus").to_sym
+  pt = p[:pt] || [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0]
+  sy = s2sym(p[:syn] || :bd_haus)
   pt.each do |h|
-    sample sy, amp: (p[:amp] || 1.0) * s[:v] * get(:mv), cutoff: s[:c] if h == 1
+    sample sy, amp: (p[:amp] || 1.0) * s[:v] * get(:mv), cutoff: s[:c], release: p[:rel] || 0.3 if h == 1
     sleep 0.25
   end
 end
 
 define :ps do |p, s|
   use_bpm p[:bpm] || get(:bpm)
-  pt = p[:pattern] || [0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0]
-  sy = (p[:synth] || ":drum_snare_hard").to_sym
+  pt = p[:pt] || [0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0]
+  sy = s2sym(p[:syn] || :drum_snare_hard)
   pt.each do |h|
     sample sy, amp: (p[:amp] || 0.8) * s[:v] * get(:mv), cutoff: s[:c] if h == 1
     sleep 0.25
@@ -66,8 +87,8 @@ end
 
 define :ph do |p, s|
   use_bpm p[:bpm] || get(:bpm)
-  pt = p[:pattern] || [1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0]
-  sy = (p[:synth] || ":drum_cymbal_closed").to_sym
+  pt = p[:pt] || [1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0]
+  sy = s2sym(p[:syn] || :drum_cymbal_closed)
   pt.each do |h|
     sample sy, amp: (p[:amp] || 0.5) * s[:v] * get(:mv), cutoff: s[:c] if h == 1
     sleep 0.25
@@ -76,64 +97,64 @@ end
 
 define :pb do |p, s|
   use_bpm p[:bpm] || get(:bpm)
-  use_synth (p[:synth] || ":bass_foundation").to_sym
-  ns = p[:notes] || [:c2, :c2, :as1, :as1]
+  use_synth s2sym(p[:syn] || :bass_foundation)
+  ns = (p[:ns] || [:c2, :c2, :as1, :as1]).map { |n| s2sym(n) }
   ns.each do |n|
-    play n.to_sym, amp: (p[:amp] || 0.8) * s[:v] * get(:mv), cutoff: s[:c], 
-         res: p[:res] || 0.3, release: p[:release] || 0.5
+    play n, amp: (p[:amp] || 0.8) * s[:v] * get(:mv), cutoff: s[:c], 
+         res: p[:res] || 0.3, release: p[:rel] || 0.5
     sleep 1
   end
 end
 
 define :pch do |p, s|
   use_bpm p[:bpm] || get(:bpm)
-  use_synth (p[:synth] || ":blade").to_sym
-  chs = p[:chords] || [[:c4, :e4, :g4], [:a3, :c4, :e4]]
+  use_synth s2sym(p[:syn] || :blade)
+  chs = p[:chs] || [[:c4, :e4, :g4], [:a3, :c4, :e4]]
+  chs = chs.map { |ch| ch.map { |n| s2sym(n) } }
   chs.each do |ch|
-    play ch.map(&:to_sym), amp: (p[:amp] || 0.6) * s[:v] * get(:mv), cutoff: s[:c],
-         attack: p[:attack] || 0.1, release: p[:release] || 1.0
+    play ch, amp: (p[:amp] || 0.6) * s[:v] * get(:mv), cutoff: s[:c],
+         attack: p[:atk] || 0.1, release: p[:rel] || 1.0
     sleep 2
   end
 end
 
 define :pl do |p, s|
   use_bpm p[:bpm] || get(:bpm)
-  use_synth (p[:synth] || ":blade").to_sym
-  ns = p[:notes] || [:c4, :e4, :g4, :a4]
+  use_synth s2sym(p[:syn] || :blade)
+  ns = (p[:ns] || [:c4, :e4, :g4, :a4]).map { |n| s2sym(n) }
   ns.each do |n|
-    play n.to_sym, amp: (p[:amp] || 0.6) * s[:v] * get(:mv), cutoff: s[:c],
-         attack: p[:attack] || 0.01, release: p[:release] || 0.3
-    sleep p[:note_duration] || 0.5
+    play n, amp: (p[:amp] || 0.6) * s[:v] * get(:mv), cutoff: s[:c],
+         attack: p[:atk] || 0.01, release: p[:rel] || 0.3
+    sleep p[:nd] || 0.5
   end
 end
 
 define :par do |p, s|
   use_bpm p[:bpm] || get(:bpm)
-  use_synth (p[:synth] || ":pluck").to_sym
-  ns = p[:notes] || [:c4, :e4, :g4, :c5]
-  sp = p[:speed] || 0.25
+  use_synth s2sym(p[:syn] || :pluck)
+  ns = (p[:ns] || [:c4, :e4, :g4, :c5]).map { |n| s2sym(n) }
+  sp = p[:spd] || 0.25
   ns.each do |n|
-    play n.to_sym, amp: (p[:amp] || 0.5) * s[:v] * get(:mv), cutoff: s[:c],
-         release: p[:release] || 0.2
+    play n, amp: (p[:amp] || 0.5) * s[:v] * get(:mv), cutoff: s[:c], release: p[:rel] || 0.2
     sleep sp
   end
 end
 
 define :ppad do |p, s|
   use_bpm p[:bpm] || get(:bpm)
-  use_synth (p[:synth] || ":hollow").to_sym
-  ns = p[:notes] || [:c3, :e3, :g3]
-  with_fx :reverb, room: p[:reverb] || 0.7 do
-    play ns.map(&:to_sym), amp: (p[:amp] || 0.4) * s[:v] * get(:mv), cutoff: s[:c],
-         attack: p[:attack] || 1.0, sustain: p[:sustain] || 2.0, release: p[:release] || 2.0
-    sleep p[:duration_bars] || 4
+  use_synth s2sym(p[:syn] || :hollow)
+  ns = (p[:ns] || [:c3, :e3, :g3]).map { |n| s2sym(n) }
+  with_fx :reverb, room: p[:rev] || 0.7 do
+    play ns, amp: (p[:amp] || 0.4) * s[:v] * get(:mv), cutoff: s[:c],
+         attack: p[:atk] || 1.0, sustain: p[:sus] || 2.0, release: p[:rel] || 2.0
+    sleep p[:db] || 4
   end
 end
 
 define :pr do |p, s|
   use_bpm p[:bpm] || get(:bpm)
   use_synth :noise
-  db = p[:duration_bars] || 8
+  db = p[:db] || 8
   st = db * 16
   st.times do |i|
     pg = i.to_f / st
@@ -145,40 +166,67 @@ end
 
 define :pam do |p, s|
   use_bpm p[:bpm] || get(:bpm)
-  use_synth (p[:synth] || ":dark_ambience").to_sym
-  with_fx :reverb, room: p[:reverb] || 0.9 do
-    play (p[:root_note] || :c2).to_sym, amp: (p[:amp] || 0.3) * s[:v] * get(:mv),
-         cutoff: s[:c], attack: 2, sustain: p[:duration_bars] || 4, release: 2
-    sleep p[:duration_bars] || 4
+  use_synth s2sym(p[:syn] || :dark_ambience)
+  rn = s2sym(p[:rn] || :c2)
+  with_fx :reverb, room: p[:rev] || 0.9 do
+    play rn, amp: (p[:amp] || 0.3) * s[:v] * get(:mv),
+         cutoff: s[:c], attack: 2, sustain: p[:db] || 4, release: 2
+    sleep p[:db] || 4
   end
 end
 
-define :ptex do |p, s|
+define :ptx do |p, s|
   use_bpm p[:bpm] || get(:bpm)
-  use_synth (p[:synth] || ":blade").to_sym
-  
-  with_fx :reverb, room: p[:reverb] || 0.7 do
+  use_synth s2sym(p[:syn] || :blade)
+  ns = p[:ns] ? (p[:ns].is_a?(Array) ? p[:ns].map { |n| s2sym(n) } : s2sym(p[:ns])) : :c3
+  with_fx :reverb, room: p[:rev] || 0.7 do
     with_fx :lpf, cutoff: s[:c] do
-      play p[:notes].map(&:to_sym), 
-        amp: (p[:amp] || 0.4) * s[:v],
-        attack: p[:attack] || 0.5,
-        sustain: p[:sustain] || 3.0,
-        release: p[:release] || 1.0
-      sleep p[:duration_bars] || 8
+      play ns, amp: (p[:amp] || 0.4) * s[:v] * get(:mv),
+           attack: p[:atk] || 0.5, sustain: p[:sus] || 3.0, release: p[:rel] || 1.0
+      sleep p[:db] || 8
     end
   end
 end
 
-define :stop_seg do |tn|
-  get(:tk).delete(tn)
+define :stg do |tn|
+  tks = get(:tk)
+  new_tks = []
+  tks.each do |t|
+    if t[:n] == tn
+      new_tks << {n: t[:n], t: t[:t], p: t[:p], v: t[:v], c: t[:c], a: false}
+    else
+      new_tks << t
+    end
+  end
+  set :tk, new_tks
 end
 
-define :set_p do |tn, pn, pv|
-  get(:tk)[tn][pn.to_sym] = pv if get(:tk)[tn]
+define :stp do |tn, pn, pv|
+  tks = get(:tk)
+  new_tks = []
+  tks.each do |t|
+    if t[:n] == tn
+      new_v = t[:v]
+      new_c = t[:c]
+      new_p = t[:p]
+      
+      case pn
+      when "vol"; new_v = pv.to_f
+      when "cut"; new_c = pv.to_f
+      else
+        new_p = t[:p].dup
+        new_p[pn.to_sym] = pv
+      end
+      
+      new_tks << {n: t[:n], t: t[:t], p: new_p, v: new_v, c: new_c, a: t[:a]}
+    else
+      new_tks << t
+    end
+  end
+  set :tk, new_tks
 end
 
-
-# 极简变量名：
+# 变量名压缩
 # tk = tracks
 # bpm = BPM
 # mv = master_volume
@@ -188,7 +236,23 @@ end
 # s = state
 # p = params
 
-# 函数命名压缩：
+# 参数名压缩
+# :volume -> :vol
+# :cutoff -> :cut
+# :duration_bars -> :db
+# :pattern -> :pt
+# :synth -> :syn
+# :notes -> :ns
+# :chords -> :chs
+# :attack -> :atk
+# :release -> :rel
+# :sustain -> :sus
+# :reverb -> :rev
+# :root_note -> :rn
+# :note_duration -> :nd
+# :speed -> :spd
+
+# 函数名压缩
 # pk = play_kick
 # ps = play_snare
 # ph = play_hihat
@@ -200,3 +264,16 @@ end
 # pr = play_riser
 # pam = play_ambient
 # ptex = play_texture
+
+# 类型名压缩
+# "kick_pattern" -> "kick"
+# "snare_pattern" -> "snare"
+# "hihat_pattern" -> "hat"
+# "bass_line" -> "bass"
+# "chord_progression" -> "chord"
+# "lead_melody" -> "lead"
+# "arpeggio" -> "arp"
+# "pad" -> "pad"
+# "riser" -> "rise"
+# "ambient_layer" -> "amb"
+# "texture" -> "tex"
