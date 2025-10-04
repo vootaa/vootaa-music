@@ -148,7 +148,7 @@
       "sub_type": "bass_line",
       "playback_params": {
         "notes": ["c2", "c2", "as1", "g1"],
-        "synth": ":fm_bass",
+        "synth": ":fm",
         "amp": 0.75,
         "cutoff": 88,
         "res": 0.2,
