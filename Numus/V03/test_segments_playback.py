@@ -249,7 +249,7 @@ if __name__ == "__main__":
     
     # 初始化
     player = SegmentPlayer()
-    library = SegmentLibrary("./segments")
+    library = SegmentLibrary("../segments")
     
     # 依次测试各类型
     test_rhythm_segments(player, library)
