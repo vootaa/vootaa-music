@@ -12,6 +12,7 @@ import json
 class SegmentCategory(Enum):
     """Segment大类"""
     RHYTHM = "rhythm"
+    BASS = "bass"
     HARMONY = "harmony"
     MELODY = "melody"
     TEXTURE = "texture"

@@ -13,7 +13,7 @@ from StandardSegment import StandardSegment, SegmentCategory, SegmentSubType
 class SegmentLibrary:
     """Segment素材库管理器"""
     
-    def __init__(self, segments_dir: str = "./segments"):
+    def __init__(self, segments_dir: str = "../segments"):
         """
         初始化Segment库
         
@@ -23,11 +23,11 @@ class SegmentLibrary:
         self.segments_dir = Path(segments_dir)
         self.segments: Dict[str, StandardSegment] = {}
         
-        # 索引结构
+        # 索引结构 - 修复：by_energy 使用 defaultdict(set) 而非 list
         self.by_category: Dict[SegmentCategory, List[str]] = defaultdict(list)
         self.by_subtype: Dict[SegmentSubType, List[str]] = defaultdict(list)
         self.by_section: Dict[str, List[str]] = defaultdict(list)
-        self.by_energy: Dict[str, List[str]] = defaultdict(list)
+        self.by_energy: Dict[str, Set[str]] = defaultdict(set)
         self.by_tags: Dict[str, Set[str]] = defaultdict(set)
         
         # 加载所有segments
@@ -44,7 +44,8 @@ class SegmentLibrary:
             "harmony.json",
             "bass.json",
             "fx.json",
-            "atmosphere.json"
+            "atmosphere.json",
+            "texture.json"
         ]
         
         for filename in json_files:
@@ -120,7 +121,7 @@ class SegmentLibrary:
         for section in segment.metadata.suitable_sections:
             self.by_section[section].append(seg_id)
         
-        # 按能量等级索引
+        # 按能量等级索引 - 修复：使用 set 的 add() 方法
         energy = segment.metadata.energy_level
         if energy < 0.3:
             self.by_energy["low"].add(seg_id)

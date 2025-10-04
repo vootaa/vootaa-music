@@ -153,6 +153,22 @@ define :pam do |p, s|
   end
 end
 
+define :ptex do |p, s|
+  use_bpm p[:bpm] || get(:bpm)
+  use_synth (p[:synth] || ":blade").to_sym
+  
+  with_fx :reverb, room: p[:reverb] || 0.7 do
+    with_fx :lpf, cutoff: s[:c] do
+      play p[:notes].map(&:to_sym), 
+        amp: (p[:amp] || 0.4) * s[:v],
+        attack: p[:attack] || 0.5,
+        sustain: p[:sustain] || 3.0,
+        release: p[:release] || 1.0
+      sleep p[:duration_bars] || 8
+    end
+  end
+end
+
 define :stop_seg do |tn|
   get(:tk).delete(tn)
 end
@@ -183,3 +199,4 @@ end
 # ppad = play_pad
 # pr = play_riser
 # pam = play_ambient
+# ptex = play_texture

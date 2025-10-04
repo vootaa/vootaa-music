@@ -1,0 +1,204 @@
+{
+  "library_info": {
+    "name": "Numus Texture Library",
+    "version": "3.0",
+    "category": "texture",
+    "total_segments": 7
+  },
+  "segments": [
+    {
+      "id": "TEX_atmos_layer__5a8d3f2c",
+      "name": "Atmospheric Texture Layer",
+      "category": "texture",
+      "sub_type": "synth_texture",
+      "playback_params": {
+        "synth": ":blade",
+        "notes": ["c3", "e3", "g3"],
+        "amp": 0.4,
+        "cutoff_min": 70,
+        "cutoff_max": 120,
+        "filter_automation": "sine_lfo",
+        "lfo_rate": 0.25,
+        "attack": 0.5,
+        "sustain": 3.0,
+        "release": 1.0,
+        "reverb": 0.7,
+        "duration_bars": 8
+      },
+      "metadata": {
+        "energy_level": 0.4,
+        "complexity": 0.6,
+        "suitable_sections": ["verse", "breakdown", "build_up"],
+        "mood_tags": ["evolving", "atmospheric", "layered"],
+        "bpm_range": [118, 130],
+        "note": "Filter LFO creates evolving texture"
+      }
+    },
+    {
+      "id": "TEX_cosmic_evo__9d3f7a2e",
+      "name": "Cosmic EDM Evolution v3",
+      "category": "texture",
+      "sub_type": "synth_texture",
+      "playback_params": {
+        "synth": ":prophet",
+        "notes": ["c3", "e3", "g3", "b3"],
+        "amp": 0.5,
+        "cutoff_min": 60,
+        "cutoff_max": 130,
+        "filter_automation": "exponential_rise",
+        "detune": 0.2,
+        "attack": 1.0,
+        "sustain": 4.0,
+        "release": 2.0,
+        "reverb": 0.8,
+        "duration_bars": 16
+      },
+      "metadata": {
+        "energy_level": 0.6,
+        "complexity": 0.8,
+        "suitable_sections": ["build_up", "climax"],
+        "mood_tags": ["cosmic", "evolving", "epic", "spacey"],
+        "bpm_range": [125, 135],
+        "note": "Exponential filter rise creates cosmic evolution"
+      }
+    },
+    {
+      "id": "TEX_evolve_layers__6a8e2d1f",
+      "name": "Evolving EDM Layers",
+      "category": "texture",
+      "sub_type": "synth_texture",
+      "playback_params": {
+        "synth": ":blade",
+        "notes": ["c4", "e4", "g4"],
+        "amp": 0.45,
+        "cutoff_min": 80,
+        "cutoff_max": 125,
+        "filter_automation": "triangle_lfo",
+        "lfo_rate": 0.5,
+        "detune": 0.15,
+        "attack": 0.3,
+        "sustain": 2.5,
+        "release": 1.5,
+        "reverb": 0.6,
+        "duration_bars": 8
+      },
+      "metadata": {
+        "energy_level": 0.55,
+        "complexity": 0.7,
+        "suitable_sections": ["verse", "build_up", "drop"],
+        "mood_tags": ["layered", "evolving", "rhythmic"],
+        "bpm_range": [120, 132],
+        "note": "Triangle LFO on filter creates evolving layers"
+      }
+    },
+    {
+      "id": "TEX_lofi_house__4c1e8d9a",
+      "name": "Lofi House Texture",
+      "category": "texture",
+      "sub_type": "synth_texture",
+      "playback_params": {
+        "synth": ":dull_bell",
+        "notes": ["c3", "e3", "g3"],
+        "amp": 0.35,
+        "cutoff": 90,
+        "attack": 0.2,
+        "sustain": 1.5,
+        "release": 0.8,
+        "reverb": 0.5,
+        "bitcrush": 8,
+        "duration_bars": 4
+      },
+      "metadata": {
+        "energy_level": 0.3,
+        "complexity": 0.4,
+        "suitable_sections": ["intro", "verse", "breakdown"],
+        "mood_tags": ["lofi", "warm", "nostalgic", "house"],
+        "bpm_range": [115, 125],
+        "note": "Bitcrush effect creates lofi character"
+      }
+    },
+    {
+      "id": "TEX_ocean_waves__7e2c9a3f",
+      "name": "Math Ocean Waves Texture",
+      "category": "texture",
+      "sub_type": "noise_layer",
+      "playback_params": {
+        "synth": ":noise",
+        "amp": 0.3,
+        "cutoff_min": 50,
+        "cutoff_max": 100,
+        "filter_automation": "sine_lfo",
+        "lfo_rate": 0.125,
+        "highpass": 60,
+        "reverb": 0.85,
+        "duration_bars": 16
+      },
+      "metadata": {
+        "energy_level": 0.25,
+        "complexity": 0.5,
+        "suitable_sections": ["intro", "breakdown", "outro"],
+        "mood_tags": ["organic", "flowing", "mathematical", "natural"],
+        "bpm_range": [110, 125],
+        "note": "Slow sine LFO simulates wave-like motion"
+      }
+    },
+    {
+      "id": "TEX_evo_synth__3a9d7e2f",
+      "name": "Texture Evolving Synth",
+      "category": "texture",
+      "sub_type": "synth_texture",
+      "playback_params": {
+        "synth": ":prophet",
+        "notes": ["c3", "ds3", "g3"],
+        "amp": 0.5,
+        "cutoff_min": 70,
+        "cutoff_max": 115,
+        "filter_automation": "saw_lfo",
+        "lfo_rate": 0.33,
+        "detune": 0.25,
+        "attack": 0.8,
+        "sustain": 3.0,
+        "release": 1.5,
+        "reverb": 0.7,
+        "duration_bars": 12
+      },
+      "metadata": {
+        "energy_level": 0.5,
+        "complexity": 0.7,
+        "suitable_sections": ["verse", "build_up"],
+        "mood_tags": ["evolving", "textural", "synthetic"],
+        "bpm_range": [118, 130],
+        "note": "Saw wave LFO creates evolving texture"
+      }
+    },
+    {
+      "id": "TEX_triple_helix__8d2f9e1c",
+      "name": "Triple Helix Pattern Texture",
+      "category": "texture",
+      "sub_type": "synth_texture",
+      "playback_params": {
+        "synth": ":blade",
+        "notes": ["c4", "e4", "g4", "c5"],
+        "amp": 0.4,
+        "cutoff_min": 85,
+        "cutoff_max": 120,
+        "filter_automation": "triple_sine_lfo",
+        "lfo_rate": 0.167,
+        "detune": 0.3,
+        "attack": 0.4,
+        "sustain": 2.0,
+        "release": 1.0,
+        "reverb": 0.75,
+        "duration_bars": 8
+      },
+      "metadata": {
+        "energy_level": 0.55,
+        "complexity": 0.9,
+        "suitable_sections": ["build_up", "climax", "drop"],
+        "mood_tags": ["complex", "mathematical", "intertwining", "algorithmic"],
+        "bpm_range": [125, 135],
+        "note": "Three phase-shifted LFOs create helix-like pattern"
+      }
+    }
+  ]
+}

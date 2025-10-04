@@ -13,7 +13,7 @@ def test_library_loading():
     print("测试1: Segment库加载")
     print("="*80)
     
-    library = SegmentLibrary("./segments")
+    library = SegmentLibrary("../segments")
     
     stats = library.get_statistics()
     print(f"\n总Segments数量: {stats['total_segments']}")
