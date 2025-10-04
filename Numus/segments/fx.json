@@ -78,12 +78,12 @@
       "category": "fx",
       "sub_type": "impact",
       "playback_params": {
-        "synth": ":prophet",
+        "synth": ":bd_boom",
         "notes": ["c2"],
-        "amp": 1.8,
+        "amp": 2.0,
         "cutoff": 120,
         "attack": 0.01,
-        "release": 0.8,
+        "release": 1.5,
         "distortion": 0.5,
         "reverb": 0.4,
         "duration_bars": 0.5

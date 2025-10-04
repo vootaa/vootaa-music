@@ -80,7 +80,7 @@
       "sub_type": "bass_line",
       "playback_params": {
         "notes": ["c2", "e2", "g2", "a2"],
-        "synth": ":bass_voxy",
+        "synth": ":bass_highend",
         "amp": 0.7,
         "cutoff": 90,
         "res": 0.25,
@@ -148,7 +148,7 @@
       "sub_type": "bass_line",
       "playback_params": {
         "notes": ["c2", "c2", "as1", "g1"],
-        "synth": ":bass_voxy",
+        "synth": ":fm_bass",
         "amp": 0.75,
         "cutoff": 88,
         "res": 0.2,
