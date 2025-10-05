@@ -1,12 +1,12 @@
 class VolumeController
-  def initialize(energy_system, math_engine, cycle_length)
+  def initialize(energy_system = nil, math_engine = nil, cycle_length = nil)
     @energy_system = energy_system
     @math = math_engine
     @cycle_length = cycle_length
   end
   
-  def calculate_fade_params(fade_in_dur, fade_out_dur, perf_cycles)
-    total_duration = @cycle_length * perf_cycles
+  def calculate_fade_params(fade_in_dur, fade_out_dur, perf_cycles, cycle_length = 60, math_engine = nil)
+    total_duration = cycle_length * perf_cycles
     
     # Smart fade selection based on golden ratio
     fade_modes = [
@@ -16,7 +16,12 @@ class VolumeController
       { in: :exponential, out: :cubic }
     ]
     
-    selected = fade_modes[@math.get_next(:golden) % fade_modes.length]
+    # 如果没有 math_engine，使用简单随机
+    if math_engine
+      selected = fade_modes[math_engine.get_next(:golden) % fade_modes.length]
+    else
+      selected = fade_modes.sample
+    end
     
     {
       fade_in: fade_in_dur,

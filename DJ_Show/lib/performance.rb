@@ -8,7 +8,7 @@ module Performance
       @energy_system = EnergyCurve.new(config[:cycle_length], config[:golden_ratio])
       @patterns = DrummerPatterns.new
       @scales = ScaleModes.new
-      @volume_ctrl = VolumeController.new
+      @volume_ctrl = VolumeController.new(@energy_system, @math, config[:cycle_length])
       @performance_start = Time.now
       @previous_energy = 0.0
       @cycle_number = 0
