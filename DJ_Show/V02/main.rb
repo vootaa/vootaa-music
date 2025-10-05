@@ -49,17 +49,17 @@ $harmony_engine = HarmonyEngine.new($config, $energy, $irr)
 $piw = PIWrapper.new
 
 # 配置能量曲线（6章节）
-$energy.add_segment(0, 40, 20, 65, :exponential)      # Ch1: 混沌初开
+$energy.add_segment(0, 40, 20, 65, :exponential)      # Ch1
 $energy.add_segment(40, 80, 65, 50, :linear)          # Ch1: 淡出
-$energy.add_segment(80, 120, 50, 75, :exponential)    # Ch2: 数学觉醒
+$energy.add_segment(80, 120, 50, 75, :exponential)    # Ch2
 $energy.add_segment(120, 160, 75, 60, :linear)        # Ch2: 淡出
-$energy.add_segment(160, 200, 60, 80, :exponential)   # Ch3: 黄金分割
+$energy.add_segment(160, 200, 60, 80, :exponential)   # Ch3
 $energy.add_segment(200, 240, 80, 50, :logistic)      # Ch3: 淡出
-$energy.add_segment(240, 280, 50, 70, :exponential)   # Ch4: 调和共振
+$energy.add_segment(240, 280, 50, 70, :exponential)   # Ch4
 $energy.add_segment(280, 320, 70, 55, :linear)        # Ch4: 淡出
-$energy.add_segment(320, 360, 55, 85, :exponential)   # Ch5: 无理数狂舞
+$energy.add_segment(320, 360, 55, 85, :exponential)   # Ch5
 $energy.add_segment(360, 400, 85, 40, :logistic)      # Ch5: 淡出
-$energy.add_segment(400, 464, 40, 60, :linear)        # Ch6: 宇宙归一
+$energy.add_segment(400, 464, 40, 60, :linear)        # Ch6
 $energy.add_segment(464, 496, 60, 10, :logistic)      # Ch6: 终极淡出
 
 puts "🎭 V02 系统初始化完成"

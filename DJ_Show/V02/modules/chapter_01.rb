@@ -1,4 +1,4 @@
-# Chapter 1：Am Aeolian（0-80 小节）- 完整集成版
+# Chapter 1：Am Aeolian（0-80 小节）
 
 class Chapter01
   def self.run
