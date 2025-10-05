@@ -4,9 +4,9 @@
 # ============================================================
 
 # Performance Parameters
-CYCLE_LENGTH = 60          # Seconds per major energy cycle
+CYCLE_LENGTH = 75         # Seconds per major energy cycle
 BASE_BPM = 90             # Beats per minute
-SET_VOLUME = 5            # Master volume (1-10)
+SET_VOLUME = 7            # Master volume (1-10)
 
 # Groove/Structure 
 BEATS_PER_BAR = 4
@@ -28,11 +28,11 @@ MELODY_DENSITY = 0.4      # 0.0 = rare, 1.0 = constant
 FILL_THRESHOLD = 0.15     # Energy delta to trigger fills
 
 # Volume Balance
-PULSE_VOLUME = 2.0
-DRUMMER_VOLUME = 2.5
+PULSE_VOLUME = 1.2
+DRUMMER_VOLUME = 1.8
 LOOP_VOLUME = 1.5
 MELODY_VOLUME = 0.6
-AMBIENT_VOLUME = 0.3
+AMBIENT_VOLUME = 0.35
 FILL_VOLUME = 2.5
 
 # Performance Duration
@@ -203,18 +203,18 @@ DRUMMER_REST_SLEEP = 2
 # (Normalized based on actual sample loudness)
 SAMPLE_VOLUMES = {
   # Kick drums (generally loud, reduce slightly)
-  bd_fat: 0.9,
-  bd_haus: 1.0,
-  bd_808: 1.1,
+  bd_fat: 0.4,
+  bd_haus: 0.5,
+  bd_808: 0.6,
   
   # Toms (balanced)
-  drum_tom_hi_hard: 1.0,
-  drum_tom_mid_hard: 1.0,
-  drum_tom_lo_hard: 1.0,
+  drum_tom_hi_hard: 0.75,
+  drum_tom_mid_hard: 0.7,
+  drum_tom_lo_hard: 0.65,
   
   # Snares (can be sharp, moderate)
-  drum_snare_hard: 0.95,
-  drum_snare_soft: 1.0,
+  drum_snare_hard: 0.75,
+  drum_snare_soft: 0.85,
   sn_dolf: 0.9,
   
   # Cymbals (often too loud, reduce)
