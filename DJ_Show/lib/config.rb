@@ -267,7 +267,7 @@ SAMPLE_VOLUMES = {
   loop_amen: 0.8,
   loop_compus: 0.9,
   loop_tabla: 1.0,
-  loop_safari: 0.85,
+  loop_safari: 1.2,
   
   # Ambient (very quiet, boost significantly)
   ambi_choir: 1.8,
