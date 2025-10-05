@@ -1,62 +1,80 @@
-# 辅助函数：欧几里得节奏、平滑插值、音阶映射等
+# Preset Manager - 预设管理
+# 管理不同章节的音色、效果器预设
 
-class Helpers
-  # 欧几里得节奏生成 E(n, k, rotation)
-  def self.euclidean(steps, pulses, rotation = 0)
-    pattern = Array.new(steps, 0)
-    slope = pulses.to_f / steps
+class PresetManager
+  PRESETS = {
+    # 第一章：混沌初开
+    chapter_01: {
+      synth: :dark_ambience,
+      bass: { amp: 0.6, cutoff: 70, res: 0.7 },
+      drums: { style: :minimal, density: 0.3 },
+      fx: { reverb: 0.8, delay: 0.4 }
+    },
     
-    pulses.times do |i|
-      pattern[(i / slope).floor] = 1
-    end
+    # 第二章：数学觉醒
+    chapter_02: {
+      synth: :saw,
+      bass: { amp: 0.8, cutoff: 85, res: 0.5 },
+      drums: { style: :techno, density: 0.6 },
+      fx: { reverb: 0.5, delay: 0.6 }
+    },
     
-    # 旋转
-    pattern.rotate(rotation)
+    # 第三章：黄金分割
+    chapter_03: {
+      synth: :blade,
+      bass: { amp: 0.9, cutoff: 95, res: 0.4 },
+      drums: { style: :breakbeat, density: 0.8 },
+      fx: { reverb: 0.4, delay: 0.5 }
+    },
+    
+    # 第四章：调和共振
+    chapter_04: {
+      synth: :prophet,
+      bass: { amp: 0.85, cutoff: 90, res: 0.5 },
+      drums: { style: :house, density: 0.7 },
+      fx: { reverb: 0.6, delay: 0.3 }
+    },
+    
+    # 第五章：无理数狂舞
+    chapter_05: {
+      synth: :tb303,
+      bass: { amp: 1.0, cutoff: 110, res: 0.3 },
+      drums: { style: :hard_techno, density: 1.0 },
+      fx: { reverb: 0.3, delay: 0.7 }
+    },
+    
+    # 第六章：宇宙归一
+    chapter_06: {
+      synth: :fm,
+      bass: { amp: 0.5, cutoff: 80, res: 0.6 },
+      drums: { style: :ambient, density: 0.2 },
+      fx: { reverb: 0.9, delay: 0.8 }
+    }
+  }
+  
+  def initialize
+    @current_preset = nil
   end
   
-  # 平滑插值（线性/指数/S型）
-  def self.interpolate(start_val, end_val, progress, curve_type = :linear)
-    case curve_type
-    when :linear
-      start_val + (end_val - start_val) * progress
-    when :exponential
-      start_val + (end_val - start_val) * (progress ** 2)
-    when :sigmoid
-      k = 10.0
-      s = 1.0 / (1.0 + Math.exp(-k * (progress - 0.5)))
-      start_val + (end_val - start_val) * s
+  # 加载预设
+  def load(preset_name)
+    if PRESETS.key?(preset_name)
+      @current_preset = PRESETS[preset_name]
+      puts "🎚️  加载预设: #{preset_name}"
+      @current_preset
     else
-      start_val + (end_val - start_val) * progress
+      puts "⚠️  预设不存在: #{preset_name}"
+      nil
     end
   end
   
-  # 将能量映射到离散档位（如：低/中/高）
-  def self.energy_to_tier(energy)
-    case energy
-    when 0..40
-      :low
-    when 41..70
-      :medium
-    else
-      :high
-    end
+  # 获取当前预设
+  def current
+    @current_preset
   end
   
-  # MIDI 音符号转 Sonic Pi 音符
-  def self.midi_to_note(midi_number)
-    note_names = [:c, :cs, :d, :ds, :e, :f, :fs, :g, :gs, :a, :as, :b]
-    octave = (midi_number / 12) - 1
-    note_index = midi_number % 12
-    "#{note_names[note_index]}#{octave}".to_sym
-  end
-  
-  # 量化到最近的 1/16 音符（防止时值漂移）
-  def self.quantize_to_sixteenth(value)
-    (value * 4).round / 4.0
-  end
-  
-  # 无理数步进取模（确定性伪随机）
-  def self.irrational_mod(counter, ratio, max_value)
-    ((counter * ratio) % 1.0 * max_value).floor
+  # 获取特定参数
+  def get(category)
+    @current_preset ? @current_preset[category] : nil
   end
 end

@@ -14,21 +14,27 @@ class FXBus
   def start
     # Bus A（章节 A 的总线）
     in_thread do
-      live_loop :fx_bus_a do
-        params = sync :xfade_params
-        @bus_a_vol = params[:vol_a] || 1.0
-        @hpf_a = params[:hpf_a] || 120
-        sleep 0.05  # 高频更新
+      loop do
+        begin
+          params = sync :xfade_params
+          @bus_a_vol = params[:vol_a] || 1.0
+          @hpf_a = params[:hpf_a] || 120
+        rescue
+          sleep 0.05
+        end
       end
     end
     
     # Bus B（章节 B 的总线）
     in_thread do
-      live_loop :fx_bus_b do
-        params = sync :xfade_params
-        @bus_b_vol = params[:vol_b] || 0.0
-        @lpf_b = params[:lpf_b] || 20000
-        sleep 0.05
+      loop do
+        begin
+          params = sync :xfade_params
+          @bus_b_vol = params[:vol_b] || 0.0
+          @lpf_b = params[:lpf_b] || 20000
+        rescue
+          sleep 0.05
+        end
       end
     end
   end
@@ -53,11 +59,5 @@ class FXBus
         end
       end
     end
-  end
-  
-  # 停止总线
-  def stop_all
-    stop :fx_bus_a
-    stop :fx_bus_b
   end
 end

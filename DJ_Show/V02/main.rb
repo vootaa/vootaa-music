@@ -1,19 +1,23 @@
-# V02 主程序：完整版
+# V02 主程序 - Sonic Pi DJ Show
+# 架构：使用 load 加载外部模块（遵循V01成功经验）
 
+# ================================
+# 核心库加载（使用 load）
+# ================================
 load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/config.rb"
-load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/irrational_engine.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/helpers.rb"
 load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/energy_mapper.rb"
-load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/master_clock.rb"
 load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/drum_patterns.rb"
 load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/drum_engine.rb"
-load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/transition_system.rb"
 load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/bass_engine.rb"
 load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/harmony_engine.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/irrational_engine.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/transition_system.rb"
 load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/fx_bus.rb"
-load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/performance_monitor.rb"
-load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/helpers.rb"
-load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/preset_manager.rb"
 
+# ================================
+# 章节模块加载
+# ================================
 load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/modules/pi_wrapper.rb"
 load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/modules/chapter_01.rb"
 load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/modules/chapter_02.rb"
@@ -22,63 +26,95 @@ load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/modules/chapter_04.rb"
 load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/modules/chapter_05.rb"
 load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/modules/chapter_06.rb"
 
+# ================================
+# 全局初始化
+# ================================
 $config = V02Config.new
-$irr_engine = IrrationalEngine.new($config)
+use_bpm $config.bpm
+use_debug false
+
+# 创建核心对象
 $energy = EnergyMapper.new
 $patterns = DrumPatterns.new
-$drum_engine = DrumEngine.new($config, $patterns, $energy, $irr_engine)
+$irr = IrrationalEngine.new($config)
 $transition = TransitionSystem.new($config)
-$bass_engine = BassEngine.new($config, $energy, $irr_engine)
-$harmony_engine = HarmonyEngine.new($config, $energy, $irr_engine)
-$piw = PIWrapper.new
-$preset_manager = PresetManager.new($config)
-
-use_bpm $config.bpm
-
-$energy.add_segment(0, 16, 30, 40, :linear)
-$energy.add_segment(16, 32, 40, 60, :exponential)
-$energy.add_segment(32, 64, 60, 65, :linear)
-$energy.add_segment(64, 80, 65, 50, :linear)
-$energy.add_segment(80, 96, 50, 65, :linear)
-$energy.add_segment(96, 112, 65, 75, :exponential)
-$energy.add_segment(112, 144, 75, 75, :linear)
-$energy.add_segment(144, 160, 75, 60, :linear)
-$energy.add_segment(160, 240, 60, 80, :exponential)
-$energy.add_segment(240, 320, 70, 70, :linear)
-$energy.add_segment(320, 400, 65, 65, :linear)
-$energy.add_segment(400, 496, 60, 40, :logistic)
-
-$clock = MasterClock.new($config.bpm, $config.total_bars)
 $fx_bus = FXBus.new($config, $transition)
-$monitor = PerformanceMonitor.new($config, $clock, $energy)
 
-$fx_bus.start
-in_thread { $clock.start }
-in_thread { $monitor.start }
+# 初始化引擎
+$drum_engine = DrumEngine.new($config, $patterns, $energy, $irr)
+$bass_engine = BassEngine.new($config, $energy, $irr)
+$harmony_engine = HarmonyEngine.new($config, $energy, $irr)
 
-in_thread { Chapter01.run }
-in_thread { Chapter02.run }
-in_thread { Chapter03.run }
-in_thread { Chapter04.run }
-in_thread { Chapter05.run }
-in_thread { Chapter06.run }
+# 初始化 PIWrapper
+$piw = PIWrapper.new
 
-in_thread { $transition.execute_transition(:ch1, :ch2, 76) }
-in_thread { $transition.execute_transition(:ch2, :ch3, 156) }
-in_thread { $transition.execute_transition(:ch3, :ch4, 236) }
-in_thread { $transition.execute_transition(:ch4, :ch5, 316) }
-in_thread { $transition.execute_transition(:ch5, :ch6, 396) }
+# 配置能量曲线（6章节）
+$energy.add_segment(0, 40, 20, 65, :exponential)      # Ch1: 混沌初开
+$energy.add_segment(40, 80, 65, 50, :linear)          # Ch1: 淡出
+$energy.add_segment(80, 120, 50, 75, :exponential)    # Ch2: 数学觉醒
+$energy.add_segment(120, 160, 75, 60, :linear)        # Ch2: 淡出
+$energy.add_segment(160, 200, 60, 80, :exponential)   # Ch3: 黄金分割
+$energy.add_segment(200, 240, 80, 50, :logistic)      # Ch3: 淡出
+$energy.add_segment(240, 280, 50, 70, :exponential)   # Ch4: 调和共振
+$energy.add_segment(280, 320, 70, 55, :linear)        # Ch4: 淡出
+$energy.add_segment(320, 360, 55, 85, :exponential)   # Ch5: 无理数狂舞
+$energy.add_segment(360, 400, 85, 40, :logistic)      # Ch5: 淡出
+$energy.add_segment(400, 464, 40, 60, :linear)        # Ch6: 宇宙归一
+$energy.add_segment(464, 496, 60, 10, :logistic)      # Ch6: 终极淡出
 
-live_loop :main_guardian do
-  sleep 16
-  if $clock.bar_count >= $config.total_bars
-    puts "=== V02 DJ Show Completed ==="
-    $drum_engine.stop_all
-    $bass_engine.stop_bass
-    $harmony_engine.stop_harmony
-    $piw.stop_all
-    $fx_bus.stop_all
-    $monitor.stop_monitor
-    stop
-  end
+puts "🎭 V02 系统初始化完成"
+puts "="*60
+
+# ================================
+# 主时钟（核心驱动）
+# ================================
+live_loop :master_clock do
+  cue :bar_tick, bar: tick
+  sleep 4  # 一小节 = 4拍
 end
+
+# ================================
+# FX总线监听器（启动）
+# ================================
+$fx_bus.start
+
+# ================================
+# 章节自动触发系统
+# ================================
+in_thread do
+  sleep 0.1
+  Chapter01.run  # 0-80 小节
+  Chapter02.run  # 80-160 小节
+  Chapter03.run  # 160-240 小节
+  Chapter04.run  # 240-320 小节
+  Chapter05.run  # 320-400 小节
+  Chapter06.run  # 400-496 小节
+end
+
+# ================================
+# 章节过渡控制器
+# ================================
+in_thread do
+  sleep 0.2
+  
+  # Ch1 → Ch2 (76-80小节)
+  $transition.execute_transition(:ch1, :ch2, 76)
+  
+  # Ch2 → Ch3 (156-160小节)
+  sleep 80 * 4
+  $transition.execute_transition(:ch2, :ch3, 156)
+  
+  # Ch3 → Ch4 (236-240小节)
+  sleep 80 * 4
+  $transition.execute_transition(:ch3, :ch4, 236)
+  
+  # Ch4 → Ch5 (316-320小节)
+  sleep 80 * 4
+  $transition.execute_transition(:ch4, :ch5, 316)
+  
+  # Ch5 → Ch6 (396-400小节)
+  sleep 80 * 4
+  $transition.execute_transition(:ch5, :ch6, 396)
+end
+
+puts "🎬 演出开始 - 总时长: #{$config.total_bars} 小节"
