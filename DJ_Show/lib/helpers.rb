@@ -33,15 +33,15 @@ module DrumHelpers
     else [0.0, 0.1, 0.3, 0.4, 0.6, 0.8]
     end
   end
+end
 
-  # Get calibrated sample volume
-  def self.get_sample_volume(sample_name)
-    config = get_performance_config
-    config[:sample_volumes][sample_name] || 1.0
-  end
+# Helper functions for performance
 
-  # Random integer in range (inclusive)
-  def self.rrand_i(min, max)
-    (rrand(min, max + 0.999)).to_i
-  end
+def get_sample_volume(sample_name)
+  config = get_performance_config
+  config[:sample_volumes][sample_name.to_sym] || 1.0
+end
+
+def rrand_i(min, max)
+  (rrand(min, max + 0.999)).to_i
 end
