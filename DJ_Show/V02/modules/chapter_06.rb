@@ -18,10 +18,10 @@ class Chapter06
       if bar >= 400 && bar < 416
         if bar == 400
           $fx_bus.with_bus_b do
-            in_thread { $pi.ocean(16, 8) }
+            in_thread { $piw.ocean(16, 8) }
             in_thread do
               sleep 4
-              $pi.ambient(:a2, :minor, 12, 6)
+              $piw.ambient(:a2, :minor, 12, 6)
             end
           end
         end
@@ -38,13 +38,13 @@ class Chapter06
       if bar >= 416 && bar < 432
         if bar == 416
           $fx_bus.with_bus_b do
-            in_thread { $pi.reich_phase(:a4, 16) }
+            in_thread { $piw.reich_phase(:a4, 16) }
           end
         end
         
         if bar == 424
           $fx_bus.with_bus_b do
-            in_thread { $pi.acid(:a2, 8, 60, 100) }
+            in_thread { $piw.acid(:a2, 8, 60, 100) }
           end
         end
       elsif bar >= 432
@@ -60,7 +60,7 @@ class Chapter06
       if bar >= 432 && bar < 464
         if bar == 432
           $fx_bus.with_bus_b do
-            in_thread { $pi.blip_rhythm(:a3, :minor_pentatonic, 32) }
+            in_thread { $piw.blip_rhythm(:a3, :minor_pentatonic, 32) }
           end
         end
       elsif bar >= 464
@@ -104,7 +104,7 @@ class Chapter06
         if bar >= 480 && bar < 488
           if bar == 480
             $fx_bus.with_bus_b do
-              in_thread { $pi.blimp_zones(:a2, :minor, 8) }
+              in_thread { $piw.blimp_zones(:a2, :minor, 8) }
             end
           end
         end
@@ -112,7 +112,7 @@ class Chapter06
         if bar >= 488 && bar < 496
           if bar == 488
             $fx_bus.with_bus_b do
-              in_thread { $pi.bach(:a2, :minor, 8) }
+              in_thread { $piw.bach(:a2, :minor, 8) }
             end
           end
         end

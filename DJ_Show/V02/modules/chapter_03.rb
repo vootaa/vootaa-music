@@ -21,10 +21,10 @@ class Chapter03
       if bar >= 160 && bar < 176
         if bar == 160
           $fx_bus.with_bus_a do
-            in_thread { $pi.ocean(16, 8) }
+            in_thread { $piw.ocean(16, 8) }
             in_thread do
               sleep 4
-              $pi.ambient_experiment(:g3, :aeolian, 12)
+              $piw.ambient_experiment(:g3, :aeolian, 12)
             end
           end
         end
@@ -42,13 +42,13 @@ class Chapter03
       if bar >= 176 && bar < 192
         if bar == 176
           $fx_bus.with_bus_a do
-            in_thread { $pi.reich_phase(:g4, 16) }
+            in_thread { $piw.reich_phase(:g4, 16) }
           end
         end
         
         if bar == 184
           $fx_bus.with_bus_a do
-            in_thread { $pi.acid(:g2, 8, 65, 105) }
+            in_thread { $piw.acid(:g2, 8, 65, 105) }
           end
         end
       elsif bar >= 192
@@ -65,13 +65,13 @@ class Chapter03
       if bar >= 192 && bar < 208
         if bar == 192
           $fx_bus.with_bus_a do
-            in_thread { $pi.blip_rhythm(:g3, :minor_pentatonic, 16) }
+            in_thread { $piw.blip_rhythm(:g3, :minor_pentatonic, 16) }
           end
         end
         
         if bar == 200
           $fx_bus.with_bus_a do
-            in_thread { $pi.wob_rhyth(:g1, 4) }
+            in_thread { $piw.wob_rhyth(:g1, 4) }
           end
         end
       elsif bar >= 208
@@ -119,7 +119,7 @@ class Chapter03
       if bar >= 224 && bar < 232
         if bar == 224
           $fx_bus.with_bus_a do
-            in_thread { $pi.driving_pulse(:g2, 8) }
+            in_thread { $piw.driving_pulse(:g2, 8) }
           end
         end
       elsif bar >= 232

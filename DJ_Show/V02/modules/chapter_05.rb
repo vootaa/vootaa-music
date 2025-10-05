@@ -17,7 +17,7 @@ class Chapter05
       if bar >= 320 && bar < 336
         if bar == 320
           $fx_bus.with_bus_a do
-            in_thread { $pi.ambient_experiment(:f3, :major, 16) }
+            in_thread { $piw.ambient_experiment(:f3, :major, 16) }
           end
         end
       elsif bar >= 336
@@ -33,13 +33,13 @@ class Chapter05
       if bar >= 336 && bar < 352
         if bar == 336
           $fx_bus.with_bus_a do
-            in_thread { $pi.reich_phase(:f4, 16) }
+            in_thread { $piw.reich_phase(:f4, 16) }
           end
         end
         
         if bar == 344
           $fx_bus.with_bus_a do
-            in_thread { $pi.acid(:f2, 8, 75, 110) }
+            in_thread { $piw.acid(:f2, 8, 75, 110) }
           end
         end
       elsif bar >= 352
@@ -55,7 +55,7 @@ class Chapter05
       if bar >= 352 && bar < 400
         if bar == 352
           $fx_bus.with_bus_a do
-            in_thread { $pi.blip_rhythm(:f3, :major, 48) }
+            in_thread { $piw.blip_rhythm(:f3, :major, 48) }
           end
         end
       elsif bar >= 400

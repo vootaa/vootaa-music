@@ -17,7 +17,7 @@ class Chapter04
       if bar >= 240 && bar < 256
         if bar == 240
           $fx_bus.with_bus_b do
-            in_thread { $pi.ambient(:c3, :major, 16, 8) }
+            in_thread { $piw.ambient(:c3, :major, 16, 8) }
           end
         end
       elsif bar >= 256
@@ -33,10 +33,10 @@ class Chapter04
       if bar >= 256 && bar < 272
         if bar == 256
           $fx_bus.with_bus_b do
-            in_thread { $pi.acid(:c2, 16, 70, 115) }
+            in_thread { $piw.acid(:c2, 16, 70, 115) }
             in_thread do
               sleep 8
-              $pi.ambient_experiment(:c3, :major, 8)
+              $piw.ambient_experiment(:c3, :major, 8)
             end
           end
         end
@@ -53,7 +53,7 @@ class Chapter04
       if bar >= 272 && bar < 320
         if bar == 272
           $fx_bus.with_bus_b do
-            in_thread { $pi.blip_rhythm(:c4, :major, 48) }
+            in_thread { $piw.blip_rhythm(:c4, :major, 48) }
           end
         end
       elsif bar >= 320

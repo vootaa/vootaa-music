@@ -24,8 +24,8 @@ class Chapter01
       if bar >= bar_start && bar < bar_end
         if bar == bar_start
           $fx_bus.with_bus_a do
-            in_thread { $pi.ambient(:a2, :minor, 16, 8) }
-            in_thread { $pi.ocean(16, 8) }
+            in_thread { $piw.ambient(:a2, :minor, 16, 8) }
+            in_thread { $piw.ocean(16, 8) }
           end
         end
       elsif bar >= bar_end
@@ -47,13 +47,13 @@ class Chapter01
       if bar >= bar_start && bar < bar_end
         if bar == bar_start
           $fx_bus.with_bus_a do
-            in_thread { $pi.reich_phase(:a4, 16) }
+            in_thread { $piw.reich_phase(:a4, 16) }
           end
         end
         
         if bar == bar_start + 4
           $fx_bus.with_bus_a do
-            in_thread { $pi.acid(:a2, 12, 60, 100) }
+            in_thread { $piw.acid(:a2, 12, 60, 100) }
           end
         end
       elsif bar >= bar_end
@@ -75,7 +75,7 @@ class Chapter01
       if bar >= bar_start && bar < bar_end
         if bar == bar_start
           $fx_bus.with_bus_a do
-            in_thread { $pi.blip_rhythm(:a3, :minor_pentatonic, 32) }
+            in_thread { $piw.blip_rhythm(:a3, :minor_pentatonic, 32) }
           end
         end
       elsif bar >= bar_end

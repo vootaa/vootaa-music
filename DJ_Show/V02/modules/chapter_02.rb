@@ -19,7 +19,7 @@ class Chapter02
       if bar >= 80 && bar < 96
         if bar == 80
           $fx_bus.with_bus_b do
-            in_thread { $pi.driving_pulse(:d2, 16) }
+            in_thread { $piw.driving_pulse(:d2, 16) }
           end
         end
       elsif bar >= 96
@@ -36,7 +36,7 @@ class Chapter02
       if bar >= 96 && bar < 112
         if bar == 96
           $fx_bus.with_bus_b do
-            in_thread { $pi.acid(:d2, 16, 70, 110) }
+            in_thread { $piw.acid(:d2, 16, 70, 110) }
           end
         end
       elsif bar >= 112
@@ -53,7 +53,7 @@ class Chapter02
       if bar >= 112 && bar < 144
         if bar == 112
           $fx_bus.with_bus_b do
-            in_thread { $pi.blip_rhythm(:d3, :dorian, 32) }
+            in_thread { $piw.blip_rhythm(:d3, :dorian, 32) }
           end
         end
       elsif bar >= 144
@@ -70,7 +70,7 @@ class Chapter02
       if bar >= 144 && bar < 160
         if bar == 144
           $fx_bus.with_bus_b do
-            in_thread { $pi.wob_rhyth(:d1, 16) }
+            in_thread { $piw.wob_rhyth(:d1, 16) }
           end
         end
       elsif bar >= 160
