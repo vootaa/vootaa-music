@@ -77,11 +77,8 @@ module Performance
     
     # 获取旋律音阶
     def get_scale_for_melody
-      mode_idx = @math.get_next(:pi) % @scales.modes.length
-      selected_mode = @scales.modes[mode_idx]
-      root = [:c4, :d4, :e4, :f4, :g4].choose
-      
-      scale(root, selected_mode)
+      mode_name = @scales.get_mode(@energy_curve.current_energy)
+      @scales.get_scale(mode_name)
     end
     
     # 生成旋律短语
@@ -138,7 +135,8 @@ module Performance
     
     # 获取鼓手模式
     def get_drum_pattern(drummer_id)
-      @patterns.get_pattern_for_drummer(drummer_id, @math)
+      pattern_index = @math.get_next(:phi).abs % @patterns.pattern_count(drummer_id)
+      @patterns.get_pattern(drummer_id, pattern_index)
     end
     
     # 判断鼓手是否应该演奏

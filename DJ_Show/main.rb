@@ -19,19 +19,11 @@ use_random_seed config[:initial_seed]
 use_bpm config[:base_bpm]
 set_volume! config[:set_volume]
 
-# Calculate fade parameters with required parameters
+# Calculate fade parameters (ONCE)
 fade_params = @conductor.volume_ctrl.calculate_fade_params(
   config[:fade_in_dur], 
   config[:fade_out_dur], 
-  config[:perf_cycles],
-  config[:cycle_length],
-  @conductor.math
-)
-performance_start = Time.now
-
-# Calculate fade parameters (ONCE)
-fade_params = @conductor.volume_ctrl.calculate_fade_params(
-  config[:fade_in_dur], config[:fade_out_dur], config[:perf_cycles]
+  config[:perf_cycles]
 )
 performance_start = Time.now
 
