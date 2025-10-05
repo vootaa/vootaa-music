@@ -1,13 +1,13 @@
 # DRUM CIRCLE DJ SHOW - MAIN PERFORMANCE
-load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/lib/config.rb"
-load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/lib/math_engine.rb"
-load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/lib/energy_curve.rb"
-load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/lib/drummer_patterns.rb"
-load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/lib/scale_modes.rb"
-load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/lib/volume_controller.rb"
-load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/lib/helpers.rb"
-load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/lib/performance_layers.rb"
-load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/lib/performance.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V01/lib/config.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V01/lib/math_engine.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V01/lib/energy_curve.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V01/lib/drummer_patterns.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V01/lib/scale_modes.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V01/lib/volume_controller.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V01/lib/helpers.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V01/lib/performance_layers.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V01/lib/performance.rb"
 
 extend PerformanceLayers
 

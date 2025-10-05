@@ -11,6 +11,7 @@ class MathEngine
   GOLDEN_DIGITS = [1,6,1,8,0,3,3,9,8,8,7,4,9,8,9,4,8,4,8,2,0,4,5,8,6,8,3,4,3,6,5,6]
   SQRT2_DIGITS = [1,4,1,4,2,1,3,5,6,2,3,7,3,0,9,5,0,4,8,8,0,1,6,8,8,7,2,4,2,0,9,6]
   
+  
   def initialize(seed)
     @seed = seed
     @pi_index = 0
