@@ -118,3 +118,36 @@ DRUMMER_PAN_POSITIONS = {
 def get_drummer_pan(drummer_id)
   DRUMMER_PAN_POSITIONS.fetch(drummer_id, 0.0)
 end
+
+# Export all config as a hash for easy passing
+def get_performance_config
+  {
+    # Core settings
+    initial_seed: INITIAL_SEED,
+    base_bpm: BASE_BPM,
+    set_volume: SET_VOLUME,
+    cycle_length: CYCLE_LENGTH,
+    golden_ratio: GOLDEN_RATIO,
+    debug_mode: DEBUG_MODE,
+    
+    # Performance
+    fade_in_dur: FADE_IN_DUR,
+    fade_out_dur: FADE_OUT_DUR,
+    perf_cycles: PERF_CYCLES,
+    
+    # Volume levels
+    pulse_volume: PULSE_VOLUME,
+    drummer_volume: DRUMMER_VOLUME,
+    loop_volume: LOOP_VOLUME,
+    melody_volume: MELODY_VOLUME,
+    ambient_volume: AMBIENT_VOLUME,
+    fill_volume: FILL_VOLUME,
+    
+    # Panning and volumes
+    drummer_pans: DRUMMER_PANS,
+    sample_volumes: SAMPLE_VOLUMES,
+    
+    # Thresholds
+    fill_threshold: FILL_THRESHOLD
+  }
+end

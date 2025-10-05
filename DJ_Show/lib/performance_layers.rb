@@ -1,6 +1,6 @@
 module PerformanceLayers
   # 播放鼓手模式
-  def play_drum_pattern(drummer_id, pattern, energy_scale, patterns, config)
+  def play_drum_pattern(drummer_id, pattern, energy, patterns, conductor)
     return unless pattern
     
     drummer_pan = config[:drummer_pans][drummer_id]
@@ -18,5 +18,15 @@ module PerformanceLayers
     end
     
     sleep pattern[:duration] + pattern[:breathe]
+
+    hits.each_with_index do |hit, beat|
+      if hit == "x"
+        sample sample_name,
+               amp: amplitude * conductor.config(:drummer_volume) * get_sample_volume(sample_name),
+               pan: conductor.config(:drummer_pans)[drummer_id.to_sym] || 0,
+               rate: rate
+      end
+      sleep 0.5
+    end
   end
 end
