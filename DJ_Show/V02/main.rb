@@ -1,67 +1,84 @@
-# V02 主文件：时间线编排与章节调度
+# V02 主程序：完整版
 
-# === 加载模块 ===
-require_relative '/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/config'
-require_relative '/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/clock'
-require_relative '/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/irrational_engine'
-require_relative '/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/energy_curve'
-require_relative '/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/helpers'
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/config.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/irrational_engine.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/energy_mapper.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/master_clock.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/drum_patterns.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/drum_engine.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/transition_system.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/bass_engine.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/harmony_engine.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/fx_bus.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/performance_monitor.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/helpers.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/lib/preset_manager.rb"
 
-# === 全局设置 ===
-use_bpm Config::BPM
-set_volume! Config::MASTER_VOLUME
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/modules/pi_wrapper.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/modules/chapter_01.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/modules/chapter_02.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/modules/chapter_03.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/modules/chapter_04.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/modules/chapter_05.rb"
+load "/Users/tsb/Pop-Proj/vootaa-music/DJ_Show/V02/modules/chapter_06.rb"
 
-# === 初始化 ===
-Clock.init
-Energy.init
+$config = V02Config.new
+$irr_engine = IrrationalEngine.new($config)
+$energy = EnergyMapper.new
+$patterns = DrumPatterns.new
+$drum_engine = DrumEngine.new($config, $patterns, $energy, $irr_engine)
+$transition = TransitionSystem.new($config)
+$bass_engine = BassEngine.new($config, $energy, $irr_engine)
+$harmony_engine = HarmonyEngine.new($config, $energy, $irr_engine)
+$piw = PIWrapper.new
+$preset_manager = PresetManager.new($config)
 
-puts "="*60
-puts "V02 DJ Show - Initialization Complete"
-puts "BPM: #{Config::BPM}"
-puts "Chapters: #{Config::CHAPTERS.keys.join(', ')}"
-puts "="*60
+use_bpm $config.bpm
 
-# === 启动母时钟 ===
-Clock.start
+$energy.add_segment(0, 16, 30, 40, :linear)
+$energy.add_segment(16, 32, 40, 60, :exponential)
+$energy.add_segment(32, 64, 60, 65, :linear)
+$energy.add_segment(64, 80, 65, 50, :linear)
+$energy.add_segment(80, 96, 50, 65, :linear)
+$energy.add_segment(96, 112, 65, 75, :exponential)
+$energy.add_segment(112, 144, 75, 75, :linear)
+$energy.add_segment(144, 160, 75, 60, :linear)
+$energy.add_segment(160, 240, 60, 80, :exponential)
+$energy.add_segment(240, 320, 70, 70, :linear)
+$energy.add_segment(320, 400, 65, 65, :linear)
+$energy.add_segment(400, 496, 60, 40, :logistic)
 
-# === 测试：简单能量曲线演示 ===
-live_loop :energy_demo do
-  sync :section  # 每 8 小节
-  
-  bar = Clock.bar_count
-  
-  # 模拟段落切换
-  section = case (bar / 8) % 6
-            when 0 then :intro
-            when 1 then :build
-            when 2 then :drop_a
-            when 3 then :bridge
-            when 4 then :drop_b
-            when 5 then :outro
-            end
-  
-  target = Energy.curve_for_section(section)
-  Energy.transition_to(target, duration: 8, curve: :logistic)
-  
-  puts "[Bar #{bar}] Section: #{section}, Target Energy: #{target}"
+$clock = MasterClock.new($config.bpm, $config.total_bars)
+$fx_bus = FXBus.new($config, $transition)
+$monitor = PerformanceMonitor.new($config, $clock, $energy)
+
+$fx_bus.start
+in_thread { $clock.start }
+in_thread { $monitor.start }
+
+in_thread { Chapter01.run }
+in_thread { Chapter02.run }
+in_thread { Chapter03.run }
+in_thread { Chapter04.run }
+in_thread { Chapter05.run }
+in_thread { Chapter06.run }
+
+in_thread { $transition.execute_transition(:ch1, :ch2, 76) }
+in_thread { $transition.execute_transition(:ch2, :ch3, 156) }
+in_thread { $transition.execute_transition(:ch3, :ch4, 236) }
+in_thread { $transition.execute_transition(:ch4, :ch5, 316) }
+in_thread { $transition.execute_transition(:ch5, :ch6, 396) }
+
+live_loop :main_guardian do
+  sleep 16
+  if $clock.bar_count >= $config.total_bars
+    puts "=== V02 DJ Show Completed ==="
+    $drum_engine.stop_all
+    $bass_engine.stop_bass
+    $harmony_engine.stop_harmony
+    $piw.stop_all
+    $fx_bus.stop_all
+    $monitor.stop_monitor
+    stop
+  end
 end
-
-# === 测试：无理数序列演示 ===
-live_loop :irrational_demo do
-  sync :phrase  # 每 4 小节
-  
-  bar = Clock.bar_count
-  
-  # φ 步进（0-7 档位）
-  phi_step = IrrationalEngine.step(bar, base: Config::PHI, scale: 8, quantize: 8)
-  
-  # √2 连续值
-  sqrt2_val = IrrationalEngine.step(bar, base: Config::SQRT2, scale: 1.0)
-  
-  # Lissajous 8字
-  x, y = IrrationalEngine.lissajous_8(bar)
-  
-  puts "  φ_step: #{phi_step}, √2: #{'%.3f' % sqrt2_val}, 8字: (#{('%.2f' % x)}, #{('%.2f' % y)})"
-end
-
-# 注意：鼓手系统、过渡系统等将在后续阶段添加
