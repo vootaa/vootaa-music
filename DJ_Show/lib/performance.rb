@@ -77,8 +77,14 @@ module Performance
     
     # 获取旋律音阶
     def get_scale_for_melody
-      mode_name = @scales.get_mode(@energy_curve.current_energy)
-      @scales.get_scale(mode_name)
+      # get_mode 返回调式名称（需要一个索引）
+      energy = current_energy
+      mode_index = (energy * ScaleModes::MODES.length).to_i
+      mode_name = @scales.get_mode(mode_index)
+      
+      # get_scale_notes 需要 root_note 和 mode_index 两个参数
+      root_note = @config[:melody_root_note] || :c4
+      @scales.get_scale_notes(root_note, mode_index)
     end
     
     # 生成旋律短语
