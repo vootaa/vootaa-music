@@ -300,12 +300,21 @@ def get_performance_config
     cycle_length: CYCLE_LENGTH,
     golden_ratio: GOLDEN_RATIO,
     debug_mode: DEBUG_MODE,
-    
+
+    # Groove/Structure (ADD these)
+    beats_per_bar: BEATS_PER_BAR,
+    bars_per_phrase: BARS_PER_PHRASE,
+    loop_slice_mode: LOOP_SLICE_MODE,
+    loop_hpf_cutoff: LOOP_HPF_CUTOFF,
+    melody_max_amp: MELODY_MAX_AMP,
+    melody_bar_density: MELODY_BAR_DENSITY,
+    fill_only_at_phrase_end: FILL_ONLY_AT_PHRASE_END,
+
     # Performance
     fade_in_dur: FADE_IN_DUR,
     fade_out_dur: FADE_OUT_DUR,
     perf_cycles: PERF_CYCLES,
-    
+
     # Volume levels
     pulse_volume: PULSE_VOLUME,
     drummer_volume: DRUMMER_VOLUME,
@@ -313,43 +322,43 @@ def get_performance_config
     melody_volume: MELODY_VOLUME,
     ambient_volume: AMBIENT_VOLUME,
     fill_volume: FILL_VOLUME,
-    
+
     # Loop configuration
     loop_start_patterns: LOOP_START_PATTERNS,
     loop_rates: LOOP_RATES,
     loop_samples: LOOP_SAMPLES,
     loop_beat_stretches: LOOP_BEAT_STRETCHES,
-    
+
     # Melody configuration
     melody_note_ranges: MELODY_NOTE_RANGES,
     melody_rhythm_patterns: MELODY_RHYTHM_PATTERNS,
     melody_phrase_lengths: MELODY_PHRASE_LENGTHS,
     melody_activation_chance: MELODY_ACTIVATION_CHANCE,
-    
+
     # Fill configuration
     fill_types: FILL_TYPES,
     fill_threshold: FILL_THRESHOLD,
-    
+
     # Ambient configuration
     ambient_samples: AMBIENT_SAMPLES,
     ambient_energy_threshold: AMBIENT_ENERGY_THRESHOLD,
     ambient_sleep_duration: AMBIENT_SLEEP_DURATION,
     ambient_rate_range: AMBIENT_RATE_RANGE,
-    
+
     # Energy categories
     energy_categories: ENERGY_CATEGORIES,
-    
+
     # Pulse configuration
     pulse_samples: PULSE_SAMPLES,
     pulse_sleep_time: PULSE_SLEEP_TIME,
-    
+
     # Drummer configuration
     drummer_pans: DRUMMER_PANS,
     drummer_rest_sleep: DRUMMER_REST_SLEEP,
-    
+
     # Sample volumes
     sample_volumes: SAMPLE_VOLUMES,
-    
+
     # Mix parameters
     max_active_drummers: MAX_ACTIVE_DRUMMERS
   }
