@@ -37,11 +37,13 @@ end
 
 # Helper functions for performance
 
+# Get calibrated sample volume
 def get_sample_volume(sample_name)
   config = get_performance_config
   config[:sample_volumes][sample_name.to_sym] || 1.0
 end
 
+# Random integer in range (inclusive)
 def rrand_i(min, max)
   (rrand(min, max + 0.999)).to_i
 end

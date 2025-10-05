@@ -33,6 +33,147 @@ PERF_CYCLES = 10          # Total number of cycles to perform
 # Debug Mode
 DEBUG_MODE = true         # Set to false for production
 
+# ============================================================
+# LOOP CONFIGURATION
+# ============================================================
+
+# Loop Slicing Patterns (inspired by drums.rb)
+LOOP_START_PATTERNS = {
+  pattern_a: [0.0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875],  # 16th notes (original)
+  pattern_b: [0.0, 0.25, 0.5, 0.75],                               # Quarter notes
+  pattern_c: [0.0, 0.333, 0.666],                                  # Triplets
+  pattern_d: [0.0, 0.1, 0.3, 0.4, 0.6, 0.8]                       # Irregular (polyrhythmic)
+}
+
+# Loop Rate Variations
+LOOP_RATES = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0]
+
+# Loop Sample Pool
+LOOP_SAMPLES = [:loop_amen, :loop_compus, :loop_tabla, :loop_safari]
+
+# Loop Beat Stretch Options
+LOOP_BEAT_STRETCHES = [4, 8, 16]
+
+# ============================================================
+# MELODY CONFIGURATION
+# ============================================================
+
+# Melody Note Ranges (MIDI note numbers)
+MELODY_NOTE_RANGES = {
+  kalimba: (60..72),      # C4 to C5
+  piano: (48..72),        # C3 to C5
+  beep: (60..84),         # C4 to C6
+  pretty_bell: (72..84),  # C5 to C6
+  dsaw: (36..60)          # C2 to C4
+}
+
+# Melody Rhythm Patterns (beat durations)
+MELODY_RHYTHM_PATTERNS = [
+  [0.5, 0.5, 1.0],           # Quick-quick-slow
+  [1.0, 0.5, 0.5],           # Slow-quick-quick
+  [0.75, 0.75, 0.5],         # Dotted rhythm
+  [0.333, 0.333, 0.333],     # Triplets
+  [1.0, 1.0, 1.0],           # Even quarters
+  [0.25, 0.25, 0.5, 1.0]     # Accelerating
+]
+
+# Melody Phrase Lengths (number of notes)
+MELODY_PHRASE_LENGTHS = [3, 4, 5, 7]
+
+# Melody Activation Chance (probability)
+MELODY_ACTIVATION_CHANCE = 3  # one_in(3) = 33% chance
+
+# ============================================================
+# FILL CONFIGURATION
+# ============================================================
+
+# Fill Type Definitions
+FILL_TYPES = {
+  tom_roll: {
+    samples: [:drum_tom_hi_hard, :drum_tom_mid_hard, :drum_tom_lo_hard],
+    duration: 1.0,
+    notes: 4,
+    sleep_time: 0.25,
+    rate_range: (0.9..1.1),
+    fx: nil
+  },
+  cymbal_crash: {
+    samples: [:drum_cymbal_open, :drum_splash_hard],
+    duration: 2.0,
+    notes: 1,
+    sleep_time: 2.0,
+    rate_range: (0.85..0.95),
+    fx: nil
+  },
+  glitch_burst: {
+    samples: [:elec_blip2, :elec_twang, :elec_pop],
+    duration: 0.5,
+    notes: 3,
+    sleep_time: 0.166,
+    rate_range: (0.8..1.5),
+    fx: :bitcrusher
+  },
+  snare_roll: {
+    samples: [:drum_snare_hard, :elec_mid_snare, :sn_dolf],
+    duration: 1.0,
+    notes: 6,
+    sleep_time: 0.166,
+    rate_range: (0.95..1.05),
+    fx: nil
+  },
+  rest: {
+    samples: [],
+    duration: 1.0,
+    notes: 0,
+    sleep_time: 1.0,
+    rate_range: (1.0..1.0),
+    fx: nil
+  }
+}
+
+# ============================================================
+# AMBIENT CONFIGURATION
+# ============================================================
+
+# Ambient Sample Pool
+AMBIENT_SAMPLES = [:ambi_choir, :ambi_drone, :ambi_lunar_land, :ambi_soft_buzz, :ambi_glass_hum]
+
+# Ambient Energy Threshold
+AMBIENT_ENERGY_THRESHOLD = 0.4
+
+# Ambient Sleep Duration
+AMBIENT_SLEEP_DURATION = 8
+
+# Ambient Rate Range
+AMBIENT_RATE_RANGE = (0.85..1.0)
+
+# ============================================================
+# ENERGY CONFIGURATION
+# ============================================================
+
+# Energy Category Thresholds
+ENERGY_CATEGORIES = [
+  { name: "Silence",     range: (0.0...0.1), max_drummers: 0, description: "Pure pulse only" },
+  { name: "Intro",       range: (0.1...0.3), max_drummers: 1, description: "Single drummer, sparse" },
+  { name: "Development", range: (0.3...0.6), max_drummers: 2, description: "Two drummers, alternating" },
+  { name: "Peak",        range: (0.6...0.9), max_drummers: 2, description: "Two drummers, overlapping" },
+  { name: "Climax",      range: (0.9..1.0),  max_drummers: 3, description: "Three drummers + fills" }
+]
+
+# ============================================================
+# PULSE CONFIGURATION
+# ============================================================
+
+# Pulse Samples
+PULSE_SAMPLES = [:bd_fat, :bd_haus]
+
+# Pulse Sleep Time
+PULSE_SLEEP_TIME = 1
+
+# ============================================================
+# DRUMMER CONFIGURATION
+# ============================================================
+
 # Drummer Panning
 DRUMMER_PANS = {
   'A' => -0.6,  # West African - Left
@@ -40,6 +181,13 @@ DRUMMER_PANS = {
   'C' => 0.2,   # Latin - Center-Right
   'D' => 0.6    # Electronic - Right
 }
+
+# Drummer Default Sleep (when not playing)
+DRUMMER_REST_SLEEP = 2
+
+# ============================================================
+# SAMPLE VOLUME CALIBRATION
+# ============================================================
 
 # Sample Volume Calibration
 # (Normalized based on actual sample loudness)
@@ -104,8 +252,6 @@ SAMPLE_VOLUMES = {
   elec_mid_snare: 1.0,
   elec_hi_snare: 0.9,
   elec_lo_snare: 1.1,
-  elec_pop: 1.2,
-  elec_twang: 1.0,
   
   # Loops (background, keep moderate)
   loop_amen: 0.8,
@@ -118,15 +264,16 @@ SAMPLE_VOLUMES = {
   ambi_drone: 1.6,
   ambi_lunar_land: 1.7,
   ambi_soft_buzz: 1.5,
-  ambi_glass_hum: 1.6,
-  
-  # Synths (adjust in use_synth, not here)
-  # kalimba, piano, beep, dsaw handled separately
+  ambi_glass_hum: 1.6
 }
+
+# ============================================================
+# HELPER FUNCTIONS
+# ============================================================
 
 # Get calibrated volume for sample
 def get_sample_volume(sample_name)
-  SAMPLE_VOLUMES[sample_name] || 1.0
+  SAMPLE_VOLUMES[sample_name.to_sym] || 1.0
 end
 
 # ============================================================
@@ -157,11 +304,43 @@ def get_performance_config
     ambient_volume: AMBIENT_VOLUME,
     fill_volume: FILL_VOLUME,
     
-    # Panning and volumes
+    # Loop configuration
+    loop_start_patterns: LOOP_START_PATTERNS,
+    loop_rates: LOOP_RATES,
+    loop_samples: LOOP_SAMPLES,
+    loop_beat_stretches: LOOP_BEAT_STRETCHES,
+    
+    # Melody configuration
+    melody_note_ranges: MELODY_NOTE_RANGES,
+    melody_rhythm_patterns: MELODY_RHYTHM_PATTERNS,
+    melody_phrase_lengths: MELODY_PHRASE_LENGTHS,
+    melody_activation_chance: MELODY_ACTIVATION_CHANCE,
+    
+    # Fill configuration
+    fill_types: FILL_TYPES,
+    fill_threshold: FILL_THRESHOLD,
+    
+    # Ambient configuration
+    ambient_samples: AMBIENT_SAMPLES,
+    ambient_energy_threshold: AMBIENT_ENERGY_THRESHOLD,
+    ambient_sleep_duration: AMBIENT_SLEEP_DURATION,
+    ambient_rate_range: AMBIENT_RATE_RANGE,
+    
+    # Energy categories
+    energy_categories: ENERGY_CATEGORIES,
+    
+    # Pulse configuration
+    pulse_samples: PULSE_SAMPLES,
+    pulse_sleep_time: PULSE_SLEEP_TIME,
+    
+    # Drummer configuration
     drummer_pans: DRUMMER_PANS,
+    drummer_rest_sleep: DRUMMER_REST_SLEEP,
+    
+    # Sample volumes
     sample_volumes: SAMPLE_VOLUMES,
     
-    # Thresholds
-    fill_threshold: FILL_THRESHOLD
+    # Mix parameters
+    max_active_drummers: MAX_ACTIVE_DRUMMERS
   }
 end

@@ -8,11 +8,15 @@ class EnergyCurve
   def calculate(elapsed_time)
     t = elapsed_time.to_f / @cycle_length
     
+    # Lissajous curve with golden ratio
     base_wave = Math.sin(2 * Math::PI * t)
     golden_wave = Math.sin(2 * Math::PI * t * @golden_ratio)
     fibonacci_wave = Math.sin(3 * Math::PI * t) * 0.5
     
+    # Combine waves
     combined = (base_wave + golden_wave + fibonacci_wave) / 2.5
+    
+    # Normalize to 0.0-1.0
     normalized = (combined + 1.0) / 2.0
     
     @previous_energy = normalized

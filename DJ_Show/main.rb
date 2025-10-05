@@ -42,7 +42,7 @@ with_fx :level, amp: 0 do |master_vol|
       control master_vol, amp: target_amp
       
       if config[:debug_mode] && (elapsed.to_i % 5 == 0)
-        puts "Volume: #{(target_amp * 100).to_i}% | Elapsed: #{elapsed.to_i}s"
+        puts "🔊 Volume: #{(target_amp * 100).to_i}% | Elapsed: #{elapsed.to_i}s"
       end
       
       sleep 0.1
@@ -56,7 +56,7 @@ with_fx :level, amp: 0 do |master_vol|
     current_cycle = (elapsed / config[:cycle_length]).to_i
     
     # 检测到新周期时更新种子
-    if current_cycle != @conductor.cycle_num
+    if current_cycle != @conductor.cycle_number
       @conductor.math.apply_cycle_offset(current_cycle)
       @conductor.instance_variable_set(:@cycle_number, current_cycle)
       puts "🔄 Entering Cycle #{current_cycle}" if config[:debug_mode]
@@ -67,10 +67,11 @@ with_fx :level, amp: 0 do |master_vol|
   
   # PULSE
   live_loop :pulse do
-    sample [:bd_fat, :bd_haus].ring.tick, 
-           amp: config[:pulse_volume] * get_sample_volume(:bd_fat), 
+    pulse_samples = config[:pulse_samples].ring
+    sample pulse_samples.tick,
+           amp: config[:pulse_volume] * get_sample_volume(pulse_samples.look),
            pan: 0
-    sleep 1
+    sleep config[:pulse_sleep_time]
   end
   
   # DRUMMERS
@@ -83,7 +84,7 @@ with_fx :level, amp: 0 do |master_vol|
         pattern = @conductor.get_drum_pattern(drummer_id)
         play_drum_pattern(drummer_id, pattern, energy, @conductor.patterns, @conductor)
       else
-        sleep 2
+        sleep config[:drummer_rest_sleep]
       end
     end
   end
@@ -93,16 +94,18 @@ with_fx :level, amp: 0 do |master_vol|
     energy = @conductor.current_energy
     
     if energy > 0.2
-      loop_samples = [:loop_amen, :loop_compus, :loop_tabla, :loop_safari].ring
-      current_sample = loop_samples.tick
+      current_sample = @conductor.get_loop_sample
       start_pattern = @conductor.get_loop_start_pattern.ring
+      rate = @conductor.get_loop_rate
+      beat_stretch = @conductor.get_loop_beat_stretch
       
-      sample current_sample, 
-             beat_stretch: 4, 
-             start: start_pattern.look,
-             rate: [0.5, 1.0, 2.0].ring.look,
+      sample current_sample,
+             beat_stretch: beat_stretch,
+             start: start_pattern.tick,
+             rate: rate,
              amp: energy * config[:loop_volume] * get_sample_volume(current_sample),
              pan: @conductor.get_pan_value(:sqrt2)
+      
       sleep 1
     else
       sleep 4
@@ -113,9 +116,9 @@ with_fx :level, amp: 0 do |master_vol|
   live_loop :melody, sync: :pulse do
     energy = @conductor.current_energy
     
-    if energy.between?(0.2, 0.8) && one_in(3)
+    if energy.between?(0.2, 0.8) && one_in(config[:melody_activation_chance])
       scale_notes = @conductor.get_scale_for_melody
-      phrase_len = rrand_i(3, 7)
+      phrase_len = @conductor.get_melody_phrase_length
       phrase = @conductor.generate_melody_phrase(scale_notes, phrase_len)
       
       use_synth @conductor.get_instrument_for_energy(energy)
@@ -123,7 +126,7 @@ with_fx :level, amp: 0 do |master_vol|
       with_fx :reverb, room: energy * 0.5 do
         with_fx :echo, phase: 0.75, decay: 2 do
           phrase.each do |note_data|
-            play note_data[:note], 
+            play note_data[:note],
                  amp: config[:melody_volume] * energy * 1.5,
                  release: note_data[:duration] * 0.8,
                  pan: @conductor.get_pan_value(:sqrt2)
@@ -141,15 +144,17 @@ with_fx :level, amp: 0 do |master_vol|
   live_loop :ambience, sync: :pulse do
     energy = @conductor.current_energy
     
-    if energy < 0.4
-      amb = [:ambi_choir, :ambi_drone, :ambi_lunar_land].ring.tick
+    if energy < config[:ambient_energy_threshold]
+      amb = @conductor.get_ambient_sample
+      amb_rate = @conductor.get_ambient_rate
+      
       with_fx :reverb, room: 0.8 do
-        sample amb, 
+        sample amb,
                amp: config[:ambient_volume] * get_sample_volume(amb),
-               rate: 0.9, 
-               pan: [-0.5, 0.5].ring.look
+               rate: amb_rate,
+               pan: @conductor.get_pan_value(:golden)
       end
-      sleep 8
+      sleep config[:ambient_sleep_duration]
     else
       sleep 4
     end
@@ -160,43 +165,45 @@ with_fx :level, amp: 0 do |master_vol|
     energy = @conductor.current_energy
     
     if @conductor.should_trigger_fill?(energy)
-      case @conductor.math.get_next(:sqrt2) % 4
-      when 0  # Tom roll
-        4.times do |i|
-          tom = [:drum_tom_hi_hard, :drum_tom_mid_hard, :drum_tom_lo_hard].choose
-          sample tom, 
-                 amp: config[:fill_volume] * get_sample_volume(tom),
-                 rate: rrand(0.9, 1.1), 
-                 pan: @conductor.math.map_to_range(i * 2, -0.8, 0.8)
-          sleep 0.25
+      fill_type = @conductor.get_fill_type
+      fill_config = @conductor.get_fill_config(fill_type)
+      
+      if fill_config[:notes] > 0
+        fill_config[:notes].times do |i|
+          sample_choice = fill_config[:samples].choose
+          rate_val = rrand(fill_config[:rate_range].min, fill_config[:rate_range].max)
+          
+          # 根据 fill 类型应用不同的效果
+          if fill_config[:fx] == :bitcrusher
+            with_fx :bitcrusher, bits: 4 do
+              sample sample_choice,
+                     amp: config[:fill_volume] * get_sample_volume(sample_choice),
+                     rate: rate_val,
+                     pan: @conductor.get_pan_value(:sqrt2)
+            end
+          else
+            sample sample_choice,
+                   amp: config[:fill_volume] * get_sample_volume(sample_choice),
+                   rate: rate_val,
+                   pan: @conductor.math.map_to_range(i * 2, -0.8, 0.8)
+          end
+          
+          sleep fill_config[:sleep_time]
         end
-      when 1  # Cymbal
-        sample :drum_cymbal_open, 
-               amp: config[:fill_volume] * get_sample_volume(:drum_cymbal_open),
-               rate: 0.9, 
-               pan: @conductor.get_pan_value(:golden)
-        sleep 2
-      when 2  # Glitch
-        glitch = [:elec_blip2, :elec_twang, :elec_pop].choose
-        with_fx :bitcrusher, bits: 4 do
-          sample glitch, 
-                 amp: config[:fill_volume] * get_sample_volume(glitch),
-                 rate: rrand(0.8, 1.5), 
-                 pan: @conductor.get_pan_value(:sqrt2)
-        end
-        sleep 0.5
       else
-        sleep 1
+        sleep fill_config[:duration]
       end
+    else
+      sleep 1
     end
-    sleep 1
   end
   
   # MONITOR
   live_loop :monitor, sync: :pulse do
     if config[:debug_mode]
       energy = @conductor.current_energy
-      puts "⚡️ Energy: #{(energy * 100).to_i}% | #{@conductor.energy_system.get_category(energy)} | Cycle: #{@conductor.cycle_num}"
+      category = @conductor.get_energy_category_name(energy)
+      puts "⚡️ Energy: #{(energy * 100).to_i}% | #{category} | Cycle: #{@conductor.cycle_number}"
     end
     sleep 4
   end

@@ -1,4 +1,6 @@
+# Performance layer implementation
 module PerformanceLayers
+  # 播放鼓手模式
   def play_drum_pattern(drummer_id, pattern, energy, patterns_obj, conductor)
     return unless pattern
     
