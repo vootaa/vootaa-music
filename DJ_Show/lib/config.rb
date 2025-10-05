@@ -8,6 +8,16 @@ CYCLE_LENGTH = 60          # Seconds per major energy cycle
 BASE_BPM = 90             # Beats per minute
 SET_VOLUME = 5            # Master volume (1-10)
 
+# Groove/Structure 
+BEATS_PER_BAR = 4
+BARS_PER_PHRASE = 8             # 8 or 16
+MAX_ACTIVE_DRUMMERS = 3         # hard cap at peak
+LOOP_SLICE_MODE = :cycle_locked # lock loop params per cycle
+LOOP_HPF_CUTOFF = 90            # Hz, free the kick
+MELODY_MAX_AMP = 0.6            # never dominate
+MELODY_BAR_DENSITY = 0.5        # only ~1/2 bars attempt melody
+FILL_ONLY_AT_PHRASE_END = true
+
 # Mathematical Constants
 INITIAL_SEED = 65535      # Starting random seed
 GOLDEN_RATIO = 1.618033988749
