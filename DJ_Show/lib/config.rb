@@ -25,55 +25,82 @@ MELODY_VOLUME = 0.6
 AMBIENT_VOLUME = 0.3
 FILL_VOLUME = 2.5
 
+# Performance Duration
+FADE_IN_DUR = 10          # Fade in duration in seconds
+FADE_OUT_DUR = 15         # Fade out duration in seconds
+PERF_CYCLES = 10          # Total number of cycles to perform
+
 # Debug Mode
-DEBUG_MODE = false        # Set true to see energy/state logs
+DEBUG_MODE = true         # Set to false for production
 
-# ============================================================
-# SAMPLE VOLUME CALIBRATION
-# Normalize volumes so all samples sound balanced
-# ============================================================
+# Drummer Panning
+DRUMMER_PANS = {
+  'A' => -0.6,  # West African - Left
+  'B' => -0.2,  # Indian - Center-Left
+  'C' => 0.2,   # Latin - Center-Right
+  'D' => 0.6    # Electronic - Right
+}
 
-SAMPLE_VOLUME_MAP = {
-  # Bass drums (naturally loud, reduce)
-  bd_haus: 0.7,
-  bd_fat: 0.7,
-  bd_808: 0.8,
-  bd_boom: 0.6,
+# Sample Volume Calibration
+# (Normalized based on actual sample loudness)
+SAMPLE_VOLUMES = {
+  # Kick drums (generally loud, reduce slightly)
+  bd_fat: 0.9,
+  bd_haus: 1.0,
+  bd_808: 1.1,
   
-  # Toms (medium, slight boost)
-  drum_tom_hi_hard: 1.1,
-  drum_tom_hi_soft: 1.3,
+  # Toms (balanced)
+  drum_tom_hi_hard: 1.0,
   drum_tom_mid_hard: 1.0,
-  drum_tom_mid_soft: 1.2,
-  drum_tom_lo_hard: 0.9,
-  drum_tom_lo_soft: 1.1,
+  drum_tom_lo_hard: 1.0,
   
-  # Snares (can be piercing, moderate)
-  drum_snare_hard: 0.9,
-  drum_snare_soft: 1.1,
+  # Snares (can be sharp, moderate)
+  drum_snare_hard: 0.95,
+  drum_snare_soft: 1.0,
+  sn_dolf: 0.9,
   
-  # Cymbals (very loud, reduce significantly)
-  drum_cymbal_open: 0.5,
+  # Cymbals (often too loud, reduce)
+  drum_cymbal_open: 0.7,
+  drum_splash_hard: 0.75,
   drum_cymbal_closed: 0.8,
-  drum_cymbal_pedal: 0.7,
-  drum_cymbal_hard: 0.6,
-  drum_cymbal_soft: 0.8,
-  drum_splash_hard: 0.6,
-  drum_splash_soft: 0.9,
   
-  # Percussion (boost quiet ones)
+  # Tabla (quiet, boost significantly)
+  tabla_tas1: 1.5,
+  tabla_tas2: 1.5,
+  tabla_tas3: 1.5,
+  tabla_ke1: 1.4,
+  tabla_ke2: 1.4,
+  tabla_ke3: 1.4,
+  tabla_na: 1.6,
+  tabla_te1: 1.5,
+  tabla_te2: 1.5,
+  tabla_te_ne: 1.5,
+  tabla_tun1: 1.4,
+  tabla_tun2: 1.4,
+  tabla_tun3: 1.4,
+  tabla_re: 1.5,
+  tabla_ghe1: 1.4,
+  tabla_ghe2: 1.4,
+  tabla_ghe3: 1.4,
+  tabla_ghe4: 1.4,
+  tabla_ghe5: 1.4,
+  tabla_ghe6: 1.4,
+  tabla_ghe7: 1.4,
+  tabla_ghe8: 1.4,
+  tabla_dhec: 1.5,
+  
+  # Percussion (vary widely)
   perc_bell: 1.2,
-  perc_bell2: 1.3,
-  perc_snap: 1.4,
-  perc_snap2: 1.3,
-  drum_cowbell: 1.0,
-  
-  # Electronic (variable, normalize)
+  perc_snap: 1.3,
+  drum_cowbell: 0.8,
   elec_bong: 1.1,
-  elec_blip: 1.3,
-  elec_blip2: 1.2,
-  elec_ping: 1.1,
-  elec_tick: 1.4,
+  
+  # Electronic (generally well-balanced)
+  elec_triangle: 1.0,
+  elec_blip: 1.1,
+  elec_blip2: 1.0,
+  elec_twang: 1.0,
+  elec_pop: 1.2,
   elec_mid_snare: 1.0,
   elec_hi_snare: 0.9,
   elec_lo_snare: 1.1,
@@ -99,25 +126,12 @@ SAMPLE_VOLUME_MAP = {
 
 # Get calibrated volume for sample
 def get_sample_volume(sample_name)
-  SAMPLE_VOLUME_MAP.fetch(sample_name, 1.0)
+  SAMPLE_VOLUMES[sample_name] || 1.0
 end
 
 # ============================================================
-# STEREO POSITIONING
-# Fixed pan positions for each drummer
+# EXPORT CONFIGURATION
 # ============================================================
-
-DRUMMER_PAN_POSITIONS = {
-  "A" => -0.6,   # West African - Left
-  "B" => 0.6,    # Indian - Right
-  "C" => -0.3,   # Latin - Center-Left
-  "D" => 0.3     # Electronic - Center-Right
-}
-
-# Get drummer's pan position
-def get_drummer_pan(drummer_id)
-  DRUMMER_PAN_POSITIONS.fetch(drummer_id, 0.0)
-end
 
 # Export all config as a hash for easy passing
 def get_performance_config

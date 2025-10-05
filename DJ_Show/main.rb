@@ -21,6 +21,13 @@ set_volume! config[:set_volume]
 
 # Initialize conductor
 @conductor = Performance::Conductor.new(config)
+@last_cycle = 0  # 添加周期跟踪
+
+# Calculate fade parameters
+fade_params = @conductor.volume_ctrl.calculate_fade_params(
+  config[:fade_in_dur], config[:fade_out_dur], config[:perf_cycles]
+)
+performance_start = Time.now
 
 # Calculate fade parameters
 fade_params = @conductor.volume_ctrl.calculate_fade_params(
@@ -52,6 +59,14 @@ with_fx :level, amp: 0 do |master_vol|
   
   # PULSE
   live_loop :pulse do
+    # 检查是否进入新周期
+    current_cycle = ((Time.now - performance_start) / config[:cycle_length]).to_i
+    if current_cycle > @last_cycle
+      @last_cycle = current_cycle
+      @conductor.math.apply_cycle_offset(current_cycle)
+      puts "🔄 Entering Cycle #{current_cycle}" if config[:debug_mode]
+    end
+    
     sample [:bd_fat, :bd_haus].ring.tick, 
            amp: config[:pulse_volume] * get_sample_volume(:bd_fat), pan: 0
     sleep 1
